@@ -94,26 +94,26 @@ formats['querystring'] = (_parse_qs, Exception, MalformedQuerystring)
 
 import os
 import sys
-from optparse import OptionParser
+from argparse import ArgumentParser
 
 import jinja2
 from jinja2 import Environment, FileSystemLoader
 
 
-def cli(opts, args):
-    if args[1] == '-':
+def cli(args):
+    if args.data == '-':
         data = sys.stdin.read()
     else:
-        data = open(os.path.join(os.getcwd(), os.path.expanduser(args[1]))).read()
+        data = open(os.path.join(os.getcwd(), os.path.expanduser(args.data))).read()
 
     try:
-        data = formats[opts.format][0](data)
-    except formats[opts.format][1]:
-        raise formats[opts.format][2](u'%s ...' % data[:60])
+        data = formats[args.format][0](data)
+    except formats[args.format][1]:
+        raise formats[args.format][2](u'%s ...' % data[:60])
         sys.exit(1)
 
     env = Environment(loader=FileSystemLoader(os.getcwd()))
-    sys.stdout.write(env.get_template(args[0]).render(data).encode('utf-8'))
+    sys.stdout.write(env.get_template(args.template).render(data).encode('utf-8'))
     sys.exit(0)
 
 
@@ -122,26 +122,23 @@ def main():
     if default_format not in formats:
         default_format = sorted(formats.keys())[0]
 
-    parser = OptionParser(usage="usage: %prog [options] <input template> <input data>",
-                          version="jinja2-cli v%s\n - Jinja2 v%s" % (__version__, jinja2.__version__))
-    parser.add_option('--format', help='Format of input variables: %s' % ', '.join(formats.keys()),
-                      dest='format', action='store', default=default_format)
-    opts, args = parser.parse_args()
+    parser = ArgumentParser()
+    parser.add_argument('template')
+    parser.add_argument('data', nargs='?', default='-',
+            help='input data. Defaults to stdin if none specified')
+    parser.add_argument('--format', default=default_format,
+            choices=formats.keys(),
+            help='format of input variables')
+    parser.add_argument('--version', action='version',
+            version='jinja2-cli {} - Jinja2 {}'.format(__version__, jinja2.__version__))
+    args = parser.parse_args()
 
-    if len(args) == 0:
+    if args.template == 'help':
         parser.print_help()
         sys.exit(1)
 
-    if args[0] == 'help':
-        parser.print_help()
-        sys.exit(1)
+    if args.format not in formats:
+        raise InvalidDataFormat(args.format)
 
-    # Without the second argv, assume they want to read from stdin
-    if len(args) == 1:
-        args.append('-')
-
-    if opts.format not in formats:
-        raise InvalidDataFormat(opts.format)
-
-    cli(opts, args)
+    cli(args)
     sys.exit(0)
