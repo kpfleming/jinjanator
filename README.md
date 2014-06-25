@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/kolypto/j2cli.svg?branch=v0.3.0-0)](https://travis-ci.org/kolypto/j2cli)
+
 j2cli - Jinja2 Command-Line Tool
 ================================
 
@@ -59,7 +61,7 @@ There is some special behavior with environment variables:
 * When `data` is not provided (data is `-`), `--format` defaults to `env` and thus reads environment variables
 * When `--format=env`, it can read a special "environment variables" file made like this: `env > /tmp/file.env`
 
-## Formats: `--format`
+## Formats
 
 ### ini
 
