@@ -8,10 +8,10 @@ Command-line interface to [Jinja2](http://jinja.pocoo.org/docs/) for templating 
 Features:
 
 * Jinja2 templating
-* Allows to use environment variables
+* Allows to use environment variables! Hello [Docker](http://www.docker.com/) :)
 * INI, YAML, JSON data sources supported
 
-Based on [mattrobenolt/jinja2-cli](https://github.com/mattrobenolt/jinja2-cli)
+Inspired by [mattrobenolt/jinja2-cli](https://github.com/mattrobenolt/jinja2-cli)
 """
 
 from setuptools import setup, find_packages

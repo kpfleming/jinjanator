@@ -4,6 +4,14 @@ j2cli - Jinja2 Command-Line Tool
 `j2cli` is a command-line tool for templating in shell-scripts, 
 leveraging the [Jinja2](http://jinja.pocoo.org/docs/) library.
 
+Features:
+
+* Jinja2 templating
+* Allows to use environment variables! Hello [Docker](http://www.docker.com/) :)
+* INI, YAML, JSON data sources supported
+
+Inspired by [mattrobenolt/jinja2-cli](https://github.com/mattrobenolt/jinja2-cli)
+
 ## Installation
 
 ```
