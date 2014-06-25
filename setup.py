@@ -9,12 +9,7 @@ Features:
 
 * Jinja2 templating
 * Allows to use environment variables
-* YAML or JSON data sources supported
-
-Usage:
-
-$ j2 config.j2 data.json --format=json
-$ cat data.json | j2 config.j2
+* INI, YAML, JSON data sources supported
 
 Based on [mattrobenolt/jinja2-cli](https://github.com/mattrobenolt/jinja2-cli)
 """

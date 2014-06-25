@@ -1,11 +1,13 @@
-"""
-jinja2-cli
-==========
+#! /usr/bin/env python
 
-License: BSD, see LICENSE for more details.
-"""
+""" j2cli main file """
+import pkg_resources
 
-__author__ = 'Matt Robenolt'
-__version__ = '0.2.0'
+__author__ = "Mark Vartanyan"
+__email__ = "kolypto@gmail.com"
+__version__ = pkg_resources.get_distribution('j2cli').version
 
-from .cli import main
+from j2cli.cli import main
+
+if __name__ == '__main__':
+    main()
