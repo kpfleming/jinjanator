@@ -1,33 +1,42 @@
-*.py[cod]
+# ===[ APP ]=== #
 
-# C extensions
-*.so
+# ===[ PYTHON PACKAGE ]=== #
+/build/
+/dist/
+/MANIFEST
+/*.egg-info/
 
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
+# ===[ OTHER ]=== #
 
-# Installer logs
-pip-log.txt
+# IDE Projects
+.idea
+.nbproject
+.project
+*.sublime-project
 
-# Unit test / coverage reports
+# Temps
+*~
+*.tmp
+*.bak
+*.swp
+*.kate-swp
+*.DS_Store
+Thumbs.db
+
+# Utils
+.sass-cache/
 .coverage
-.tox
-nosetests.xml
 
-#Translations
+# Generated
+__pycache__
+*.py[cod]
+*.pot
 *.mo
 
-#Mr Developer
-.mr.developer.cfg
+# Runtime
+/*.log
+/*.pid
+
+# ===[ EXCLUDES ]=== #
+!.gitkeep
+!.htaccess
