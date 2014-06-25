@@ -7,7 +7,7 @@ def _parse_ini(data_string):
     :type data_string: basestring
     :rtype: dict
     """
-    from StringIO import StringIO
+    from io import BytesIO
 
     # Override
     class MyConfigParser(ConfigParser.ConfigParser):
@@ -23,7 +23,7 @@ def _parse_ini(data_string):
 
     # Parse
     ini = MyConfigParser()
-    ini.readfp(StringIO(data_string))
+    ini.readfp(BytesIO(data_string))
 
     # Export
     return ini.as_dict()

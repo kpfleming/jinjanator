@@ -26,14 +26,16 @@ def render_template(cwd, template_path, context):
         .encode('utf-8')
 
 
-def render_command(cwd, environ, argv):
+def render_command(cwd, environ, stdin, argv):
     """ Pure render command
     :param cwd: Current working directory (to search for the files)
     :type cwd: basestring
     :param environ: Environment variables
     :type environ: dict
-    :param args: Command-line arguments
-    :type args: list
+    :param stdin: Stdin stream
+    :type stdin: file
+    :param argv: Command-line arguments
+    :type argv: list
     :return: Rendered template
     :rtype: basestring
     """
@@ -45,7 +47,7 @@ def render_command(cwd, environ, argv):
     parser.add_argument('-v', '--version', action='version',
                         version='j2cli {}, Jinja2 {}'.format(__version__, jinja2.__version__))
 
-    parser.add_argument('-f', '--format', default='?', help='Input data format', choices=['?'] + FORMATS.keys())
+    parser.add_argument('-f', '--format', default='?', help='Input data format', choices=['?'] + list(FORMATS.keys()))
     parser.add_argument('template', help='Template file to process')
     parser.add_argument('data', nargs='?', default='-', help='Input data path')
     args = parser.parse_args(argv)
@@ -67,7 +69,7 @@ def render_command(cwd, environ, argv):
     if args.data == '-' and args.format == 'env':
         input_data_f = None
     else:
-        input_data_f = sys.stdin if args.data == '-' else open(args.data)
+        input_data_f = stdin if args.data == '-' else open(args.data)
 
     # Read data
     context = read_context_data(
@@ -89,6 +91,7 @@ def main():
     output = render_command(
         os.getcwd(),
         os.environ,
+        sys.stdin,
         sys.argv[1:]
     )
     sys.stdout.write(output)
