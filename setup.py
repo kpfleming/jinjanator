@@ -18,7 +18,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='j2cli',
-    version='0.3.0-0',
+    version='0.3.0-1',
     author='Mark Vartanyan',
     author_email='kolypto@gmail.com',
 
@@ -39,8 +39,12 @@ setup(
     install_requires=[
         'jinja2 >= 2.7.2',
     ],
+    extras_require={
+        '_dev': ['wheel', 'nose'],
+    },
     include_package_data=True,
     zip_safe=False,
+    test_suite='nose.collector',
 
     platforms='any',
     classifiers=[

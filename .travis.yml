@@ -4,7 +4,7 @@ python:
 #  - "3.3" # not so fast :)
 
 install:
-  - "pip install -e ."
+  - "pip install -e '.[_dev]'"
 
-script: nosetests
+script: make test
 
