@@ -69,83 +69,10 @@ There is some special behavior with environment variables:
 
 ## Formats
 
-
-### env
-Data input from environment variables.
-
-Render directly from the current environment variable values:
-
-    $ j2 config.j2
-
-Or alternatively, read the values from a file:
-
-```
-NGINX_HOSTNAME=localhost
-NGINX_WEBROOT=/var/www/project
-NGINX_LOGS=/var/log/nginx/
-```
-
-And render with:
-
-    $ j2 config.j2 data.env
-    $ env | j2 --format=env config.j2.
-
-This is especially useful with Docker to link containers together.
-
-### ini
-INI data input format.
-
-data.ini:
-
-```
-[nginx]
-hostname=localhost
-webroot=/var/www/project
-logs=/var/log/nginx/
-```
-
-Usage:
-
-    $ j2 config.j2 data.ini
-    $ cat data.ini | j2 --format=ini config.j2
-
-### json
-JSON data input format
-
-data.json:
-
-```
-{
-    "nginx":{
-        "hostname": "localhost",
-        "webroot": "/var/www/project",
-        "logs": "/var/log/nginx/"
-    }
-}
-```
-
-Usage:
-
-    $ j2 config.j2 data.json
-    $ cat data.json | j2 --format=ini config.j2
-
-### yaml
-YAML data input format.
-
-data.yaml:
-
-```
-nginx:
-  hostname: localhost
-  webroot: /var/www/project
-  logs: /var/log/nginx
-```
-
-Usage:
-
-    $ j2 config.j2 data.yml
-    $ cat data.yml | j2 --format=yaml config.j2
-
+{% for name, format in formats|dictsort() %}
+### {{ name }}
+{{ format.doc }}
+{% endfor %}
 
 
 
@@ -154,24 +81,7 @@ Extras
 
 ## Filters
 
-
-### `docker_link(value, format='{addr}:{port}')`
-Given a Docker Link environment variable value, format it into something else.
-
-This first parses a Docker Link value like this:
-
-    DB_PORT=tcp://172.17.0.5:5432
-
-Into a dict:
-
-```python
-{
-  'proto': 'tcp',
-  'addr': '172.17.0.5',
-  'port': '5432'
-}
-```
-
-And then uses `format` to format it, where the default format is '{addr}:{port}'.
-
-More info here: [Docker Links](https://docs.docker.com/userguide/dockerlinks/)
+{% for filter in extras.filters|sort() %}
+### `{{ filter.qsignature }}`
+{{ filter.doc }}
+{% endfor %}

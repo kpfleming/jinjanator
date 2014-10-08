@@ -2,9 +2,34 @@ import os, sys
 import argparse
 
 import jinja2
+import jinja2.loaders
 from . import __version__
 
 from .context import read_context_data, FORMATS
+from .extras import filters
+
+
+class FilePathLoader(jinja2.BaseLoader):
+    """ Custom Jinja2 template loader which just loads a single template file """
+
+    def __init__(self, cwd, encoding='utf-8'):
+        self.cwd = cwd
+        self.encoding = encoding
+
+    def get_source(self, environment, template):
+        # Path
+        filename = os.path.join(self.cwd, template)
+
+        # Read
+        try:
+            with open(template, 'r') as f:
+                contents = f.read().decode(self.encoding)
+        except IOError:
+            raise jinja2.TemplateNotFound(template)
+
+        # Finish
+        uptodate = lambda: False
+        return contents, filename, uptodate
 
 
 def render_template(cwd, template_path, context):
@@ -17,9 +42,13 @@ def render_template(cwd, template_path, context):
     :rtype: basestring
     """
     env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(cwd),
+        loader=FilePathLoader(cwd),
         undefined=jinja2.StrictUndefined # raises errors for undefined variables
     )
+
+    # Register extras
+    env.filters['docker_link'] = filters.docker_link
+
     return env \
         .get_template(template_path) \
         .render(context) \

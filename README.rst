@@ -23,6 +23,12 @@ Installation
 
     pip install j2cli
 
+To enable the YAML support with `pyyaml <http://pyyaml.org/>`__:
+
+::
+
+    pip install j2cli[yaml]
+
 Usage
 -----
 
@@ -86,8 +92,38 @@ There is some special behavior with environment variables:
 Formats
 -------
 
+env
+~~~
+
+Data input from environment variables.
+
+Render directly from the current environment variable values:
+
+::
+
+    $ j2 config.j2
+
+Or alternatively, read the values from a file:
+
+::
+
+    NGINX_HOSTNAME=localhost
+    NGINX_WEBROOT=/var/www/project
+    NGINX_LOGS=/var/log/nginx/
+
+And render with:
+
+::
+
+    $ j2 config.j2 data.env
+    $ env | j2 --format=env config.j2.
+
+This is especially useful with Docker to link containers together.
+
 ini
 ~~~
+
+INI data input format.
 
 data.ini:
 
@@ -107,6 +143,8 @@ Usage:
 
 json
 ~~~~
+
+JSON data input format
 
 data.json:
 
@@ -130,6 +168,8 @@ Usage:
 yaml
 ~~~~
 
+YAML data input format.
+
 data.yaml:
 
 ::
@@ -146,29 +186,39 @@ Usage:
     $ j2 config.j2 data.yml
     $ cat data.yml | j2 --format=yaml config.j2
 
-env
-~~~
+Extras
+======
 
-Render directly from environment variable values:
+Filters
+-------
 
-::
+``docker_link(value, format='{addr}:{port}')``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    $ j2 config.j2
+Given a Docker Link environment variable value, format it into something
+else.
 
-Or read them from a file:
-
-::
-
-    NGINX_HOSTNAME=localhost
-    NGINX_WEBROOT=/var/www/project
-    NGINX_LOGS=/var/log/nginx/
-
-And render with:
+This first parses a Docker Link value like this:
 
 ::
 
-    $ j2 config.j2 data.env
-    $ env | j2 --format=env config.j2.
+    DB_PORT=tcp://172.17.0.5:5432
 
-.. |Build Status| image:: https://travis-ci.org/kolypto/j2cli.svg?branch=v0.3.0-0
+Into a dict:
+
+.. code:: python
+
+    {
+      'proto': 'tcp',
+      'addr': '172.17.0.5',
+      'port': '5432'
+    }
+
+And then uses ``format`` to format it, where the default format is
+'{addr}:{port}'.
+
+More info here: `Docker
+Links <https://docs.docker.com/userguide/dockerlinks/>`__
+
+.. |Build Status| image:: https://travis-ci.org/kolypto/j2cli.svg
    :target: https://travis-ci.org/kolypto/j2cli

@@ -1,17 +1,13 @@
 all:
 
-.PHONY: README.md env test test3 check clean build publish install
+SHELL := /bin/bash
+.PHONY: clean build publish
 
-# Run tests
-test:
-	@nosetests tests/
-test3:
-	@nosetests3 tests/
 # Package
-check:
-	@./setup.py check
 clean:
-	@rm -rf build/ dist/ *.egg-info/ README.rst
+	@rm -rf build/ dist/ *.egg-info/ README.md README.rst
+README.md: $(shell find misc/ j2cli/)
+	@python misc/_doc/README.py | j2 -f json misc/_doc/README.md.j2 > $@
 README.rst: README.md
 	@pandoc -f markdown -t rst -o README.rst README.md
 build: README.rst

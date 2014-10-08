@@ -1,6 +1,7 @@
 # ===[ APP ]=== #
 
 # ===[ PYTHON PACKAGE ]=== #
+/.tox/
 /build/
 /dist/
 /MANIFEST

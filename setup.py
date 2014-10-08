@@ -18,7 +18,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='j2cli',
-    version='0.3.0-1',
+    version='0.3.1-0',
     author='Mark Vartanyan',
     author_email='kolypto@gmail.com',
 
@@ -40,7 +40,7 @@ setup(
         'jinja2 >= 2.7.2',
     ],
     extras_require={
-        '_dev': ['wheel', 'nose'],
+        'yaml': ['pyyaml',]
     },
     include_package_data=True,
     zip_safe=False,

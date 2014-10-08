@@ -1,10 +1,7 @@
 language: python
-python:
-  - "2.7"
-#  - "3.3" # not so fast :)
-
 install:
-  - "pip install -e '.[_dev]'"
-
-script: make test
-
+  - pip install tox
+script:
+  - tox
+env:
+  - TOXENV=py27

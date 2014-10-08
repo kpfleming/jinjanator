@@ -3,9 +3,21 @@ import sys
 #region Parsers
 
 def _parse_ini(data_string):
-    """ Parse INI
-    :type data_string: basestring
-    :rtype: dict
+    """ INI data input format.
+
+    data.ini:
+
+    ```
+    [nginx]
+    hostname=localhost
+    webroot=/var/www/project
+    logs=/var/log/nginx/
+    ```
+
+    Usage:
+
+        $ j2 config.j2 data.ini
+        $ cat data.ini | j2 --format=ini config.j2
     """
     from io import BytesIO
 
@@ -29,23 +41,67 @@ def _parse_ini(data_string):
     return ini.as_dict()
 
 def _parse_json(data_string):
-    """ Parse JSON
-    :type data_string: basestring
-    :rtype: dict
+    """ JSON data input format
+
+    data.json:
+
+    ```
+    {
+        "nginx":{
+            "hostname": "localhost",
+            "webroot": "/var/www/project",
+            "logs": "/var/log/nginx/"
+        }
+    }
+    ```
+
+    Usage:
+
+        $ j2 config.j2 data.json
+        $ cat data.json | j2 --format=ini config.j2
     """
     return json.loads(data_string)
 
 def _parse_yaml(data_string):
-    """ Parse YAML
-    :type data_string: basestring
-    :rtype: dict
+    """ YAML data input format.
+
+    data.yaml:
+
+    ```
+    nginx:
+      hostname: localhost
+      webroot: /var/www/project
+      logs: /var/log/nginx
+    ```
+
+    Usage:
+
+        $ j2 config.j2 data.yml
+        $ cat data.yml | j2 --format=yaml config.j2
     """
     return yaml.load(data_string)
 
 def _parse_env(data_string):
-    """ Parse environment variables file
-    :type data_string: str|dict
-    :rtype: dict
+    """ Data input from environment variables.
+
+    Render directly from the current environment variable values:
+
+        $ j2 config.j2
+
+    Or alternatively, read the values from a file:
+
+    ```
+    NGINX_HOSTNAME=localhost
+    NGINX_WEBROOT=/var/www/project
+    NGINX_LOGS=/var/log/nginx/
+    ```
+
+    And render with:
+
+        $ j2 config.j2 data.env
+        $ env | j2 --format=env config.j2.
+
+    This is especially useful with Docker to link containers together.
     """
     # Parse
     if isinstance(data_string, basestring):
