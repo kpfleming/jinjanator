@@ -4,4 +4,4 @@ install:
 script:
   - tox
 env:
-  - TOXENV=py27
+  - TOXENV=py26
