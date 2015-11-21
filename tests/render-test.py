@@ -19,7 +19,8 @@ class RenderTest(unittest.TestCase):
 
   access_log /var/log/nginx//http.access.log combined;
   error_log  /var/log/nginx//http.error.log;
-}"""
+}
+"""
 
     def _testme(self, argv, stdin=None, env=None):
         """ Helper test shortcut """
