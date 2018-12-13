@@ -1,4 +1,4 @@
-|Build Status|
+`Build Status <https://travis-ci.org/kolypto/j2cli>`__
 
 j2cli - Jinja2 Command-Line Tool
 ================================
@@ -21,13 +21,13 @@ Installation
 
 ::
 
-    pip install j2cli
+   pip install j2cli
 
 To enable the YAML support with `pyyaml <http://pyyaml.org/>`__:
 
 ::
 
-    pip install j2cli[yaml]
+   pip install j2cli[yaml]
 
 Usage
 -----
@@ -36,37 +36,37 @@ Compile a template using INI-file data source:
 
 ::
 
-    $ j2 config.j2 data.ini
+   $ j2 config.j2 data.ini
 
 Compile using JSON data source:
 
 ::
 
-    $ j2 config.j2 data.json
+   $ j2 config.j2 data.json
 
 Compile using YAML data source (requires PyYAML):
 
 ::
 
-    $ j2 config.j2 data.yaml
+   $ j2 config.j2 data.yaml
 
 Compile using JSON data on stdin:
 
 ::
 
-    $ curl http://example.com/service.json | j2 --format=json config.j2
+   $ curl http://example.com/service.json | j2 --format=json config.j2
 
 Compile using environment variables (hello Docker!):
 
 ::
 
-    $ j2 config.j2
+   $ j2 config.j2
 
 Or even read environment variables from a file:
 
 ::
 
-    $ j2 --format=env config.j2 data.env
+   $ j2 --format=env config.j2 data.env
 
 Reference
 =========
@@ -86,7 +86,7 @@ There is some special behavior with environment variables:
 
 -  When ``data`` is not provided (data is ``-``), ``--format`` defaults
    to ``env`` and thus reads environment variables
--  When ``--format=env``, it can read a special "environment variables"
+-  When ``--format=env``, it can read a special “environment variables”
    file made like this: ``env > /tmp/file.env``
 
 Formats
@@ -101,22 +101,22 @@ Render directly from the current environment variable values:
 
 ::
 
-    $ j2 config.j2
+   $ j2 config.j2
 
 Or alternatively, read the values from a file:
 
 ::
 
-    NGINX_HOSTNAME=localhost
-    NGINX_WEBROOT=/var/www/project
-    NGINX_LOGS=/var/log/nginx/
+   NGINX_HOSTNAME=localhost
+   NGINX_WEBROOT=/var/www/project
+   NGINX_LOGS=/var/log/nginx/
 
 And render with:
 
 ::
 
-    $ j2 config.j2 data.env
-    $ env | j2 --format=env config.j2.
+   $ j2 config.j2 data.env
+   $ env | j2 --format=env config.j2.
 
 This is especially useful with Docker to link containers together.
 
@@ -129,17 +129,17 @@ data.ini:
 
 ::
 
-    [nginx]
-    hostname=localhost
-    webroot=/var/www/project
-    logs=/var/log/nginx/
+   [nginx]
+   hostname=localhost
+   webroot=/var/www/project
+   logs=/var/log/nginx/
 
 Usage:
 
 ::
 
-    $ j2 config.j2 data.ini
-    $ cat data.ini | j2 --format=ini config.j2
+   $ j2 config.j2 data.ini
+   $ cat data.ini | j2 --format=ini config.j2
 
 json
 ~~~~
@@ -150,20 +150,20 @@ data.json:
 
 ::
 
-    {
-        "nginx":{
-            "hostname": "localhost",
-            "webroot": "/var/www/project",
-            "logs": "/var/log/nginx/"
-        }
-    }
+   {
+       "nginx":{
+           "hostname": "localhost",
+           "webroot": "/var/www/project",
+           "logs": "/var/log/nginx/"
+       }
+   }
 
 Usage:
 
 ::
 
-    $ j2 config.j2 data.json
-    $ cat data.json | j2 --format=ini config.j2
+   $ j2 config.j2 data.json
+   $ cat data.json | j2 --format=ini config.j2
 
 yaml
 ~~~~
@@ -174,17 +174,17 @@ data.yaml:
 
 ::
 
-    nginx:
-      hostname: localhost
-      webroot: /var/www/project
-      logs: /var/log/nginx
+   nginx:
+     hostname: localhost
+     webroot: /var/www/project
+     logs: /var/log/nginx
 
 Usage:
 
 ::
 
-    $ j2 config.j2 data.yml
-    $ cat data.yml | j2 --format=yaml config.j2
+   $ j2 config.j2 data.yml
+   $ cat data.yml | j2 --format=yaml config.j2
 
 Extras
 ======
@@ -202,23 +202,20 @@ This first parses a Docker Link value like this:
 
 ::
 
-    DB_PORT=tcp://172.17.0.5:5432
+   DB_PORT=tcp://172.17.0.5:5432
 
 Into a dict:
 
 .. code:: python
 
-    {
-      'proto': 'tcp',
-      'addr': '172.17.0.5',
-      'port': '5432'
-    }
+   {
+     'proto': 'tcp',
+     'addr': '172.17.0.5',
+     'port': '5432'
+   }
 
 And then uses ``format`` to format it, where the default format is
-'{addr}:{port}'.
+‘{addr}:{port}’.
 
 More info here: `Docker
 Links <https://docs.docker.com/userguide/dockerlinks/>`__
-
-.. |Build Status| image:: https://travis-ci.org/kolypto/j2cli.svg
-   :target: https://travis-ci.org/kolypto/j2cli

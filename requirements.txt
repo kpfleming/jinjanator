@@ -2,3 +2,4 @@ wheel
 nose
 exdoc
 pyyaml
+j2cli
