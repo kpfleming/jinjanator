@@ -30,7 +30,7 @@ def docker_link(value, format='{addr}:{port}'):
     :return: Formatted string
     """
     # pass undefined values on down the pipeline
-    if(is_undefined(value)):
+    if is_undefined(value):
         return value
 
     # Parse the value
