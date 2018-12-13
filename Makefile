@@ -12,5 +12,7 @@ README.rst: README.md
 	@pandoc -f markdown -t rst -o README.rst README.md
 build: README.rst
 	@./setup.py build sdist bdist_wheel
+publish-test: README.rst
+	@twine upload --repository testpypi dist/*
 publish: README.rst
-	@./setup.py build sdist bdist_wheel register upload -r pypi
+	@twine upload dist/*

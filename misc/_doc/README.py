@@ -21,4 +21,4 @@ README = {
     }
 }
 
-print json.dumps(README)
+print(json.dumps(README))
