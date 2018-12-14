@@ -29,6 +29,51 @@ To enable the YAML support with `pyyaml <http://pyyaml.org/>`__:
 
    pip install j2cli[yaml]
 
+Tutorial
+--------
+
+Suppose, you want to have an nginx configuration file template,
+``nginx.j2``:
+
+.. code:: jinja2
+
+   server {
+     listen 80;
+     server_name {{ nginx.hostname }};
+
+     root {{ nginx.webroot }};
+     index index.htm;
+   }
+
+And you have a JSON file with the data, ``nginx.json``:
+
+.. code:: json
+
+   {
+       "nginx":{
+           "hostname": "localhost",
+           "webroot": "/var/www/project"
+       }
+   }
+
+This is how you render it into a working configuration file:
+
+.. code:: bash
+
+   $ j2 -f json nginx.j2 nginx.json > nginx.conf
+
+The output is saved to ``nginx.conf``:
+
+::
+
+   server {
+     listen 80;
+     server_name localhost;
+
+     root /var/www/project;
+     index index.htm;
+   }
+
 Usage
 -----
 
@@ -191,22 +236,6 @@ Extras
 
 Filters
 -------
-
-``is_undefined(obj)``
-~~~~~~~~~~~~~~~~~~~~~
-
-Check if the object passed is undefined. This does nothing more than
-performing an instance check against :class:``Undefined`` but looks
-nicer. This can be used for custom filters or tests that want to react
-to undefined variables. For example a custom default filter can look
-like this::
-
-::
-
-   def default(var, default=''):
-       if is_undefined(var):
-           return default
-       return var
 
 ``docker_link(value, format='{addr}:{port}')``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

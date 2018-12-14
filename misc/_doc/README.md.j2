@@ -26,6 +26,49 @@ To enable the YAML support with [pyyaml](http://pyyaml.org/):
 pip install j2cli[yaml]
 ```
 
+## Tutorial
+
+Suppose, you want to have an nginx configuration file template, `nginx.j2`:
+
+{% raw %}```jinja2
+server {
+  listen 80;
+  server_name {{ nginx.hostname }};
+
+  root {{ nginx.webroot }};
+  index index.htm;
+}
+```{% endraw %}
+
+And you have a JSON file with the data, `nginx.json`:
+
+```json
+{
+    "nginx":{
+        "hostname": "localhost",
+        "webroot": "/var/www/project"
+    }
+}
+```
+
+This is how you render it into a working configuration file:
+
+```bash
+$ j2 -f json nginx.j2 nginx.json > nginx.conf
+```
+
+The output is saved to `nginx.conf`:
+
+```
+server {
+  listen 80;
+  server_name localhost;
+
+  root /var/www/project;
+  index index.htm;
+}
+```
+
 ## Usage
 
 Compile a template using INI-file data source:

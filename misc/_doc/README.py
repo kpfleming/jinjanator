@@ -17,7 +17,7 @@ README = {
     'extras': {
         'filters': [doc(v)
                     for k, v in getmembers(j2cli.extras.filters)
-                    if inspect.isfunction(v)]
+                    if inspect.isfunction(v) and inspect.getmodule(v) is j2cli.extras.filters]
     }
 }
 
