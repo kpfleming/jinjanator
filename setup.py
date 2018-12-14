@@ -3,22 +3,25 @@
 j2cli
 ==========
 
-Command-line interface to [Jinja2](http://jinja.pocoo.org/docs/) for templating in shell scripts.
+``j2cli`` is a command-line tool for templating in shell-scripts,
+leveraging the `Jinja2 <http://jinja.pocoo.org/docs/>`__ library.
 
 Features:
 
-* Jinja2 templating
-* Allows to use environment variables! Hello [Docker](http://www.docker.com/) :)
-* INI, YAML, JSON data sources supported
+-  Jinja2 templating
+-  Allows to use environment variables! Hello
+   `Docker <http://www.docker.com/>`__ :)
+-  INI, YAML, JSON data sources supported
 
-Inspired by [mattrobenolt/jinja2-cli](https://github.com/mattrobenolt/jinja2-cli)
+Inspired by
+`mattrobenolt/jinja2-cli <https://github.com/mattrobenolt/jinja2-cli>`__
 """
 
 from setuptools import setup, find_packages
 
 setup(
     name='j2cli',
-    version='0.3.2-0',
+    version='0.3.2-1',
     author='Mark Vartanyan',
     author_email='kolypto@gmail.com',
 

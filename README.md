@@ -155,6 +155,18 @@ Extras
 ## Filters
 
 
+### `is_undefined(obj)`
+Check if the object passed is undefined.  This does nothing more than
+performing an instance check against :class:`Undefined` but looks nicer.
+This can be used for custom filters or tests that want to react to
+undefined variables.  For example a custom default filter can look like
+this::
+
+    def default(var, default=''):
+        if is_undefined(var):
+            return default
+        return var
+
 ### `docker_link(value, format='{addr}:{port}')`
 Given a Docker Link environment variable value, format it into something else.
 
