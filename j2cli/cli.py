@@ -77,6 +77,8 @@ def render_command(cwd, environ, stdin, argv):
                         version='j2cli {0}, Jinja2 {1}'.format(__version__, jinja2.__version__))
 
     parser.add_argument('-f', '--format', default='?', help='Input data format', choices=['?'] + list(FORMATS.keys()))
+    parser.add_argument('-e', '--import-env', default=None, metavar='VAR', dest='import_env',
+                        help='Import environment variables as `var` variable. Use empty string to import into the top level')
     parser.add_argument('template', help='Template file to process')
     parser.add_argument('data', nargs='?', default='-', help='Input data path')
     args = parser.parse_args(argv)
@@ -104,7 +106,8 @@ def render_command(cwd, environ, stdin, argv):
     context = read_context_data(
         args.format,
         input_data_f,
-        environ
+        environ,
+        args.import_env
     )
 
     # Render

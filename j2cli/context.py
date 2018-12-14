@@ -167,15 +167,18 @@ except ImportError:
 
 
 
-def read_context_data(format, f, environ):
+def read_context_data(format, f, environ, import_env=None):
     """ Read context data into a dictionary
     :param format: Data format
     :type format: str
-    :param f: Data file stream, or None
+    :param f: Data file stream, or None (for env)
     :type f: file|None
+    :param import_env: Variable name, if any, that will contain environment variables of the template.
+    :type import_env: bool|None
     :return: Dictionary with the context data
     :rtype: dict
     """
+
     # Special case: environment variables
     if format == 'env' and f is None:
         return _parse_env(environ)
@@ -186,4 +189,14 @@ def read_context_data(format, f, environ):
     # Parse it
     if format not in FORMATS:
         raise ValueError('{0} format unavailable'.format(format))
-    return FORMATS[format](data_string)
+    context = FORMATS[format](data_string)
+
+    # Import environment
+    if import_env is not None:
+        if import_env == '':
+            context.update(environ)
+        else:
+            context[import_env] = environ
+
+    # Done
+    return context
