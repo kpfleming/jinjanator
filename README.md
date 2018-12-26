@@ -94,6 +94,7 @@ Compile using environment variables (hello Docker!):
 Or even read environment variables from a file:
 
     $ j2 --format=env config.j2 data.env
+
     
 # Reference
 `j2` accepts the following arguments:
@@ -104,6 +105,9 @@ Or even read environment variables from a file:
 Options:
 
 * `--format, -f`: format for the data file. The default is `?`: guess from file extension.
+* `--import-env VAR, -e EVAR`: import all environment variables into the template as `VAR`.
+    To import environment variables into the global scope, give it an empty string: `--import-env=`.
+    (This will overwrite any existing variables!)
 
 There is some special behavior with environment variables:
 
@@ -218,3 +222,4 @@ Into a dict:
 And then uses `format` to format it, where the default format is '{addr}:{port}'.
 
 More info here: [Docker Links](https://docs.docker.com/userguide/dockerlinks/)
+

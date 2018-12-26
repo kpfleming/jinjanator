@@ -126,6 +126,10 @@ Options:
 
 -  ``--format, -f``: format for the data file. The default is ``?``:
    guess from file extension.
+-  ``--import-env VAR, -e EVAR``: import all environment variables into
+   the template as ``VAR``. To import environment variables into the
+   global scope, give it an empty string: ``--import-env=``. (This will
+   overwrite any existing variables!)
 
 There is some special behavior with environment variables:
 
