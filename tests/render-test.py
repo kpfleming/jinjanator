@@ -120,7 +120,7 @@ class RenderTest(unittest.TestCase):
             self._testme(['--format=env', '--filters=resources/custom_filters.py', template], '(1)', env=dict(a='1'))
 
     def test_custom_tests(self):
-        with mktemp('{% if a is custom_odd %}odd{% endif %}') as template:
+        with mktemp('{% if a|int is custom_odd %}odd{% endif %}') as template:
             self._testme(['--format=env', '--tests=resources/custom_tests.py', template], 'odd', env=dict(a='1'))
 
 
