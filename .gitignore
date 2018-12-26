@@ -1,10 +1,10 @@
 # ===[ APP ]=== #
 
 # ===[ PYTHON PACKAGE ]=== #
-/.tox/
 /build/
 /dist/
 /MANIFEST
+/*.egg/
 /*.egg-info/
 
 # ===[ OTHER ]=== #
@@ -25,6 +25,7 @@
 Thumbs.db
 
 # Utils
+/.tox/
 .sass-cache/
 .coverage
 
