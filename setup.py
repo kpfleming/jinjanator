@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-j2cli - Jinja2 Command-Line Tool
+""" j2cli - Jinja2 Command-Line Tool
 ================================
 
 `j2cli` is a command-line tool for templating in shell-scripts,
@@ -20,14 +19,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='j2cli',
-    version='0.3.4-0',
+    version='0.3.4-1',
     author='Mark Vartanyan',
     author_email='kolypto@gmail.com',
 
     url='https://github.com/kolypto/j2cli',
     license='BSD',
     description='Command-line interface to Jinja2 for templating in shell scripts.',
-    long_description=__doc__,
+    long_description=__doc__,  # can't do open('README.md').read() because we're describing self
     long_description_content_type='text/markdown',
     keywords=['Jinja2', 'templating', 'command-line', 'CLI'],
 

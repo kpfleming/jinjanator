@@ -1,4 +1,4 @@
-## 0.3.4
+## 0.3.4 (2018-12-26)
 * `-o outfile` option writes to a file
 
 ## 0.3.3
