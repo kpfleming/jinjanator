@@ -22,8 +22,8 @@ class FilePathLoader(jinja2.BaseLoader):
 
         # Read
         try:
-            with io.open(template, 'rb') as f:
-                contents = f.read().decode(self.encoding)
+            with io.open(template, 'rt', encoding=self.encoding) as f:
+                contents = f.read()
         except IOError:
             raise jinja2.TemplateNotFound(template)
 
