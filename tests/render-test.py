@@ -97,3 +97,9 @@ class RenderTest(unittest.TestCase):
         with mktemp('{{ a }}/{{ B }}') as template:
             with mktemp('{"a":1,"B":1}') as context:
                 self._testme(['--format=json', '--import-env=', template, context], '1/2', env=dict(B='2'))
+
+    def test_env_file__equals_sign_in_value(self):
+        # Test whether environment variables with "=" in the value are parsed correctly
+        with mktemp('{{ A|default('') }}/{{ B }}/{{ C }}') as template:
+            with mktemp('A\nB=1\nC=val=1\n') as context:
+                self._testme(['--format=env', template, context], '/1/val=1', env=dict(B='2'))

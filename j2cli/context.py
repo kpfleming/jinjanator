@@ -116,7 +116,7 @@ def _parse_env(data_string):
             (
                 list(map(
                     str.strip,
-                    line.split('=')
+                    line.split('=', 1)
                 ))
                 for line in data_string.split("\n"))
         )
