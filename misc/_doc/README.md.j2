@@ -11,6 +11,7 @@ Features:
 * Jinja2 templating
 * Allows to use environment variables! Hello [Docker](http://www.docker.com/) :)
 * INI, YAML, JSON data sources supported
+* Environment variables in templates
 
 Inspired by [mattrobenolt/jinja2-cli](https://github.com/mattrobenolt/jinja2-cli)
 

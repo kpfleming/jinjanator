@@ -1,20 +1,19 @@
 #!/usr/bin/env python
 """
-j2cli
-==========
+j2cli - Jinja2 Command-Line Tool
+================================
 
-``j2cli`` is a command-line tool for templating in shell-scripts,
-leveraging the `Jinja2 <http://jinja.pocoo.org/docs/>`__ library.
+`j2cli` is a command-line tool for templating in shell-scripts,
+leveraging the [Jinja2](http://jinja.pocoo.org/docs/) library.
 
 Features:
 
--  Jinja2 templating
--  Allows to use environment variables! Hello
-   `Docker <http://www.docker.com/>`__ :)
--  INI, YAML, JSON data sources supported
+* Jinja2 templating
+* Allows to use environment variables! Hello [Docker](http://www.docker.com/) :)
+* INI, YAML, JSON data sources supported
+* Environment variables in templates
 
-Inspired by
-`mattrobenolt/jinja2-cli <https://github.com/mattrobenolt/jinja2-cli>`__
+Inspired by [mattrobenolt/jinja2-cli](https://github.com/mattrobenolt/jinja2-cli)
 """
 
 from setuptools import setup, find_packages
