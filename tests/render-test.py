@@ -1,5 +1,9 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 import unittest
-import os, os.path, tempfile
+import os, io, os.path, tempfile
 from contextlib import contextmanager
 
 from j2cli.cli import render_command
@@ -8,7 +12,7 @@ from j2cli.cli import render_command
 def mktemp(contents):
     """ Create a temporary file with the given contents, and yield its path """
     _, path = tempfile.mkstemp()
-    fp = open(path, 'w+')
+    fp = io.open(path, 'wt+', encoding='utf-8')
     fp.write(contents)
     fp.flush()
     try:
@@ -28,7 +32,7 @@ class RenderTest(unittest.TestCase):
         """ Helper test shortcut """
         result = render_command(os.getcwd(), env or {}, stdin, argv)
         if isinstance(result, bytes):
-            result = result.decode()
+            result = result.decode('utf-8')
         self.assertEqual(result, expected_output)
 
     #: The expected output
@@ -102,4 +106,12 @@ class RenderTest(unittest.TestCase):
         # Test whether environment variables with "=" in the value are parsed correctly
         with mktemp('{{ A|default('') }}/{{ B }}/{{ C }}') as template:
             with mktemp('A\nB=1\nC=val=1\n') as context:
-                self._testme(['--format=env', template, context], '/1/val=1', env=dict(B='2'))
+                self._testme(['--format=env', template, context], '/1/val=1')
+
+    def test_unicode(self):
+        # Test how unicode is handled
+        # I'm using Russian language for unicode :)
+        with mktemp('Проверка {{ a }} связи!') as template:
+            with mktemp('{"a": "широкополосной"}') as context:
+                self._testme(['--format=json', template, context], 'Проверка широкополосной связи!')
+

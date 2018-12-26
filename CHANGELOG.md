@@ -4,3 +4,4 @@
 * New CLI option: `--import-env` that imports environment variables into the template
 * Fix: trailing newline is not removed anymore
 * Fix: env vars with "=" in values are now parsed correctly
+* Fix: now unicode templates & contexts are fully supported
