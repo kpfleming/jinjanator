@@ -75,6 +75,27 @@ The output is saved to ``nginx.conf``:
      index index.htm;
    }
 
+Alternatively, you can use the ``-o nginx.conf`` option.
+
+Tutorial with environment variables
+-----------------------------------
+
+Suppose, you have a very simple template, ``person.xml``:
+
+.. code:: jinja2
+
+   <data><name>{{ name }}</name><age>{{ age }}</age></data>
+
+What is the easiest way to use j2 here? Use environment variables in
+your bash script:
+
+.. code:: bash
+
+   $ export name=Andrew
+   $ export age=31
+   $ j2 /tmp/person.xml
+   <data><name>Andrew</name><age>31</age></data>
+
 Usage
 -----
 
@@ -131,6 +152,7 @@ Options:
    the template as ``VAR``. To import environment variables into the
    global scope, give it an empty string: ``--import-env=``. (This will
    overwrite any existing variables!)
+-  ``-o outfile``: Write rendered template to a file
 -  ``--filters filters.py``: Load custom Jinja2 filters and tests from a
    Python file. Will load all top-level functions and register them as
    filters. This option can be used multiple times to import several

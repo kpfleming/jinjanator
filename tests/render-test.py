@@ -123,4 +123,10 @@ class RenderTest(unittest.TestCase):
         with mktemp('{% if a|int is custom_odd %}odd{% endif %}') as template:
             self._testme(['--format=env', '--tests=resources/custom_tests.py', template], 'odd', env=dict(a='1'))
 
-
+    def test_output_file(self):
+        with mktemp('{{ a }}') as template:
+            try:
+                self._testme(['-o', '/tmp/j2-out', template], '', env=dict(a='123'))
+                self.assertEqual('123', io.open('/tmp/j2-out', 'r').read())
+            finally:
+                os.unlink('/tmp/j2-out')

@@ -1,3 +1,6 @@
+## 0.3.4
+* `-o outfile` option writes to a file
+
 ## 0.3.3
 * Python 3 support. 
   Supported versions: 2.6, 2.7, 3.6, 3.7

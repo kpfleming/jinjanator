@@ -104,6 +104,7 @@ def render_command(cwd, environ, stdin, argv):
                         help='Load custom Jinja2 filters from a Python file: all top-level functions are imported.')
     parser.add_argument('--tests', nargs='+', default=[], metavar='python-file', dest='tests',
                         help='Load custom Jinja2 tests from a Python file.')
+    parser.add_argument('-o', metavar='outfile', dest='output_file', help="Output to a file instead of stdout")
     parser.add_argument('template', help='Template file to process')
     parser.add_argument('data', nargs='?', default='-', help='Input data path')
     args = parser.parse_args(argv)
@@ -146,7 +147,17 @@ def render_command(cwd, environ, stdin, argv):
         renderer.import_tests(fname)
 
     # Render
-    return renderer.render(args.template, context)
+    result = renderer.render(args.template, context)
+
+    # -o
+    if args.output_file:
+        with io.open(args.output_file, 'wt', encoding='utf-8') as f:
+            f.write(result.decode('utf-8'))
+            f.close()
+        return ''
+
+    # Finish
+    return result
 
 
 
