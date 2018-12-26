@@ -130,6 +130,12 @@ Options:
    the template as ``VAR``. To import environment variables into the
    global scope, give it an empty string: ``--import-env=``. (This will
    overwrite any existing variables!)
+-  ``--filters filters.py``: Load custom Jinja2 filters and tests from a
+   Python file. Will load all top-level functions and register them as
+   filters. This option can be used multiple times to import several
+   files.
+-  ``--tests tests.py``: Load custom Jinja2 filters and tests from a
+   Python file.
 
 There is some special behavior with environment variables:
 

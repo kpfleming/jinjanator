@@ -5,6 +5,8 @@ import jinja2
 import jinja2.loaders
 from . import __version__
 
+import imp, inspect
+
 from .context import read_context_data, FORMATS
 from .extras import filters
 
@@ -32,28 +34,48 @@ class FilePathLoader(jinja2.BaseLoader):
         return contents, filename, uptodate
 
 
-def render_template(cwd, template_path, context):
-    """ Render a template
-    :param template_path: Path to the template file
-    :type template_path: basestring
-    :param context: Template data
-    :type context: dict
-    :return: Rendered template
-    :rtype: basestring
-    """
-    env = jinja2.Environment(
-        loader=FilePathLoader(cwd),
-        undefined=jinja2.StrictUndefined, # raises errors for undefined variables
-        keep_trailing_newline=True
-    )
+class Jinja2TemplateRenderer(object):
+    """ Template renderer """
 
-    # Register extras
-    env.filters['docker_link'] = filters.docker_link
+    def __init__(self, cwd):
+        self._env = jinja2.Environment(
+            loader=FilePathLoader(cwd),
+            undefined=jinja2.StrictUndefined, # raises errors for undefined variables
+            keep_trailing_newline=True
+        )
 
-    return env \
-        .get_template(template_path) \
-        .render(context) \
-        .encode('utf-8')
+    def register_filters(self, filters):
+        self._env.filters.update(filters)
+
+    def register_tests(self, tests):
+        self._env.tests.update(tests)
+
+    def import_filters(self, filename):
+        self.register_filters(self._import_functions(filename))
+
+    def import_tests(self, filename):
+        self.register_tests(self._import_functions(filename))
+
+    def _import_functions(self, filename):
+        m = imp.load_source('imported-funcs', filename)
+        return {name: func
+                for name, func in inspect.getmembers(m)
+                if inspect.isfunction(func)}
+
+    def render(self, template_path, context):
+        """ Render a template
+        :param template_path: Path to the template file
+        :type template_path: basestring
+        :param context: Template data
+        :type context: dict
+        :return: Rendered template
+        :rtype: basestring
+        """
+        return self._env \
+            .get_template(template_path) \
+            .render(context) \
+            .encode('utf-8')
+
 
 
 def render_command(cwd, environ, stdin, argv):
@@ -80,6 +102,10 @@ def render_command(cwd, environ, stdin, argv):
     parser.add_argument('-f', '--format', default='?', help='Input data format', choices=['?'] + list(FORMATS.keys()))
     parser.add_argument('-e', '--import-env', default=None, metavar='VAR', dest='import_env',
                         help='Import environment variables as `var` variable. Use empty string to import into the top level')
+    parser.add_argument('--filters', nargs='+', default=[], metavar='python-file', dest='filters',
+                        help='Load custom Jinja2 filters from a Python file: all top-level functions are imported.')
+    parser.add_argument('--tests', nargs='+', default=[], metavar='python-file', dest='tests',
+                        help='Load custom Jinja2 tests from a Python file.')
     parser.add_argument('template', help='Template file to process')
     parser.add_argument('data', nargs='?', default='-', help='Input data path')
     args = parser.parse_args(argv)
@@ -111,12 +137,19 @@ def render_command(cwd, environ, stdin, argv):
         args.import_env
     )
 
+    # Renderer
+    renderer = Jinja2TemplateRenderer(cwd)
+
+    # Filters, Tests
+    renderer.register_filters({'docker_link': filters.docker_link})
+    for fname in args.filters:
+        renderer.import_filters(fname)
+    for fname in args.tests:
+        renderer.import_tests(fname)
+
     # Render
-    return render_template(
-        cwd,
-        args.template,
-        context
-    )
+    return renderer.render(args.template, context)
+
 
 
 def main():
