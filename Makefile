@@ -17,3 +17,7 @@ publish-test: README.rst
 	@twine upload --repository pypitest dist/*
 publish: README.rst
 	@twine upload dist/*
+
+# Just remember
+# Test in Python 2.6:
+# docker run --rm -it -v $(realpath .):/app mrupgrade/deadsnakes:2.6 bash -c 'cd /app && pip install -e . && pip install nose tox && nosetests'
