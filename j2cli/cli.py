@@ -58,9 +58,7 @@ class Jinja2TemplateRenderer(object):
 
     def _import_functions(self, filename):
         m = imp.load_source('imported-funcs', filename)
-        return {name: func
-                for name, func in inspect.getmembers(m)
-                if inspect.isfunction(func)}
+        return dict((name, func) for name, func in inspect.getmembers(m) if inspect.isfunction(func))
 
     def render(self, template_path, context):
         """ Render a template
