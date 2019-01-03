@@ -9,10 +9,9 @@ leveraging the `Jinja2 <http://jinja.pocoo.org/docs/>`__ library.
 Features:
 
 -  Jinja2 templating
--  Allows to use environment variables! Hello
-   `Docker <http://www.docker.com/>`__ :)
 -  INI, YAML, JSON data sources supported
--  Environment variables in templates
+-  Allows the use of environment variables in templates! Hello
+   `Docker <http://www.docker.com/>`__ :)
 
 Inspired by
 `mattrobenolt/jinja2-cli <https://github.com/mattrobenolt/jinja2-cli>`__
