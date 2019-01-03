@@ -1,3 +1,7 @@
+## 0.3.5 (2019-01-03)
+* New option: `--undefined` that allows undefined variables
+* Fix: unicode support in environment variables
+
 ## 0.3.4 (2018-12-26)
 * `-o outfile` option writes to a file
 

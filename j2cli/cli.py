@@ -37,10 +37,10 @@ class FilePathLoader(jinja2.BaseLoader):
 class Jinja2TemplateRenderer(object):
     """ Template renderer """
 
-    def __init__(self, cwd):
+    def __init__(self, cwd, allow_undefined):
         self._env = jinja2.Environment(
             loader=FilePathLoader(cwd),
-            undefined=jinja2.StrictUndefined, # raises errors for undefined variables
+            undefined=jinja2.Undefined if allow_undefined else jinja2.StrictUndefined,  # raise errors for undefineds?
             keep_trailing_newline=True
         )
 
@@ -104,6 +104,7 @@ def render_command(cwd, environ, stdin, argv):
                         help='Load custom Jinja2 filters from a Python file: all top-level functions are imported.')
     parser.add_argument('--tests', nargs='+', default=[], metavar='python-file', dest='tests',
                         help='Load custom Jinja2 tests from a Python file.')
+    parser.add_argument('--undefined', action='store_true', dest='undefined', help='Allow undefined variables to be used in templates (no error will be raised)')
     parser.add_argument('-o', metavar='outfile', dest='output_file', help="Output to a file instead of stdout")
     parser.add_argument('template', help='Template file to process')
     parser.add_argument('data', nargs='?', default='-', help='Input data path')
@@ -141,7 +142,7 @@ def render_command(cwd, environ, stdin, argv):
     )
 
     # Renderer
-    renderer = Jinja2TemplateRenderer(cwd)
+    renderer = Jinja2TemplateRenderer(cwd, args.undefined)
 
     # Filters, Tests
     renderer.register_filters({'docker_link': filters.docker_link})

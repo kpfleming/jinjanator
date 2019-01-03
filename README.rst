@@ -153,6 +153,9 @@ Options:
    global scope, give it an empty string: ``--import-env=``. (This will
    overwrite any existing variables!)
 -  ``-o outfile``: Write rendered template to a file
+-  ``--undefined``: Allow undefined variables to be used in templates
+   (no error will be raised)
+
 -  ``--filters filters.py``: Load custom Jinja2 filters and tests from a
    Python file. Will load all top-level functions and register them as
    filters. This option can be used multiple times to import several

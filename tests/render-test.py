@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import unittest
 import os, sys, io, os.path, tempfile
 from contextlib import contextmanager
+from jinja2.exceptions import UndefinedError
 
 from j2cli.cli import render_command
 
@@ -139,3 +140,10 @@ class RenderTest(unittest.TestCase):
                 self.assertEqual('123', io.open('/tmp/j2-out', 'r').read())
             finally:
                 os.unlink('/tmp/j2-out')
+
+    def test_undefined(self):
+        """ Test --undefined """
+        # `name` undefined: error
+        self.assertRaises(UndefinedError, self._testme, ['resources/name.j2'], u'Hello !\n', env=dict())
+        # `name` undefined: no error
+        self._testme(['--undefined', 'resources/name.j2'], u'Hello !\n', env=dict())
