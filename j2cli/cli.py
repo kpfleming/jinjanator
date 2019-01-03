@@ -128,7 +128,11 @@ def render_command(cwd, environ, stdin, argv):
     else:
         input_data_f = stdin if args.data == '-' else open(args.data)
 
-    # Read data
+    # Python 2: Encode environment variables as unicode
+    if sys.version_info[0] == 2 and args.format == 'env':
+        environ = dict((k.decode('utf-8'), v.decode('utf-8')) for k, v in environ.items())
+
+    # Read data)
     context = read_context_data(
         args.format,
         input_data_f,

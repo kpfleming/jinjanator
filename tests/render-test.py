@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 import unittest
-import os, io, os.path, tempfile
+import os, sys, io, os.path, tempfile
 from contextlib import contextmanager
 
 from j2cli.cli import render_command
@@ -114,6 +114,15 @@ class RenderTest(unittest.TestCase):
         with mktemp('Проверка {{ a }} связи!') as template:
             with mktemp('{"a": "широкополосной"}') as context:
                 self._testme(['--format=json', template, context], 'Проверка широкополосной связи!')
+
+        # Test case from issue #17: unicode environment variables
+        if sys.version_info[0] == 2:
+            # Python 2: environment variables are bytes
+            self._testme(['resources/name.j2'], u'Hello Jürgen!\n', env=dict(name=b'J\xc3\xbcrgen'))
+        else:
+            # Python 3: environment variables are unicode strings
+            self._testme(['resources/name.j2'], u'Hello Jürgen!\n', env=dict(name=u'Jürgen'))
+
 
     def test_custom_filters(self):
         with mktemp('{{ a|parentheses }}') as template:
