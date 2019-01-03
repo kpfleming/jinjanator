@@ -159,7 +159,7 @@ def render_command(cwd, environ, stdin, argv):
         with io.open(args.output_file, 'wt', encoding='utf-8') as f:
             f.write(result.decode('utf-8'))
             f.close()
-        return ''
+        return b''
 
     # Finish
     return result
