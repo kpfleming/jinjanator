@@ -1,7 +1,6 @@
 all:
 
 SHELL := /bin/bash
-.PHONY: clean build publish test test-tox test-docker
 
 # Package
 .PHONY: clean

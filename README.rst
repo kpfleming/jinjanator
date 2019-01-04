@@ -1,4 +1,5 @@
 `Build Status <https://travis-ci.org/kolypto/j2cli>`__
+`Pythons <.travis.yml>`__
 
 j2cli - Jinja2 Command-Line Tool
 ================================
