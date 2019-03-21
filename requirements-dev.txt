@@ -1,4 +1,3 @@
 wheel
 nose
 exdoc
-pyyaml

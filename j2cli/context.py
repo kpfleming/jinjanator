@@ -85,7 +85,15 @@ def _parse_yaml(data_string):
         $ j2 config.j2 data.yml
         $ cat data.yml | j2 --format=yaml config.j2
     """
-    return yaml.load(data_string)
+    # Loader
+    try:
+        # PyYAML 5.1 supports FullLoader
+        Loader = yaml.FullLoader
+    except AttributeError:
+        # Have to use SafeLoader for older versions
+        Loader = yaml.SafeLoader
+    # Done
+    return yaml.load(data_string, Loader=Loader)
 
 def _parse_env(data_string):
     """ Data input from environment variables.

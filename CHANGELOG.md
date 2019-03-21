@@ -1,3 +1,9 @@
+## 0.3.6 (2019-03-21)
+* Fixed support for Python 2.6
+* Dropped Python 2.6 from unit-tests
+* Fixed a warning issued by PyYAML. 
+  See [issue #33](https://github.com/kolypto/j2cli/issues/33)
+
 ## 0.3.5 (2019-01-03)
 * New option: `--undefined` that allows undefined variables
 * Fix: unicode support in environment variables

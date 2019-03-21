@@ -15,10 +15,18 @@ Inspired by [mattrobenolt/jinja2-cli](https://github.com/mattrobenolt/jinja2-cli
 """
 
 from setuptools import setup, find_packages
+import sys
+
+# PyYAML 3.11 was the last to support Python 2.6
+# This code limits pyyaml version for older pythons
+pyyaml_version = 'pyyaml >= 3.10'  # fresh
+if sys.version_info[:2] == (2, 6) or True:
+    pyyaml_version = 'pyyaml<=3.11'
+
 
 setup(
     name='j2cli',
-    version='0.3.5-1',
+    version='0.3.6-1',
     author='Mark Vartanyan',
     author_email='kolypto@gmail.com',
 
@@ -41,7 +49,7 @@ setup(
         'jinja2 >= 2.7.2',
     ],
     extras_require={
-        'yaml': ['pyyaml',]
+        'yaml': [pyyaml_version,]
     },
     include_package_data=True,
     zip_safe=False,
