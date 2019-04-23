@@ -15,10 +15,12 @@ README = {
         for name, f in j2cli.context.FORMATS.items()
     },
     'extras': {
-        'filters': [doc(v)
+        'filters': {k: doc(v)
                     for k, v in getmembers(j2cli.extras.filters)
-                    if inspect.isfunction(v) and inspect.getmodule(v) is j2cli.extras.filters]
+                    if inspect.isfunction(v) and inspect.getmodule(v) is j2cli.extras.filters}
     }
 }
+
+assert 'yaml' in README['formats'], 'Looks like the YAML library is not installed!'
 
 print(json.dumps(README))

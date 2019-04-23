@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import unittest
 import os, sys, io, os.path, tempfile
+from copy import copy
 from contextlib import contextmanager
 from jinja2.exceptions import UndefinedError
 
@@ -23,6 +24,15 @@ def mktemp(contents):
         os.unlink(path)
 
 
+@contextmanager
+def mock_environ(new_env):
+    old_env = copy(os.environ)
+    os.environ.update(new_env)
+    yield
+    os.environ.clear()
+    os.environ.update(old_env)
+
+
 class RenderTest(unittest.TestCase):
     def setUp(self):
         os.chdir(
@@ -31,7 +41,8 @@ class RenderTest(unittest.TestCase):
 
     def _testme(self, argv, expected_output, stdin=None, env=None):
         """ Helper test shortcut """
-        result = render_command(os.getcwd(), env or {}, stdin, argv)
+        with mock_environ(env or {}):
+            result = render_command(os.getcwd(), env or {}, stdin, argv)
         if isinstance(result, bytes):
             result = result.decode('utf-8')
         self.assertEqual(result, expected_output)
@@ -123,6 +134,23 @@ class RenderTest(unittest.TestCase):
         else:
             # Python 3: environment variables are unicode strings
             self._testme(['resources/name.j2'], u'Hello Jürgen!\n', env=dict(name=u'Jürgen'))
+
+    def test_filters__env(self):
+        with mktemp('user_login: kolypto') as yml_file:
+            with mktemp('{{ user_login }}:{{ "USER_PASS"|env }}') as template:
+                # Test: template with an env variable
+                self._testme(['--format=yaml', template, yml_file], 'kolypto:qwerty123', env=dict(USER_PASS='qwerty123'))
+
+                # environment cleaned up
+                assert 'USER_PASS' not in os.environ
+
+                # Test: KeyError
+                with self.assertRaises(KeyError):
+                    self._testme(['--format=yaml', template, yml_file], 'kolypto:qwerty123', env=dict())
+
+            # Test: default
+            with mktemp('{{ user_login }}:{{ "USER_PASS"|env("-none-") }}') as template:
+                self._testme(['--format=yaml', template, yml_file], 'kolypto:-none-', env=dict())
 
 
     def test_custom_filters(self):

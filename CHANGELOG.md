@@ -1,6 +1,9 @@
+## 0.3.7 (2019-04-23)
+* The new `{{ VAR_NAME |env }}` filter lets you use environment variables in every template.
+
 ## 0.3.6 (2019-03-21)
 * Fixed support for Python 2.6
-* Dropped Python 2.6 from unit-tests
+* Dropped Python 2.6 from unit-tests~~~~
 * Fixed a warning issued by PyYAML. 
   See [issue #33](https://github.com/kolypto/j2cli/issues/33)
 

@@ -1,4 +1,5 @@
 """ Custom Jinja2 filters """
+import os
 
 from jinja2 import is_undefined
 import re
@@ -41,3 +42,29 @@ def docker_link(value, format='{addr}:{port}'):
 
     # Format
     return format.format(**d)
+
+
+def env(varname, default=None):
+    """ Use an environment variable's value inside your template.
+
+        This filter is available even when your data source is something other that the environment.
+
+        Example:
+
+        ```jinja2
+        User: {{ user_login }}
+        Pass: {{ USER_PASSWORD|env }}
+        ```
+
+        You can provide the default value:
+
+        ```jinja2
+        Pass: {{ USER_PASSWORD|env("-none-") }}
+        ```
+    """
+    if default is not None:
+        # With the default, there's never an error
+        return os.getenv(varname, default)
+    else:
+        # Raise KeyError when not provided
+        return os.environ[varname]

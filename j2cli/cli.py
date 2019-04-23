@@ -145,7 +145,10 @@ def render_command(cwd, environ, stdin, argv):
     renderer = Jinja2TemplateRenderer(cwd, args.undefined)
 
     # Filters, Tests
-    renderer.register_filters({'docker_link': filters.docker_link})
+    renderer.register_filters({
+        'docker_link': filters.docker_link,
+        'env': filters.env,
+    })
     for fname in args.filters:
         renderer.import_filters(fname)
     for fname in args.tests:

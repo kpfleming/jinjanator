@@ -156,7 +156,7 @@ Extras
 
 ## Filters
 
-{% for filter in extras.filters|sort() %}
+{% for name, filter in extras.filters|dictsort() %}
 ### `{{ filter.qsignature }}`
 {{ filter.doc }}
 {% endfor %}

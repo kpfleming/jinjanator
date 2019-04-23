@@ -251,3 +251,21 @@ And then uses `format` to format it, where the default format is '{addr}:{port}'
 
 More info here: [Docker Links](https://docs.docker.com/userguide/dockerlinks/)
 
+### `env(varname, default=None)`
+Use an environment variable's value inside your template.
+
+This filter is available even when your data source is something other that the environment.
+
+Example:
+
+```jinja2
+User: {{ user_login }}
+Pass: {{ USER_PASSWORD|env }}
+```
+
+You can provide the default value:
+
+```jinja2
+Pass: {{ USER_PASSWORD|env("-none-") }}
+```
+
