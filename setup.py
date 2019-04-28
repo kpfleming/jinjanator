@@ -26,7 +26,7 @@ if sys.version_info[:2] == (2, 6) or True:
 
 setup(
     name='j2cli',
-    version='0.3.7',
+    version='0.3.8',
     author='Mark Vartanyan',
     author_email='kolypto@gmail.com',
 

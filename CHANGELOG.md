@@ -1,3 +1,6 @@
+## 0.3.8 (2019-04-29)
+* Enabled Jinja2 extensions: i18n, do, loopcontrols
+
 ## 0.3.7 (2019-04-23)
 * The new `{{ VAR_NAME |env }}` filter lets you use environment variables in every template.
 

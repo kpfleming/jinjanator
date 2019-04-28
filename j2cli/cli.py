@@ -37,8 +37,16 @@ class FilePathLoader(jinja2.BaseLoader):
 class Jinja2TemplateRenderer(object):
     """ Template renderer """
 
+    ENABLED_EXTENSIONS=(
+        # TODO: some day, we will load custom extensions from the CLI. Will we?
+        'jinja2.ext.i18n',
+        'jinja2.ext.do',
+        'jinja2.ext.loopcontrols',
+    )
+
     def __init__(self, cwd, allow_undefined):
         self._env = jinja2.Environment(
+            extensions=self.ENABLED_EXTENSIONS,
             loader=FilePathLoader(cwd),
             undefined=jinja2.Undefined if allow_undefined else jinja2.StrictUndefined,  # raise errors for undefineds?
             keep_trailing_newline=True

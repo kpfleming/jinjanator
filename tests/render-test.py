@@ -175,3 +175,8 @@ class RenderTest(unittest.TestCase):
         self.assertRaises(UndefinedError, self._testme, ['resources/name.j2'], u'Hello !\n', env=dict())
         # `name` undefined: no error
         self._testme(['--undefined', 'resources/name.j2'], u'Hello !\n', env=dict())
+
+    def test_jinja2_extensions(self):
+        with mktemp('{% do [] %}') as template:
+            # `do` tag is an extension
+            self._testme([template], '')
