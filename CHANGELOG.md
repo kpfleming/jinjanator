@@ -1,3 +1,7 @@
+## 0.3.9 (2019-05-4)
+* New: customize.py that lets you customize :)
+* Fixed a bug with setup.py and yaml
+
 ## 0.3.8 (2019-04-29)
 * Enabled Jinja2 extensions: i18n, do, loopcontrols
 
