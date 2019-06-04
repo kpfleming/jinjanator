@@ -177,6 +177,37 @@ class RenderTest(unittest.TestCase):
         self._testme(['--undefined', 'resources/name.j2'], u'Hello !\n', env=dict())
 
     def test_jinja2_extensions(self):
+        """ Test that an extension is enabled """
         with mktemp('{% do [] %}') as template:
             # `do` tag is an extension
             self._testme([template], '')
+
+
+    def test_customize(self):
+        """  Test --customize """
+        # Test: j2_environment_params()
+        # Custom tag start/end
+        with mktemp('<% if 1 %>1<% else %>2<% endif %>') as template:
+            self._testme(['--customize=resources/customize.py', template], '1')
+
+        # Test: alter_context()
+        # Extra variable: ADD=127
+        with mktemp('<< ADD >>') as template:
+            self._testme(['--customize=resources/customize.py', template], '127')
+
+        # Test: extra_filters()
+        with mktemp('<< ADD|parentheses >>') as template:
+            self._testme(['--customize=resources/customize.py', template], '(127)')
+
+        # Test: extra_tests()
+        with mktemp('<% if ADD|int is custom_odd %>odd<% endif %>') as template:
+            self._testme(['--customize=resources/customize.py', template], 'odd')
+
+        # reset
+        # otherwise it will load the same module even though its name has changed
+        del sys.modules['customize-module']
+
+        # Test: no hooks in a file
+        # Got to restore to the original configuration and use {% %} again
+        with mktemp('{% if 1 %}1{% endif %}') as template:
+            self._testme(['--customize=render-test.py', template], '1')

@@ -9,6 +9,7 @@ import imp, inspect
 
 from .context import read_context_data, FORMATS
 from .extras import filters
+from .extras.customize import CustomizationModule
 
 
 class FilePathLoader(jinja2.BaseLoader):
@@ -38,19 +39,20 @@ class Jinja2TemplateRenderer(object):
     """ Template renderer """
 
     ENABLED_EXTENSIONS=(
-        # TODO: some day, we will load custom extensions from the CLI. Will we?
         'jinja2.ext.i18n',
         'jinja2.ext.do',
         'jinja2.ext.loopcontrols',
     )
 
-    def __init__(self, cwd, allow_undefined):
-        self._env = jinja2.Environment(
-            extensions=self.ENABLED_EXTENSIONS,
-            loader=FilePathLoader(cwd),
-            undefined=jinja2.Undefined if allow_undefined else jinja2.StrictUndefined,  # raise errors for undefineds?
-            keep_trailing_newline=True
-        )
+    def __init__(self, cwd, allow_undefined, j2_env_params):
+        # Custom env params
+        j2_env_params.setdefault('keep_trailing_newline', True)
+        j2_env_params.setdefault('undefined', jinja2.Undefined if allow_undefined else jinja2.StrictUndefined)
+        j2_env_params.setdefault('extensions', self.ENABLED_EXTENSIONS)
+        j2_env_params.setdefault('loader', FilePathLoader(cwd))
+
+        # Environment
+        self._env = jinja2.Environment(**j2_env_params)
 
     def register_filters(self, filters):
         self._env.filters.update(filters)
@@ -83,7 +85,6 @@ class Jinja2TemplateRenderer(object):
             .encode('utf-8')
 
 
-
 def render_command(cwd, environ, stdin, argv):
     """ Pure render command
     :param cwd: Current working directory (to search for the files)
@@ -112,6 +113,8 @@ def render_command(cwd, environ, stdin, argv):
                         help='Load custom Jinja2 filters from a Python file: all top-level functions are imported.')
     parser.add_argument('--tests', nargs='+', default=[], metavar='python-file', dest='tests',
                         help='Load custom Jinja2 tests from a Python file.')
+    parser.add_argument('--customize', default=None, metavar='python-file.py', dest='customize',
+                        help='A Python file that implements hooks to fine-tune the j2cli behavior')
     parser.add_argument('--undefined', action='store_true', dest='undefined', help='Allow undefined variables to be used in templates (no error will be raised)')
     parser.add_argument('-o', metavar='outfile', dest='output_file', help="Output to a file instead of stdout")
     parser.add_argument('template', help='Template file to process')
@@ -141,7 +144,15 @@ def render_command(cwd, environ, stdin, argv):
     if sys.version_info[0] == 2 and args.format == 'env':
         environ = dict((k.decode('utf-8'), v.decode('utf-8')) for k, v in environ.items())
 
-    # Read data)
+    # Customization
+    if args.customize is not None:
+        customize = CustomizationModule(
+            imp.load_source('customize-module', args.customize)
+        )
+    else:
+        customize = CustomizationModule(None)
+
+    # Read data
     context = read_context_data(
         args.format,
         input_data_f,
@@ -149,8 +160,10 @@ def render_command(cwd, environ, stdin, argv):
         args.import_env
     )
 
+    context = customize.alter_context(context)
+
     # Renderer
-    renderer = Jinja2TemplateRenderer(cwd, args.undefined)
+    renderer = Jinja2TemplateRenderer(cwd, args.undefined, j2_env_params=customize.j2_environment_params())
 
     # Filters, Tests
     renderer.register_filters({
@@ -161,6 +174,9 @@ def render_command(cwd, environ, stdin, argv):
         renderer.import_filters(fname)
     for fname in args.tests:
         renderer.import_tests(fname)
+
+    renderer.register_filters(customize.extra_filters())
+    renderer.register_tests(customize.extra_tests())
 
     # Render
     result = renderer.render(args.template, context)
