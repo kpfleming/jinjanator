@@ -20,7 +20,7 @@ import sys
 # PyYAML 3.11 was the last to support Python 2.6
 # This code limits pyyaml version for older pythons
 pyyaml_version = 'pyyaml >= 3.10'  # fresh
-if sys.version_info[:2] == (2, 6) or True:
+if sys.version_info[:2] == (2, 6):
     pyyaml_version = 'pyyaml<=3.11'
 
 
