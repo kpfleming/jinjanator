@@ -1,4 +1,9 @@
-## 0.3.9 (2019-05-4)
+## 0.3.10 (2019-06-07)
+* New: `env()` is now available as a function
+* New: can now customize the `Environment` object
+* Fixed documentation
+
+## 0.3.9 (2019-06-04)
 * New: customize.py that lets you customize :)
 * Fixed a bug with setup.py and yaml
 

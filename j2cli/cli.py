@@ -53,6 +53,9 @@ class Jinja2TemplateRenderer(object):
 
         # Environment
         self._env = jinja2.Environment(**j2_env_params)
+        self._env.globals.update(dict(
+            env=filters.env
+        ))
 
     def register_filters(self, filters):
         self._env.filters.update(filters)
@@ -164,6 +167,7 @@ def render_command(cwd, environ, stdin, argv):
 
     # Renderer
     renderer = Jinja2TemplateRenderer(cwd, args.undefined, j2_env_params=customize.j2_environment_params())
+    customize.j2_environment(renderer._env)
 
     # Filters, Tests
     renderer.register_filters({

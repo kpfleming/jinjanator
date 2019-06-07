@@ -53,14 +53,23 @@ def env(varname, default=None):
 
         ```jinja2
         User: {{ user_login }}
-        Pass: {{ USER_PASSWORD|env }}
+        Pass: {{ "USER_PASSWORD"|env }}
         ```
 
         You can provide the default value:
 
         ```jinja2
-        Pass: {{ USER_PASSWORD|env("-none-") }}
+        Pass: {{ "USER_PASSWORD"|env("-none-") }}
         ```
+
+        For your convenience, it's also available as a function:
+
+        ```jinja2
+        User: {{ user_login }}
+        Pass: {{ env("USER_PASSWORD") }}
+        ```
+
+        Notice that there must be quotes around the environment variable name
     """
     if default is not None:
         # With the default, there's never an error

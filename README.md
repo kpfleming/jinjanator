@@ -90,6 +90,17 @@ $ j2 /tmp/person.xml
 <data><name>Andrew</name><age>31</age></data>
 ```
 
+## Using environment variables
+
+Even when you use yaml or json as the data source, you can always access environment variables
+using the `env()` function:
+
+```jinja2
+Username: {{ login }}
+Password: {{ env("APP_PASSWORD") }}
+```
+
+
 ## Usage
 
 Compile a template using INI-file data source:
@@ -263,14 +274,23 @@ Example:
 
 ```jinja2
 User: {{ user_login }}
-Pass: {{ USER_PASSWORD|env }}
+Pass: {{ "USER_PASSWORD"|env }}
 ```
 
 You can provide the default value:
 
 ```jinja2
-Pass: {{ USER_PASSWORD|env("-none-") }}
+Pass: {{ "USER_PASSWORD"|env("-none-") }}
 ```
+
+For your convenience, it's also available as a function:
+
+```jinja2
+User: {{ user_login }}
+Pass: {{ env("USER_PASSWORD") }}
+```
+
+Notice that there must be quotes around the environment variable name
 
 
 
@@ -291,6 +311,7 @@ The following hooks are available:
 
 * `j2_environment_params() -> dict`: returns a `dict` of additional parameters for
     [Jinja2 Environment](http://jinja.pocoo.org/docs/2.10/api/#jinja2.Environment).
+* `j2_environment(env: Environment) -> Environment`: lets you customize the `Environment` object.
 * `alter_context(context: dict) -> dict`: lets you modify the context variables that are going to be
     used for template rendering. You can do all sorts of pre-processing here.
 * `extra_filters() -> dict`: returns a `dict` with extra filters for Jinja2
@@ -331,6 +352,18 @@ def j2_environment_params():
         # http://jinja.pocoo.org/docs/2.10/extensions/#jinja-extensions
         extensions=('jinja2.ext.i18n',),
     )
+
+
+def j2_environment(env):
+    """ Modify Jinja2 environment
+
+    :param env: jinja2.environment.Environment
+    :rtype: jinja2.environment.Environment
+    """
+    env.globals.update(
+        my_function=lambda v: 'my function says "{}"'.format(v)
+    )
+    return env
 
 
 def alter_context(context):

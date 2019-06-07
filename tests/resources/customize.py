@@ -30,6 +30,18 @@ def j2_environment_params():
     )
 
 
+def j2_environment(env):
+    """ Modify Jinja2 environment
+
+    :param env: jinja2.environment.Environment
+    :rtype: jinja2.environment.Environment
+    """
+    env.globals.update(
+        my_function=lambda v: 'my function says "{}"'.format(v)
+    )
+    return env
+
+
 def alter_context(context):
     """ Modify the context and return it """
     # An extra variable

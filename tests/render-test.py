@@ -152,6 +152,19 @@ class RenderTest(unittest.TestCase):
             with mktemp('{{ user_login }}:{{ "USER_PASS"|env("-none-") }}') as template:
                 self._testme(['--format=yaml', template, yml_file], 'kolypto:-none-', env=dict())
 
+            # Test: using as a function
+            with mktemp('{{ user_login }}:{{ env("USER_PASS") }}') as template:
+                self._testme(['--format=yaml', template, yml_file], 'kolypto:qwerty123', env=dict(USER_PASS='qwerty123'))
+
+                with self.assertRaises(KeyError):
+                    # Variable not set
+                    self._testme(['--format=yaml', template, yml_file], '', env=dict())
+
+            # Test: using as a function, with a default
+            with mktemp('{{ user_login }}:{{ env("USER_PASS", "-none-") }}') as template:
+                self._testme(['--format=yaml', template, yml_file], 'kolypto:qwerty123', env=dict(USER_PASS='qwerty123'))
+                self._testme(['--format=yaml', template, yml_file], 'kolypto:-none-', env=dict())
+
 
     def test_custom_filters(self):
         with mktemp('{{ a|parentheses }}') as template:
@@ -189,6 +202,11 @@ class RenderTest(unittest.TestCase):
         # Custom tag start/end
         with mktemp('<% if 1 %>1<% else %>2<% endif %>') as template:
             self._testme(['--customize=resources/customize.py', template], '1')
+
+        # Test: j2_environment()
+        # custom function: my_function
+        with mktemp('<< my_function("hey") >>') as template:
+            self._testme(['--customize=resources/customize.py', template], 'my function says "hey"')
 
         # Test: alter_context()
         # Extra variable: ADD=127

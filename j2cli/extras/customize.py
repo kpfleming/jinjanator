@@ -20,6 +20,9 @@ class CustomizationModule(object):
     def j2_environment_params(self):
         return {}
 
+    def j2_environment(self, env):
+        return env
+
     def alter_context(self, context):
         return context
 
@@ -31,4 +34,4 @@ class CustomizationModule(object):
 
     _IMPORTED_METHOD_NAMES = [
         f.__name__
-        for f in (j2_environment_params, alter_context, extra_filters, extra_tests)]
+        for f in (j2_environment_params, j2_environment, alter_context, extra_filters, extra_tests)]

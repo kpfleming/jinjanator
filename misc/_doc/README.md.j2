@@ -90,6 +90,17 @@ $ j2 /tmp/person.xml
 <data><name>Andrew</name><age>31</age></data>
 ```
 
+## Using environment variables
+
+Even when you use yaml or json as the data source, you can always access environment variables
+using the `env()` function:
+
+{% raw %}```jinja2
+Username: {{ login }}
+Password: {{ env("APP_PASSWORD") }}
+```{% endraw %}
+
+
 ## Usage
 
 Compile a template using INI-file data source:
@@ -182,6 +193,7 @@ The following hooks are available:
 
 * `j2_environment_params() -> dict`: returns a `dict` of additional parameters for
     [Jinja2 Environment](http://jinja.pocoo.org/docs/2.10/api/#jinja2.Environment).
+* `j2_environment(env: Environment) -> Environment`: lets you customize the `Environment` object.
 * `alter_context(context: dict) -> dict`: lets you modify the context variables that are going to be
     used for template rendering. You can do all sorts of pre-processing here.
 * `extra_filters() -> dict`: returns a `dict` with extra filters for Jinja2
