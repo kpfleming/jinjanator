@@ -1,3 +1,6 @@
+## 0.3.11 (2019-08-18)
+* Fix: use `env` format from stdin
+
 ## 0.3.10 (2019-06-07)
 * New: `env()` is now available as a function
 * New: can now customize the `Environment` object
