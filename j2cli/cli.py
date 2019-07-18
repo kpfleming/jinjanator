@@ -138,7 +138,7 @@ def render_command(cwd, environ, stdin, argv):
             }[os.path.splitext(args.data)[1]]
 
     # Input: data
-    if args.data == '-' and args.format == 'env':
+    if args.data == '-' and args.format == 'env' and (stdin is None or stdin.isatty()):
         input_data_f = None
     else:
         input_data_f = stdin if args.data == '-' else open(args.data)

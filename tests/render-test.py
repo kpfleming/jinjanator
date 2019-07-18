@@ -98,6 +98,8 @@ class RenderTest(unittest.TestCase):
         self._testme_std(['resources/nginx-env.j2', 'resources/data.env'])
         # Format
         self._testme_std(['--format=env', 'resources/nginx-env.j2', 'resources/data.env'])
+        # Stdin
+        self._testme_std(['--format=env', 'resources/nginx-env.j2'], stdin=open('resources/data.env'))
 
         # Environment!
         env = dict(NGINX_HOSTNAME='localhost', NGINX_WEBROOT='/var/www/project', NGINX_LOGS='/var/log/nginx/')

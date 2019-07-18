@@ -113,7 +113,7 @@ def _parse_env(data_string):
     And render with:
 
         $ j2 config.j2 data.env
-        $ env | j2 --format=env config.j2.
+        $ env | j2 --format=env config.j2
 
     This is especially useful with Docker to link containers together.
     """
