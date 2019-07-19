@@ -127,12 +127,17 @@ Or even read environment variables from a file:
 
     $ j2 --format=env config.j2 data.env
 
+Or pipe it: (note that you'll have to use the "-" in this particular case):
+
+    $ j2 --format=env config.j2 - < data.env
+
     
 # Reference
 `j2` accepts the following arguments:
 
 * `template`: Jinja2 template file to render
-* `data`: (optional) path to the data used for rendering. The default is `-`: use stdin
+* `data`: (optional) path to the data used for rendering.
+    The default is `-`: use stdin. Specify it explicitly when using env!
 
 Options:
 
@@ -166,7 +171,7 @@ Render directly from the current environment variable values:
 
     $ j2 config.j2
 
-Or alternatively, read the values from a file:
+Or alternatively, read the values from a dotenv file:
 
 ```
 NGINX_HOSTNAME=localhost
@@ -179,7 +184,9 @@ And render with:
     $ j2 config.j2 data.env
     $ env | j2 --format=env config.j2
 
-This is especially useful with Docker to link containers together.
+If you're going to pipe a dotenv file into `j2`, you'll need to use "-" as the second argument to explicitly:
+
+    $ j2 config.j2 - < data.env
 
 ### ini
 INI data input format.

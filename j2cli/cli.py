@@ -121,12 +121,12 @@ def render_command(cwd, environ, stdin, argv):
     parser.add_argument('--undefined', action='store_true', dest='undefined', help='Allow undefined variables to be used in templates (no error will be raised)')
     parser.add_argument('-o', metavar='outfile', dest='output_file', help="Output to a file instead of stdout")
     parser.add_argument('template', help='Template file to process')
-    parser.add_argument('data', nargs='?', default='-', help='Input data path')
+    parser.add_argument('data', nargs='?', default=None, help='Input data file path; "-" to use stdin')
     args = parser.parse_args(argv)
 
     # Input: guess format
     if args.format == '?':
-        if args.data == '-':
+        if args.data is None or args.data == '-':
             args.format = 'env'
         else:
             args.format = {
@@ -138,10 +138,27 @@ def render_command(cwd, environ, stdin, argv):
             }[os.path.splitext(args.data)[1]]
 
     # Input: data
-    if args.data == '-' and args.format == 'env' and (stdin is None or stdin.isatty()):
-        input_data_f = None
+    # We always expect a file;
+    # unless the user wants 'env', and there's no input file provided.
+    if args.format == 'env':
+        # With the "env" format, if no dotenv filename is provided, we have two options:
+        # either the user wants to use the current environment, or he's feeding a dotenv file at stdin.
+        # Depending on whether we have data at stdin, we'll need to choose between the two.
+        #
+        # The problem is that in Linux, you can't reliably determine whether there is any data at stdin:
+        # some environments would open the descriptor even though they're not going to feed any data in.
+        # That's why many applications would ask you to explicitly specify a '-' when stdin should be used.
+        #
+        # And this is what we're going to do here as well.
+        # The script, however, would give the user a hint that they should use '-'
+        if args.data == '-':
+            input_data_f = stdin
+        elif args.data == None:
+            input_data_f = None
+        else:
+            input_data_f = open(args.data)
     else:
-        input_data_f = stdin if args.data == '-' else open(args.data)
+        input_data_f = stdin if args.data is None or args.data == '-' else open(args.data)
 
     # Python 2: Encode environment variables as unicode
     if sys.version_info[0] == 2 and args.format == 'env':
@@ -183,7 +200,25 @@ def render_command(cwd, environ, stdin, argv):
     renderer.register_tests(customize.extra_tests())
 
     # Render
-    result = renderer.render(args.template, context)
+    try:
+        result = renderer.render(args.template, context)
+    except jinja2.exceptions.UndefinedError as e:
+        # When there's data at stdin, tell the user they should use '-'
+        try:
+            stdin_has_data = stdin is not None and not stdin.isatty()
+            if args.format == 'env' and args.data == None and stdin_has_data:
+                extra_info = (
+                    "\n\n"
+                    "If you're trying to pipe a .env file, please run me with a '-' as the data file name:\n"
+                    "$ {cmd} {argv} -".format(cmd=os.path.basename(sys.argv[0]), argv=' '.join(sys.argv[1:]))
+                )
+                e.args = (e.args[0] + extra_info,) + e.args[1:]
+        except:
+            # The above code is so optional that any, ANY, error, is ignored
+            pass
+
+        # Proceed
+        raise
 
     # -o
     if args.output_file:
@@ -199,11 +234,14 @@ def render_command(cwd, environ, stdin, argv):
 
 def main():
     """ CLI Entry point """
-    output = render_command(
-        os.getcwd(),
-        os.environ,
-        sys.stdin,
-        sys.argv[1:]
-    )
+    try:
+        output = render_command(
+            os.getcwd(),
+            os.environ,
+            sys.stdin,
+            sys.argv[1:]
+        )
+    except SystemExit:
+        return 1
     outstream = getattr(sys.stdout, 'buffer', sys.stdout)
     outstream.write(output)

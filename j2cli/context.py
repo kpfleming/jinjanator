@@ -102,7 +102,7 @@ def _parse_env(data_string):
 
         $ j2 config.j2
 
-    Or alternatively, read the values from a file:
+    Or alternatively, read the values from a dotenv file:
 
     ```
     NGINX_HOSTNAME=localhost
@@ -115,7 +115,9 @@ def _parse_env(data_string):
         $ j2 config.j2 data.env
         $ env | j2 --format=env config.j2
 
-    This is especially useful with Docker to link containers together.
+    If you're going to pipe a dotenv file into `j2`, you'll need to use "-" as the second argument to explicitly:
+
+        $ j2 config.j2 - < data.env
     """
     # Parse
     if isinstance(data_string, basestring):

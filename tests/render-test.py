@@ -70,6 +70,7 @@ class RenderTest(unittest.TestCase):
         self._testme_std(['--format=ini', 'resources/nginx.j2', 'resources/data.ini'])
         # Stdin
         self._testme_std(['--format=ini', 'resources/nginx.j2'], stdin=open('resources/data.ini'))
+        self._testme_std(['--format=ini', 'resources/nginx.j2', '-'], stdin=open('resources/data.ini'))
 
     def test_json(self):
         # Filename
@@ -78,6 +79,7 @@ class RenderTest(unittest.TestCase):
         self._testme_std(['--format=json', 'resources/nginx.j2', 'resources/data.json'])
         # Stdin
         self._testme_std(['--format=json', 'resources/nginx.j2'], stdin=open('resources/data.json'))
+        self._testme_std(['--format=json', 'resources/nginx.j2', '-'], stdin=open('resources/data.json'))
 
     def test_yaml(self):
         try:
@@ -92,19 +94,24 @@ class RenderTest(unittest.TestCase):
         self._testme_std(['--format=yaml', 'resources/nginx.j2', 'resources/data.yml'])
         # Stdin
         self._testme_std(['--format=yaml', 'resources/nginx.j2'], stdin=open('resources/data.yml'))
+        self._testme_std(['--format=yaml', 'resources/nginx.j2', '-'], stdin=open('resources/data.yml'))
 
     def test_env(self):
         # Filename
-        self._testme_std(['resources/nginx-env.j2', 'resources/data.env'])
+        self._testme_std(['--format=env', 'resources/nginx-env.j2', 'resources/data.env'])
+        self._testme_std([                'resources/nginx-env.j2', 'resources/data.env'])
         # Format
         self._testme_std(['--format=env', 'resources/nginx-env.j2', 'resources/data.env'])
+        self._testme_std([                'resources/nginx-env.j2', 'resources/data.env'])
         # Stdin
-        self._testme_std(['--format=env', 'resources/nginx-env.j2'], stdin=open('resources/data.env'))
+        self._testme_std(['--format=env', 'resources/nginx-env.j2', '-'], stdin=open('resources/data.env'))
+        self._testme_std([                'resources/nginx-env.j2', '-'], stdin=open('resources/data.env'))
 
         # Environment!
+        # In this case, it's not explicitly provided, but implicitly gotten from the environment
         env = dict(NGINX_HOSTNAME='localhost', NGINX_WEBROOT='/var/www/project', NGINX_LOGS='/var/log/nginx/')
         self._testme_std(['--format=env', 'resources/nginx-env.j2'], env=env)
-        self._testme_std(['--format=env', 'resources/nginx-env.j2'], env=env)
+        self._testme_std([                'resources/nginx-env.j2'], env=env)
 
     def test_import_env(self):
         # Import environment into a variable
