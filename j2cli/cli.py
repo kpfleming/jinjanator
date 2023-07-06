@@ -5,8 +5,6 @@ import jinja2
 import jinja2.loaders
 from . import __version__
 
-import imp, inspect
-
 from .context import read_context_data, FORMATS
 from .extras import filters
 from .extras.customize import CustomizationModule
@@ -70,8 +68,9 @@ class Jinja2TemplateRenderer(object):
         self.register_tests(self._import_functions(filename))
 
     def _import_functions(self, filename):
-        m = imp.load_source('imported-funcs', filename)
-        return dict((name, func) for name, func in inspect.getmembers(m) if inspect.isfunction(func))
+        return dict()
+        # m = imp.load_source('imported-funcs', filename)
+        # return dict((name, func) for name, func in inspect.getmembers(m) if inspect.isfunction(func))
 
     def render(self, template_path, context):
         """ Render a template
@@ -164,13 +163,7 @@ def render_command(cwd, environ, stdin, argv):
     if sys.version_info[0] == 2 and args.format == 'env':
         environ = dict((k.decode('utf-8'), v.decode('utf-8')) for k, v in environ.items())
 
-    # Customization
-    if args.customize is not None:
-        customize = CustomizationModule(
-            imp.load_source('customize-module', args.customize)
-        )
-    else:
-        customize = CustomizationModule(None)
+    customize = CustomizationModule(None)
 
     # Read data
     context = read_context_data(
