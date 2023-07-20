@@ -6,7 +6,7 @@ from typing import Any, Callable, Dict, Mapping, Optional, Sequence, TextIO, Tup
 
 import jinja2
 
-from . import VERSION, filters
+from . import filters, version
 from .context import FORMATS, read_context_data
 
 
@@ -59,9 +59,6 @@ class Jinja2TemplateRenderer:
     def register_filters(self, filters: Mapping[str, Callable[..., Any]]) -> None:
         self._env.filters.update(filters)
 
-    def register_tests(self, tests: Mapping[str, Callable[..., Any]]) -> None:
-        self._env.tests.update(tests)
-
     def render(self, template_name: str, context: Mapping[str, str]) -> str:
         return self._env.get_template(template_name).render(context)
 
@@ -97,7 +94,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         "-v",
         "--version",
         action="version",
-        version=f"jinjanate {VERSION}, Jinja2 {jinja2.__version__}",
+        version=f"jinjanate {version}, Jinja2 {jinja2.__version__}",
         help="display version of this program",
     )
 
@@ -169,7 +166,7 @@ def render_command(
 
     if not args.quiet:
         print(
-            f"{Path(argv[0]).name} {VERSION}, Jinja2 {jinja2.__version__}",
+            f"{Path(argv[0]).name} {version}, Jinja2 {jinja2.__version__}",
             file=sys.stderr,
         )
 
@@ -260,7 +257,7 @@ def render_command(
     return result
 
 
-def main():
+def main() -> Optional[int]:
     try:
         output = render_command(Path.cwd(), os.environ, sys.stdin, sys.argv)
     except SystemExit:

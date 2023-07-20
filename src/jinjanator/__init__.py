@@ -1,3 +1,3 @@
-from .version import version as VERSION  # noqa: N812
+from .version import version
 
-__all__ = ("VERSION",)
+__all__ = (version,)

@@ -1,8 +1,9 @@
 """Custom Jinja2 filters."""
 import os
+from typing import Optional
 
 
-def env(varname, default=None):
+def env(varname: str, default: Optional[Optional[str]] = None) -> str:
     """Use an environment variable's value inside your template.
 
     This filter is available even when your data source is something other that the environment.

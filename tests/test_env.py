@@ -4,11 +4,13 @@ import os
 from typing import Any
 
 import pytest
+from jinja2 import UndefinedError
 
 from . import (
     FilePairFactory,
     render_file,
     render_file_env,
+    render_implicit_stream,
 )
 
 
@@ -84,3 +86,9 @@ def test_function(make_file_pair: FilePairFactory, monkeypatch: Any) -> None:
         "yaml",
     )
     assert render_file(files, []) == "kolypto:-none-"
+
+
+def test_env_stream(make_file_pair: FilePairFactory) -> None:
+    files = make_file_pair("{{ a }}", "foo=bar", "env")
+    with pytest.raises(UndefinedError, match="If you're trying to pipe a .env file"):
+        render_implicit_stream(files, ["--format=env"])

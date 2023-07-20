@@ -64,11 +64,11 @@ python = "3.11"
 
 [tool.hatch.envs.lint]
 dependencies = [
-    "attrs", # needed for type-checking
+    "attrs", # needed for type-checking tests
     "black",
     "ruff",
     "mypy",
-    "pytest", # needed for type-checking
+    "pytest", # needed for type-checking tests
     "types-PyYAML",
 ]
 
@@ -111,7 +111,7 @@ python = [
 ci = [
     "rm -f .coverage",
     # run tests
-    "pytest --verbose --cov-append  --cov-branch --cov-fail-under=90 --cov=jinjanator tests/",
+    "pytest --verbose --cov-append  --cov-branch --cov-fail-under=90 --cov=jinjanator",
     # produce a coverage report with 'missing' lines indicated
     "coverage report -m",
 ]
@@ -147,7 +147,6 @@ select = [
 ]
 ignore = [
   "C901",
-  "SIM115", # stop ignoring this once the file-handling code has been improved
 ]
 unfixable = ["F401"]
 
@@ -169,11 +168,10 @@ check_untyped_defs = true
 disallow_any_generics = true
 disallow_incomplete_defs = true
 disallow_subclassing_any = true
-disallow_untyped_calls = false # set to true once code has been improved
+disallow_untyped_calls = true
 disallow_untyped_decorators = true
-disallow_untyped_defs = false # set to true once code has been improved
+disallow_untyped_defs = true
 follow_imports = "normal"
-# implicit_reexport = false
 no_implicit_optional = true
 strict_equality = true
 warn_no_return = true
