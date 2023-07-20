@@ -1,0 +1,35 @@
+name: Lint checks
+
+on:
+  pull_request:
+    branches:
+    - main
+  schedule:
+    - cron: "35 4 * * 6"
+
+jobs:
+  preflight:
+    runs-on: ubuntu-22.04
+    outputs:
+      image_base: ${{ steps.details.outputs.image_base }}
+      need_lint: ${{ steps.preflight.outputs.need_lint == 'true' }}
+    steps:
+    - uses: actions/checkout@v3
+    - id: details
+      uses: kpfleming/composite-actions/image-details@v2
+      with:
+        base_image: python:bookworm-main
+    - id: preflight
+      uses: kpfleming/composite-actions/lint-preflight@v2
+      with:
+        lint_paths: workflow-support/lint_paths.yml
+  lint:
+    if: needs.preflight.outputs.need_lint == 'true'
+    runs-on: ubuntu-22.04
+    needs:
+    - preflight
+    container:
+      image: ${{ needs.preflight.outputs.image_base }}:main
+    steps:
+    - uses: actions/checkout@v3
+    - uses: kpfleming/composite-actions/lint-hatch@v2

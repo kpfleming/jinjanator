@@ -1,0 +1,4 @@
+paths:
+  - 'src/**/*.py'
+  - 'pyproject.toml'
+  - '.github/workflows/lint.yml'

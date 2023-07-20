@@ -1,0 +1,182 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = [
+  "hatch-vcs",
+  "hatchling",
+]
+
+[project]
+name = "jinjanator"
+description = "Command-line interface to Jinja2 for templating in shell scripts."
+readme = "README.md"
+license = { text="Apache-2.0" }
+authors = [
+  { name="Kevin P. Fleming", email="jinjanator@kevin.km6g.us" },
+  { name="Mark Vartanyan", email="kolypto@gmail.com" },
+]
+requires-python = ">=3.8"
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Typing :: Typed",
+]
+dynamic = [
+  "version",
+]
+dependencies = [
+  "jinja2>=2.7.2",
+  "PyYAML",
+]
+[project.urls]
+"Bug Tracker" = "https://github.com/kpfleming/jinjanator/issues"
+"Homepage" = "https://github.com/kpfleming/jinjanator"
+[project.scripts]
+jinjanate = "jinjanator.cli:main"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/jinjanator/version.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src",
+    "tests",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "src/jinjanator",
+]
+
+[tool.hatch.envs.default]
+python = "3.11"
+
+[tool.hatch.envs.lint]
+dependencies = [
+    "attrs", # needed for type-checking
+    "black",
+    "ruff",
+    "mypy",
+    "pytest", # needed for type-checking
+    "types-PyYAML",
+]
+
+[tool.hatch.envs.lint.scripts]
+lint = [
+     "black --preview src tests",
+     "ruff check --fix -- src tests",
+     "mypy --package jinjanator",
+     "mypy tests",
+     "shellcheck workflow-support/*.sh",
+]
+lint-action = [
+     "black --check --diff --preview src tests",
+     "ruff check --format=github -- src tests",
+     "mypy --package jinjanator",
+     "mypy tests",
+     "shellcheck workflow-support/*.sh",
+]
+
+[tool.hatch.envs.ci]
+dependencies = [
+    "attrs",
+    "coverage[toml]",
+    "pytest",
+    "pytest-cov",
+    "pytest-icdiff",
+    "PyYAML",
+]
+
+[[tool.hatch.envs.ci.matrix]]
+python = [
+"3.8",
+"3.9",
+"3.10",
+"3.11",
+"3.12",
+]
+
+[tool.hatch.envs.ci.scripts]
+ci = [
+    "rm -f .coverage",
+    # run tests
+    "pytest --verbose --cov-append  --cov-branch --cov-fail-under=90 --cov=jinjanator tests/",
+    # produce a coverage report with 'missing' lines indicated
+    "coverage report -m",
+]
+
+[tool.black]
+line-length = 90
+
+[tool.ruff]
+src = ["src", "tests"]
+format = "grouped"
+target-version = "py38"
+line-length = 100
+select = [
+  "A",
+  "B",
+  "C",
+#  "D",
+  "COM",
+  "DTZ",
+  "E",
+  "F",
+  "I",
+  "ISC",
+  "N",
+  "PT",
+  "Q",
+  "RET",
+  "RUF",
+  "SIM",
+  "UP",
+  "W292",
+  "YTT",
+]
+ignore = [
+  "C901",
+  "SIM115", # stop ignoring this once the file-handling code has been improved
+]
+unfixable = ["F401"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+xfail_strict = true
+testpaths = [
+    "tests",
+]
+addopts = [
+    "-ra",
+    "--strict-markers",
+]
+
+[tool.mypy]
+namespace_packages = true
+explicit_package_bases = true
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = false # set to true once code has been improved
+disallow_untyped_decorators = true
+disallow_untyped_defs = false # set to true once code has been improved
+follow_imports = "normal"
+# implicit_reexport = false
+no_implicit_optional = true
+strict_equality = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_ignores = true

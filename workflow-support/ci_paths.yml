@@ -1,0 +1,7 @@
+paths:
+  - 'src/**/*.py'
+  - 'tests/**/*.py'
+  - 'pyproject.toml'
+  - 'workflow-support/versions.json'
+  - '.github/workflows/ci.yml'
+  - '.github/workflows/test.yml'

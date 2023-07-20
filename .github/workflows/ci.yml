@@ -1,0 +1,61 @@
+name: CI checks
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    types:
+    - opened
+    - reopened
+    - synchronize
+    branches:
+    - main
+  schedule:
+    - cron: "35 4 * * 6"
+
+jobs:
+  preflight:
+    runs-on: ubuntu-22.04
+    outputs:
+      image_base: ${{ steps.details.outputs.image_base }}
+      image_tag: ${{ steps.preflight.outputs.image_tag }}
+      versions: ${{ steps.get_versions.outputs.versions }}
+      need_ci: ${{ (steps.preflight.outputs.need_ci == 'true') || (steps.preflight.outputs.need_image == 'true') }}
+    steps:
+    - uses: actions/checkout@v3
+    - id: get_versions
+      run: cat workflow-support/versions.json >> $GITHUB_OUTPUT
+    - id: details
+      uses: kpfleming/composite-actions/image-details@v2
+      with:
+        base_image: python:bookworm-main
+    - id: preflight
+      uses: kpfleming/composite-actions/ci-preflight@v2
+      with:
+        ci_paths: workflow-support/ci_paths.yml
+        files_hash: ${{ hashfiles('pyproject.toml', 'workflow-support/make_ci_image.sh', '.github/workflows/ci.yml') }}
+        base_image_hash: ${{ steps.details.outputs.base_image_hash }}
+    - id: make-ci-image
+      uses: kpfleming/composite-actions/make-ci-image@v2
+      if: steps.preflight.outputs.need_image == 'true'
+      with:
+        build_args: ${{ vars.PYTHON_DISTRIBUTION_NAME }}
+        base_image: ${{ steps.details.outputs.base_image }}
+        image_name: ${{ steps.details.outputs.image_base }}:${{ steps.preflight.outputs.image_tag }}
+        image_cache_key: ${{ steps.preflight.outputs.image_cache_key }}
+        image_registry: ${{ steps.details.outputs.image_registry }}
+        registry_username: ${{ secrets.QUAY_BOT_NAME }}
+        registry_password: ${{ secrets.QUAY_BOT_PASSWORD }}
+  ci:
+    needs:
+    - preflight
+    strategy:
+      matrix:
+        python: ${{ fromJSON(needs.preflight.outputs.versions).python }}
+      fail-fast: false
+    uses: ./.github/workflows/test.yml
+    with:
+      if: ${{ needs.preflight.outputs.need_ci == 'true' }}
+      image: ${{ needs.preflight.outputs.image_base }}:${{ needs.preflight.outputs.image_tag }}
+      python: ${{ matrix.python }}
