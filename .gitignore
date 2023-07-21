@@ -1,3 +1,5 @@
 .coverage
+*.egg-info
 dist
+build
 src/jinjanator/version.py

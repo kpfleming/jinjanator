@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import pathlib
+from pathlib import Path
 
 import pytest
 
@@ -8,7 +8,7 @@ from . import FilePair, FilePairFactory
 
 
 @pytest.fixture()
-def make_file_pair(tmp_path: pathlib.Path) -> FilePairFactory:
+def make_file_pair(tmp_path: Path) -> FilePairFactory:
     def _make_file_pair(
         template_content: str,
         data_content: str,

@@ -2,12 +2,24 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import Any, Callable, Dict, Mapping, Optional, Sequence, TextIO, Tuple, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Mapping,
+    Optional,
+    Sequence,
+    TextIO,
+    Tuple,
+    Union,
+    cast,
+)
 
 import jinja2
+import pluggy  # type: ignore
 
-from . import filters, version
-from .context import FORMATS, read_context_data
+from . import filters, formats, plugin, version
+from .context import read_context_data
 
 
 class FilePathLoader(jinja2.BaseLoader):
@@ -44,7 +56,13 @@ class Jinja2TemplateRenderer:
         "jinja2.ext.loopcontrols",
     )
 
-    def __init__(self, cwd: Path, allow_undefined: bool, j2_env_params: Dict[str, Any]):
+    def __init__(
+        self,
+        cwd: Path,
+        allow_undefined: bool,
+        j2_env_params: Dict[str, Any],
+        plugin_hook_callers: plugin.PluginHookCallers,
+    ):
         j2_env_params.setdefault("keep_trailing_newline", True)
         j2_env_params.setdefault(
             "undefined",
@@ -54,10 +72,15 @@ class Jinja2TemplateRenderer:
         j2_env_params.setdefault("loader", FilePathLoader(cwd))
 
         self._env = jinja2.Environment(**j2_env_params)
-        self._env.globals.update({"env": filters.env})
 
-    def register_filters(self, filters: Mapping[str, Callable[..., Any]]) -> None:
-        self._env.filters.update(filters)
+        for plugin_globals in plugin_hook_callers.plugin_globals():
+            self._env.globals.update(plugin_globals)
+
+        for plugin_filters in plugin_hook_callers.plugin_filters():
+            self._env.filters.update(plugin_filters)
+
+        for plugin_tests in plugin_hook_callers.plugin_tests():
+            self._env.tests.update(plugin_tests)
 
     def render(self, template_name: str, context: Mapping[str, str]) -> str:
         return self._env.get_template(template_name).render(context)
@@ -83,7 +106,10 @@ class UniqueStore(argparse.Action):
         self.already_seen = True
 
 
-def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
+def parse_args(
+    formats: Mapping[str, plugin.Format],
+    argv: Optional[Sequence[str]] = None,
+) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="j2",
         description="Command-line interface to Jinja2 for templating in shell scripts.",
@@ -104,7 +130,15 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         action=UniqueStore,
         default="?",
         help="Input data format",
-        choices=["?", *list(FORMATS.keys())],
+        choices=["?", *list(formats.keys())],
+    )
+
+    parser.add_argument(
+        "--format-option",
+        action="append",
+        metavar="option",
+        dest="format_options",
+        help="Options for data parser",
     )
 
     parser.add_argument(
@@ -162,7 +196,19 @@ def render_command(
     stdin: Optional[TextIO],
     argv: Sequence[str],
 ) -> str:
-    args = parse_args(argv[1:])
+    pm = pluggy.PluginManager("jinjanator")
+    pm.add_hookspecs(plugin.PluginHooks)
+    pm.register(filters)
+    pm.register(formats)
+    pm.load_setuptools_entrypoints("jinjanator")
+    plugin_hook_callers = cast(plugin.PluginHookCallers, pm.hook)
+
+    available_formats: Dict[str, plugin.Format] = {}
+
+    for plugin_formats in plugin_hook_callers.plugin_formats():
+        available_formats.update(plugin_formats)
+
+    args = parse_args(available_formats, argv[1:])
 
     if not args.quiet:
         print(
@@ -175,12 +221,12 @@ def render_command(
             args.format = "env"
         else:
             suffix = args.data.suffix
-            for k, v in FORMATS.items():
+            for k, v in available_formats.items():
                 if suffix in v.suffixes:
                     args.format = k
                     break
             if args.format == "?":
-                raise ValueError(f"{suffix} format unavailable")
+                raise ValueError(f"no format which can read '{suffix}' files available")
 
     # We always expect a file;
     # unless the user wants 'env', and there's no input file provided.
@@ -212,18 +258,22 @@ def render_command(
             stdin if args.data is None or str(args.data) == "-" else args.data.open()
         )
 
-    context = read_context_data(args.format, input_data_f, environ, args.import_env)
+    if args.format == "env" and input_data_f is None:
+        context = environ
+    else:
+        context = read_context_data(
+            available_formats[args.format],
+            input_data_f,
+            environ,
+            args.import_env,
+            args.format_options,
+        )
 
     renderer = Jinja2TemplateRenderer(
         cwd,
         args.undefined,
         j2_env_params={},
-    )
-
-    renderer.register_filters(
-        {
-            "env": filters.env,
-        },
+        plugin_hook_callers=plugin_hook_callers,
     )
 
     try:
@@ -259,7 +309,12 @@ def render_command(
 
 def main() -> Optional[int]:
     try:
-        output = render_command(Path.cwd(), os.environ, sys.stdin, sys.argv)
+        output = render_command(
+            Path.cwd(),
+            os.environ,
+            sys.stdin,
+            sys.argv,
+        )
     except SystemExit:
         return 1
     outstream = getattr(sys.stdout, "buffer", sys.stdout)

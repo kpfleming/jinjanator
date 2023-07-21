@@ -1,0 +1,26 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools>=61",
+]
+
+[project]
+name = "jinjanator-plugin-example"
+version = "0.0.0"
+requires-python = ">=3.8"
+dependencies = [
+  "jinjanator",
+]
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
+
+[tool.setuptools]
+py-modules = ["jinjanator_plugin_example"]
+
+[project.entry-points.jinjanator]
+example = "jinjanator_plugin_example"

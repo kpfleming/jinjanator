@@ -19,5 +19,8 @@ def test_quiet(make_file_pair: FilePairFactory, capsys: Any) -> None:
 
 def test_unavailable_suffix(make_file_pair: FilePairFactory, capsys: Any) -> None:
     files = make_file_pair("Hello {{name}}!", "name=Blart", "xyz")
-    with pytest.raises(ValueError, match=".xyz format unavailable"):
+    with pytest.raises(
+        ValueError,
+        match="no format which can read '.xyz' files available",
+    ):
         render_file(files, [])

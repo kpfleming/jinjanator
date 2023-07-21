@@ -34,7 +34,9 @@ dynamic = [
 ]
 dependencies = [
   "jinja2>=2.7.2",
+  "pluggy",
   "PyYAML",
+  "typing-extensions",
 ]
 [project.urls]
 "Bug Tracker" = "https://github.com/kpfleming/jinjanator/issues"
@@ -74,17 +76,19 @@ dependencies = [
 
 [tool.hatch.envs.lint.scripts]
 lint = [
-     "black --preview src tests",
-     "ruff check --fix -- src tests",
+     "black --preview src tests plugin_example",
+     "ruff check --fix -- src tests plugin_example",
      "mypy --package jinjanator",
      "mypy tests",
+     "mypy plugin_example/*.py",
      "shellcheck workflow-support/*.sh",
 ]
 lint-action = [
-     "black --check --diff --preview src tests",
-     "ruff check --format=github -- src tests",
+     "black --check --diff --preview src tests plugin_example",
+     "ruff check --format=github -- src tests plugin_example",
      "mypy --package jinjanator",
      "mypy tests",
+     "mypy plugin_example/*.py",
      "shellcheck workflow-support/*.sh",
 ]
 
@@ -109,6 +113,7 @@ python = [
 
 [tool.hatch.envs.ci.scripts]
 ci = [
+    "pip install ./plugin_example",
     "rm -f .coverage",
     # run tests
     "pytest --verbose --cov-append  --cov-branch --cov-fail-under=90 --cov=jinjanator",
@@ -155,6 +160,7 @@ minversion = "6.0"
 xfail_strict = true
 testpaths = [
     "tests",
+    "plugin_example/tests",
 ]
 addopts = [
     "-ra",
@@ -162,6 +168,7 @@ addopts = [
 ]
 
 [tool.mypy]
+python_version = 3.8
 namespace_packages = true
 explicit_package_bases = true
 check_untyped_defs = true

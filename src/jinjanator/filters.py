@@ -1,9 +1,10 @@
-"""Custom Jinja2 filters."""
 import os
 from typing import Optional
 
+from .plugin import Filters, Globals, plugin_filters_hook, plugin_globals_hook
 
-def env(varname: str, default: Optional[Optional[str]] = None) -> str:
+
+def env(varname: str, default: Optional[str] = None) -> str:
     """Use an environment variable's value inside your template.
 
     This filter is available even when your data source is something other that the environment.
@@ -36,3 +37,13 @@ def env(varname: str, default: Optional[Optional[str]] = None) -> str:
 
     # Raise KeyError when not provided
     return os.environ[varname]
+
+
+@plugin_filters_hook
+def plugin_filters() -> Filters:
+    return {"env": env}
+
+
+@plugin_globals_hook
+def plugin_globals() -> Globals:
+    return {"env": env}
