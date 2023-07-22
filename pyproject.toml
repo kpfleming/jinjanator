@@ -1,6 +1,7 @@
 [build-system]
 build-backend = "hatchling.build"
 requires = [
+  "hatch-fancy-pypi-readme",
   "hatch-vcs",
   "hatchling",
 ]
@@ -8,7 +9,6 @@ requires = [
 [project]
 name = "jinjanator"
 description = "Command-line interface to Jinja2 for templating in shell scripts."
-readme = "README.md"
 license = { text="Apache-2.0" }
 authors = [
   { name="Kevin P. Fleming", email="jinjanator@kevin.km6g.us" },
@@ -30,6 +30,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dynamic = [
+  "readme",
   "version",
 ]
 dependencies = [
@@ -43,6 +44,19 @@ dependencies = [
 "Homepage" = "https://github.com/kpfleming/jinjanator"
 [project.scripts]
 jinjanate = "jinjanator.cli:main"
+
+[tool.hatch.envs.changelog]
+dependencies = [
+  "towncrier",
+]
+
+[tool.hatch.envs.changelog.scripts]
+draft = [
+  "towncrier build --version main --draft",
+]
+release = [
+  "towncrier build --version {args}",
+]
 
 [tool.hatch.version]
 source = "vcs"
@@ -116,10 +130,50 @@ ci = [
     "pip install ./plugin_example",
     "rm -f .coverage",
     # run tests
-    "pytest --verbose --cov-append  --cov-branch --cov-fail-under=90 --cov=jinjanator",
+    "pytest --verbose --cov-append  --cov-branch --cov-fail-under=96 --cov=jinjanator",
     # produce a coverage report with 'missing' lines indicated
     "coverage report -m",
 ]
+
+[tool.hatch.metadata.hooks.fancy-pypi-readme]
+content-type = "text/markdown"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+text = "# *jinjanator*: CLI tool for rendering Jinja2 templates\n"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+path = "README.md"
+start-at = "Features:"
+end-before = "## Credits"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+text = """
+
+## Release Information
+
+"""
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+path = "CHANGELOG.md"
+start-after = "<!-- towncrier release notes start -->"
+# pattern = "\n(###.+?\n)## "
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+text = """
+---
+
+[→ Full Changelog](https://github.com/kpfleming/jinjanator/blob/main/CHANGELOG.md)
+
+
+"""
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
+pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)'
+replacement = '[\1](https://github.com/kpfleming/jinjanator/tree/main/\g<2>)'
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
+pattern = "#(\\d+)"
+replacement = "[#\\1](https://github.com/kpfleming/jinjanator/issues/\\1)"
 
 [tool.black]
 line-length = 90
@@ -128,32 +182,39 @@ line-length = 90
 src = ["src", "tests"]
 format = "grouped"
 target-version = "py38"
-line-length = 100
-select = [
-  "A",
-  "B",
-  "C",
-#  "D",
-  "COM",
-  "DTZ",
-  "E",
-  "F",
-  "I",
-  "ISC",
-  "N",
-  "PT",
-  "Q",
-  "RET",
-  "RUF",
-  "SIM",
-  "UP",
-  "W292",
-  "YTT",
-]
+select = ["ALL"]
+
 ignore = [
-  "C901",
+  "ANN",      # Mypy is better at this.
+  "C901",     # Leave complexity to me.
+  "COM",      # Leave commas to Black.
+  "D",        # We have different ideas about docstrings.
+  "E501",     # leave line-length enforcement to Black
+  "PLR0912",  # Leave complexity to me.
+  "TRY301",   # Raise in try blocks can totally make sense.
 ]
 unfixable = ["F401"]
+
+[tool.ruff.per-file-ignores]
+"src/jinjanator/cli.py" = ["T201"]
+"plugin_example/jinjanator_plugin_example.py" = ["INP001"]
+"plugin_example/tests/test_plugin.py" = ["INP001"]
+"tests/*" = [
+  "PLC1901", # empty strings are falsey, but are less specific in tests
+  "PT005",   # we use always underscores and explicit names
+  "S101",    # assert
+  "SIM300",  # Yoda rocks in tests
+]
+"plugin_example/tests/*" = [
+  "PLC1901", # empty strings are falsey, but are less specific in tests
+  "PT005",   # we use always underscores and explicit names
+  "S101",    # assert
+  "SIM300",  # Yoda rocks in tests
+]
+
+[tool.ruff.isort]
+lines-between-types = 1
+lines-after-imports = 2
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -185,3 +246,42 @@ warn_no_return = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unused_ignores = true
+
+[tool.towncrier]
+name = "jinjanator"
+package = "jinjanator"
+directory = "changelog.d"
+filename = "CHANGELOG.md"
+start_string = "<!-- towncrier release notes start -->\n"
+template = "changelog.d/towncrier_template.md.jinja"
+title_format = ""
+issue_format = "[#{issue}](https://github.com/kpfleming/jinjanator/issues/{issue})"
+underlines = ["", "", ""]
+
+[[tool.towncrier.section]]
+path = ""
+
+[[tool.towncrier.type]]
+directory = "breaking"
+name = "Backwards-incompatible Changes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "deprecating"
+name = "Deprecations"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "adding"
+name = "Additions"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "changing"
+name = "Changes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "fixing"
+name = "Fixes"
+showcontent = true

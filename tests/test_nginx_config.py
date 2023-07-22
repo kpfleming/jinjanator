@@ -8,6 +8,7 @@ from . import (
     render_implicit_stream,
 )
 
+
 DATA_TEMPLATE = """
 server {
   listen 80;

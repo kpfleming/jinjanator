@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import configparser
 import json
-from typing import Any, List, Mapping, Optional
+
+from typing import Any, Mapping
 
 import yaml
 
@@ -9,7 +12,7 @@ from .plugin import Format, Formats, plugin_formats_hook
 
 def _parse_ini(
     data_string: str,
-    options: Optional[List[str]] = None,
+    options: list[str] | None = None,  # noqa: ARG001
 ) -> Mapping[str, Any]:
     """INI data input format.
 
@@ -31,9 +34,9 @@ def _parse_ini(
     # Override
     class MyConfigParser(configparser.ConfigParser):
         def as_dict(self) -> Mapping[str, Any]:
-            d = dict(self._sections)  # type: ignore
+            d = dict(self._sections)  # type: ignore[attr-defined]
             for k in d:
-                d[k] = dict(self._defaults, **d[k])  # type: ignore
+                d[k] = dict(self._defaults, **d[k])  # type: ignore[attr-defined]
                 d[k].pop("__name__", None)
             return d
 
@@ -47,7 +50,7 @@ def _parse_ini(
 
 def _parse_json(
     data_string: str,
-    options: Optional[List[str]] = None,
+    options: list[str] | None = None,  # noqa: ARG001
 ) -> Mapping[str, Any]:
     """JSON data input format.
 
@@ -71,14 +74,15 @@ def _parse_json(
     context = json.loads(data_string)
 
     if not isinstance(context, dict):
-        raise ValueError("JSON input does not contain an object (dictionary)")
+        msg = "JSON input does not contain an object (dictionary)"
+        raise TypeError(msg)
 
     return context
 
 
 def _parse_yaml(
     data_string: str,
-    options: Optional[List[str]] = None,
+    options: list[str] | None = None,  # noqa: ARG001
 ) -> Mapping[str, Any]:
     """YAML data input format.
 
@@ -96,17 +100,18 @@ def _parse_yaml(
         $ j2 config.j2 data.yml
         $ cat data.yml | j2 --format=yaml config.j2
     """
-    context = yaml.load(data_string, yaml.FullLoader)
+    context = yaml.safe_load(data_string)
 
     if not isinstance(context, dict):
-        raise ValueError("YAML input does not contain a mapping (dictionary)")
+        msg = "YAML input does not contain a mapping (dictionary)"
+        raise TypeError(msg)
 
     return context
 
 
 def _parse_env(
     data_string: str,
-    options: Optional[List[str]] = None,
+    options: list[str] | None = None,  # noqa: ARG001
 ) -> Mapping[str, str]:
     """Data input from environment variables.
 
@@ -136,7 +141,7 @@ def _parse_env(
     # Parse
     return dict(
         filter(
-            lambda line: len(line) == 2,
+            lambda line: len(line) == 2,  # noqa: PLR2004
             (
                 list(map(str.strip, line.split("=", 1)))
                 for line in data_string.split("\n")

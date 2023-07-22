@@ -10,11 +10,12 @@
 [![Project Management - Hatch](https://img.shields.io/badge/Project%20Management-Hatch-purple.svg)](https://github.com/pypa/hatch)
 [![Testing - Pytest](https://img.shields.io/badge/Testing-Pytest-orange.svg)](https://github.com/pytest-dev/pytest)
 
-This repo contains `jinjanator`, a CLI tool to render [Jinja2][2]
-templates. It is a fork of `j2cli`, which itself was a fork of
-`jinja2-cli`, both of which are no longer maintained.
+This repo contains `jinjanator`, a CLI tool to render
+[Jinja2](https://github.com/pallets/jinja/) templates. It is a fork of
+`j2cli`, which itself was a fork of `jinja2-cli`, both of which are no
+longer actively maintained.
 
-Open Source software: [Apache License 2.0][3]
+Open Source software: [Apache License 2.0](https://spdx.org/licenses/Apache-2.0.html)
 
 ## &nbsp;
 
@@ -22,17 +23,19 @@ Features:
 
 * Jinja2 templating
 * INI, YAML, JSON data sources supported
-* Allows the use of environment variables in templates!
+* Environment variables can be used with or without data files
+* Plugins can provide additional formats, filters, tests, and global
+  functions (see [Plugins](PLUGINS.md) for details).
 
 ## Installation
 
 ```
-pip install j2cli
+pip install jinjanator
 ```
 
 ## Tutorial
 
-Suppose, you want to have an nginx configuration file template, `nginx.j2`:
+Suppose, you have an NGINX configuration file template, `nginx.j2`:
 
 ```jinja2
 server {
@@ -58,7 +61,7 @@ And you have a JSON file with the data, `nginx.json`:
 This is how you render it into a working configuration file:
 
 ```bash
-$ j2 -f json nginx.j2 nginx.json > nginx.conf
+$ jinjanate nginx.j2 nginx.json > nginx.conf
 ```
 
 The output is saved to `nginx.conf`:
@@ -73,98 +76,117 @@ server {
 }
 ```
 
-Alternatively, you can use the `-o nginx.conf` option.
+Alternatively, you can use the `-o nginx.conf` or `--output-file
+nginx.conf`options to write directly to the file.
 
 ## Tutorial with environment variables
 
-Suppose, you have a very simple template, `person.xml`:
+Suppose, you have a very simple template, `person.xml.j2`:
 
 ```jinja2
 <data><name>{{ name }}</name><age>{{ age }}</age></data>
 ```
 
-What is the easiest way to use j2 here?
-Use environment variables in your bash script:
+What is the easiest way to use jinjanator here?
+Use environment variables in your Bash script:
 
 ```bash
 $ export name=Andrew
 $ export age=31
-$ j2 /tmp/person.xml
+$ jinjanate /tmp/person.xml.j2
 <data><name>Andrew</name><age>31</age></data>
 ```
 
 ## Using environment variables
 
-Even when you use yaml or json as the data source, you can always access environment variables
-using the `env()` function:
+Even when you use a data file as the data source, you can always
+access environment variables using the `env()` function:
 
 ```jinja2
 Username: {{ login }}
 Password: {{ env("APP_PASSWORD") }}
 ```
 
+Or, if you prefer, as a filter:
 
-## Usage
+```jinja2
+Username: {{ login }}
+Password: {{ "APP_PASSWORD" | env }}
+```
 
-Compile a template using INI-file data source:
-
-    $ j2 config.j2 data.ini
-
-Compile using JSON data source:
-
-    $ j2 config.j2 data.json
-
-Compile using YAML data source (requires PyYAML):
-
-    $ j2 config.j2 data.yaml
-
-Compile using JSON data on stdin:
-
-    $ curl http://example.com/service.json | j2 --format=json config.j2
-
-Compile using environment variables (hello Docker!):
-
-    $ j2 config.j2
-
-Or even read environment variables from a file:
-
-    $ j2 --format=env config.j2 data.env
-
-Or pipe it: (note that you'll have to use the "-" in this particular case):
-
-    $ j2 --format=env config.j2 - < data.env
-
-
-# Reference
-`j2` accepts the following arguments:
+## CLI Reference
+`jinjanate` accepts the following arguments:
 
 * `template`: Jinja2 template file to render
 * `data`: (optional) path to the data used for rendering.
-    The default is `-`: use stdin. Specify it explicitly when using env!
+    The default is `-`: use stdin.
 
 Options:
 
-* `--format FMT, -f FMT`: format for the data file. The default is `?`: guess from file extension.
-* `--import-env VAR, -e VAR`: import all environment variables into the template as `VAR`.
-    To import environment variables into the global scope, give it an empty string: `--import-env=`.
-    (This will overwrite any existing variables!)
-* `--output-file OUTFILE, -o OUTFILE`: Write rendered template to a file
-* `--undefined`: Allow undefined variables to be used in templates (no error will be raised)
+* `--format FMT, -f FMT`: format for the data file. The default is
+  `?`: guess from file extension. Supported formats are YAML (.yaml or
+  .yml), JSON (.json), INI (.ini), and dotenv (.env), plus any formats
+  provided by plugins you have installed.
+* `--format-option OPT`: option to be passed to the parser for the
+  data format selected with `--format` (or auto-selected). This can be
+  specified multiple times. Refer to the documentation for the format
+  itself to learn whether it supports any options.
+* `--help, -h`: generates a help message describing usage of the tool.
+* `--import-env VAR, -e VAR`: import all environment variables into
+    the template as `VAR`.  To import environment variables into the
+    global scope, give it an empty string: `--import-env=`.  (This
+    will overwrite any existing variables with the same names!)
+* `--output-file OUTFILE, -o OUTFILE`: Write rendered template to a
+  file.
+* `--quiet`: Avoid generating any output on stderr.
+* `--undefined`: Allow undefined variables to be used in templates (no
+  error will be raised).
+* `--version`: prints the version of the tool and the Jinja2 package installed.
 
 There is some special behavior with environment variables:
 
-* When `data` is not provided (data is `-`), `--format` defaults to `env` and thus reads environment variables
-* When `--format=env`, it can read a special "environment variables" file made like this: `env > /tmp/file.env`
+* When `data` is not provided (data is `-`), `--format` defaults to
+  `env` and thus reads environment variables.
 
-## Formats
+## Usage Examples
+
+Render a template using INI-file data source:
+
+    $ jinjanate config.j2 data.ini
+
+Render using JSON data source:
+
+    $ jinjanate config.j2 data.json
+
+Render using YAML data source:
+
+    $ jinjanate config.j2 data.yaml
+
+Render using JSON data on stdin:
+
+    $ curl http://example.com/service.json | jinjanate --format=json config.j2 -
+
+Render using environment variables:
+
+    $ jinjanate config.j2
+
+Or use environment variables from a file:
+
+    $ jinjanate config.j2 data.env
+
+Or pipe it: (note that you'll have to use "-" in this particular case):
+
+    $ jinjanate --format=env config.j2 - < data.env
 
 
-### env
-Data input from environment variables.
+## Data Formats
+
+### dotenv
+Data input from environment variables. This format does not support any options.
 
 Render directly from the current environment variable values:
 
-    $ j2 config.j2
+    $ jinjanate config.j2
 
 Or alternatively, read the values from a dotenv file:
 
@@ -176,15 +198,19 @@ NGINX_LOGS=/var/log/nginx/
 
 And render with:
 
-    $ j2 config.j2 data.env
-    $ env | j2 --format=env config.j2
+    $ jinjanate config.j2 data.env
 
-If you're going to pipe a dotenv file into `j2`, you'll need to use "-" as the second argument to explicitly:
+Or:
 
-    $ j2 config.j2 - < data.env
+    $ env | jinjanate --format=env config.j2
 
-### ini
-INI data input format.
+If you're going to pipe a dotenv file into `jinjanate`, you'll need to
+use "-" as the second argument:
+
+    $ jinjanate config.j2 - < data.env
+
+### INI
+INI data input format. This format does not support any options.
 
 data.ini:
 
@@ -192,16 +218,19 @@ data.ini:
 [nginx]
 hostname=localhost
 webroot=/var/www/project
-logs=/var/log/nginx/
+logs=/var/log/nginx
 ```
 
 Usage:
 
-    $ j2 config.j2 data.ini
-    $ cat data.ini | j2 --format=ini config.j2
+    $ jinjanate config.j2 data.ini
 
-### json
-JSON data input format
+Or:
+
+    $ cat data.ini | jinjanate --format=ini config.j2
+
+### JSON
+JSON data input format. This format does not support any options.
 
 data.json:
 
@@ -210,18 +239,21 @@ data.json:
     "nginx":{
         "hostname": "localhost",
         "webroot": "/var/www/project",
-        "logs": "/var/log/nginx/"
+        "logs": "/var/log/nginx"
     }
 }
 ```
 
 Usage:
 
-    $ j2 config.j2 data.json
-    $ cat data.json | j2 --format=ini config.j2
+    $ jinjanate config.j2 data.json
 
-### yaml
-YAML data input format.
+Or:
+
+    $ cat data.json | jinjanate --format=ini config.j2
+
+### YAML
+YAML data input format. This format does not support any options.
 
 data.yaml:
 
@@ -234,31 +266,34 @@ nginx:
 
 Usage:
 
-    $ j2 config.j2 data.yml
-    $ cat data.yml | j2 --format=yaml config.j2
+    $ jinjanate config.j2 data.yml
 
+Or:
+
+    $ cat data.yml | jinjanate --format=yaml config.j2
 
 ## Filters
 
 ### `env(varname, default=None)`
-Use an environment variable's value inside your template.
+Use an environment variable's value in the template.
 
-This filter is available even when your data source is something other that the environment.
+This filter is available even when your data source is something other
+than the environment.
 
 Example:
 
 ```jinja2
 User: {{ user_login }}
-Pass: {{ "USER_PASSWORD"|env }}
+Pass: {{ "USER_PASSWORD" | env }}
 ```
 
-You can provide the default value:
+You can provide a default value:
 
 ```jinja2
-Pass: {{ "USER_PASSWORD"|env("-none-") }}
+Pass: {{ "USER_PASSWORD" | env("-none-") }}
 ```
 
-For your convenience, it's also available as a function:
+For your convenience, it's also available as a global function:
 
 ```jinja2
 User: {{ user_login }}
@@ -266,6 +301,32 @@ Pass: {{ env("USER_PASSWORD") }}
 ```
 
 Notice that there must be quotes around the environment variable name
+when it is a literal string.
 
-[2]: https://github.com/pallets/jinja/
-[3]: https://spdx.org/licenses/Apache-2.0.html
+## Credits
+
+This tool was created from [j2cli](https://github.com/kolypto/j2cli),
+which itself was created from
+[jinja2-cli](https://github.com/mattrobenolt/jinja2-cli). It was
+created to bring the project up to 'modern' Python coding, packaging,
+and project-management standards, and to support plugins to provide
+extensibility.
+
+["Standing on the shoulders of
+giants"](https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants)
+could not be more true than it is in the Python community; this
+project relies on many wonderful tools and libraries produced by the
+global open source software community, in addition to Python
+itself. I've listed many of them below, but if I've overlooked any
+please do not be offended :-)
+
+* [Attrs](https://github.com/python-attrs/attrs)
+* [Black](https://github.com/psf/black)
+* [Hatch-Fancy-PyPI-Readme](https://github.com/hynek/hatch-fancy-pypi-readme)
+* [Hatch](https://github.com/pypa/hatch)
+* [Jinja2](https://github.com/pallets/jinja/)
+* [Mypy](https://github.com/python/mypy)
+* [Pluggy](https://github.com/pytest-dev/pluggy)
+* [Pytest](https://github.com/pytest-dev/pytest)
+* [Ruff](https://github.com/astral-sh/ruff)
+* [Towncrier](https://github.com/twisted/towncrier)

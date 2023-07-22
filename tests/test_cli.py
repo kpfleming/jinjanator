@@ -17,7 +17,7 @@ def test_quiet(make_file_pair: FilePairFactory, capsys: Any) -> None:
     assert len(captured.err) == 0
 
 
-def test_unavailable_suffix(make_file_pair: FilePairFactory, capsys: Any) -> None:
+def test_unavailable_suffix(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("Hello {{name}}!", "name=Blart", "xyz")
     with pytest.raises(
         ValueError,

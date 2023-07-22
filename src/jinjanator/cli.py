@@ -1,22 +1,21 @@
+from __future__ import annotations
+
 import argparse
 import os
 import sys
+
 from pathlib import Path
 from typing import (
     Any,
     Callable,
-    Dict,
     Mapping,
-    Optional,
     Sequence,
     TextIO,
-    Tuple,
-    Union,
     cast,
 )
 
 import jinja2
-import pluggy  # type: ignore
+import pluggy  # type: ignore[import]
 
 from . import filters, formats, plugin, version
 from .context import read_context_data
@@ -29,9 +28,9 @@ class FilePathLoader(jinja2.BaseLoader):
 
     def get_source(
         self,
-        environment: jinja2.Environment,
+        environment: jinja2.Environment,  # noqa: ARG002
         template_name: str,
-    ) -> Tuple[str, str, Callable[[], bool]]:
+    ) -> tuple[str, str, Callable[[], bool]]:
         template_path = Path(template_name)
 
         if not template_path.is_absolute():
@@ -59,8 +58,8 @@ class Jinja2TemplateRenderer:
     def __init__(
         self,
         cwd: Path,
-        allow_undefined: bool,
-        j2_env_params: Dict[str, Any],
+        allow_undefined: bool,  # noqa: FBT001
+        j2_env_params: dict[str, Any],
         plugin_hook_callers: plugin.PluginHookCallers,
     ):
         j2_env_params.setdefault("keep_trailing_newline", True)
@@ -71,7 +70,7 @@ class Jinja2TemplateRenderer:
         j2_env_params.setdefault("extensions", self.ENABLED_EXTENSIONS)
         j2_env_params.setdefault("loader", FilePathLoader(cwd))
 
-        self._env = jinja2.Environment(**j2_env_params)
+        self._env = jinja2.Environment(**j2_env_params, autoescape=True)
 
         for plugin_globals in plugin_hook_callers.plugin_globals():
             self._env.globals.update(plugin_globals)
@@ -97,8 +96,8 @@ class UniqueStore(argparse.Action):
         self,
         parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,
-        values: Optional[Union[str, Sequence[Any]]],
-        option_string: Optional[str] = None,
+        values: str | Sequence[Any] | None,
+        option_string: str | None = None,
     ) -> None:
         if self.already_seen and option_string:
             parser.error(option_string + " cannot be specified more than once.")
@@ -108,7 +107,7 @@ class UniqueStore(argparse.Action):
 
 def parse_args(
     formats: Mapping[str, plugin.Format],
-    argv: Optional[Sequence[str]] = None,
+    argv: Sequence[str] | None = None,
 ) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="j2",
@@ -190,20 +189,24 @@ def parse_args(
     return parser.parse_args(argv)
 
 
-def render_command(
-    cwd: Path,
-    environ: Mapping[str, str],
-    stdin: Optional[TextIO],
-    argv: Sequence[str],
-) -> str:
+def get_hook_callers() -> plugin.PluginHookCallers:
     pm = pluggy.PluginManager("jinjanator")
     pm.add_hookspecs(plugin.PluginHooks)
     pm.register(filters)
     pm.register(formats)
     pm.load_setuptools_entrypoints("jinjanator")
-    plugin_hook_callers = cast(plugin.PluginHookCallers, pm.hook)
+    return cast(plugin.PluginHookCallers, pm.hook)
 
-    available_formats: Dict[str, plugin.Format] = {}
+
+def render_command(
+    cwd: Path,
+    environ: Mapping[str, str],
+    stdin: TextIO | None,
+    argv: Sequence[str],
+) -> str:
+    plugin_hook_callers = get_hook_callers()
+
+    available_formats: dict[str, plugin.Format] = {}
 
     for plugin_formats in plugin_hook_callers.plugin_formats():
         available_formats.update(plugin_formats)
@@ -226,7 +229,8 @@ def render_command(
                     args.format = k
                     break
             if args.format == "?":
-                raise ValueError(f"no format which can read '{suffix}' files available")
+                msg = f"no format which can read '{suffix}' files available"
+                raise ValueError(msg)
 
     # We always expect a file;
     # unless the user wants 'env', and there's no input file provided.
@@ -291,7 +295,7 @@ def render_command(
                     )
                 )
                 e.args = (e.args[0] + extra_info,) + e.args[1:]
-        except:  # noqa: E722
+        except:  # noqa: E722, S110
             # The above code is so optional that any, ANY, error, is ignored
             pass
 
@@ -307,7 +311,7 @@ def render_command(
     return result
 
 
-def main() -> Optional[int]:
+def main() -> int | None:
     try:
         output = render_command(
             Path.cwd(),

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pytest
+
 from jinja2.exceptions import UndefinedError
 
 from . import (

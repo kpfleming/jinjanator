@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import codecs
-from typing import List, Mapping, Optional
+
+from typing import Mapping
 
 from jinjanator.plugin import (
     Filters,
@@ -17,12 +20,12 @@ def rot13_filter(value: str) -> str:
 
 
 def is_len12_test(value: str) -> bool:
-    return len(value) == 12
+    return len(value) == 12  # noqa: PLR2004
 
 
 def spam_format(
-    data_string: str,
-    options: Optional[List[str]] = None,
+    data_string: str,  # noqa: ARG001
+    options: list[str] | None = None,
 ) -> Mapping[str, str]:
     if options and options[0] == "ham":
         return {

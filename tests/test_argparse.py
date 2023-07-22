@@ -8,7 +8,9 @@ from jinjanator.cli import parse_args
 from jinjanator.plugin import Format
 
 
-def fake_env_parser(data: str, options: list[str] | None = None) -> Mapping[str, Any]:
+def fake_env_parser(
+    data: str, options: list[str] | None = None  # noqa: ARG001
+) -> Mapping[str, Any]:
     return {"foo": "bar"}
 
 

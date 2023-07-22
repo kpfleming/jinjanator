@@ -1,19 +1,24 @@
-from typing import Any, Dict, List, Mapping, Optional, TextIO
+from __future__ import annotations
 
-from .plugin import Format
+from typing import TYPE_CHECKING, Any, Mapping, TextIO
+
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .plugin import Format
 
 
 def read_context_data(
     fmt: Format,
-    f: Optional[TextIO],
+    f: TextIO | None,
     environ: Mapping[str, str],
-    import_env: Optional[str] = None,
-    format_options: Optional[List[str]] = None,
+    import_env: str | None = None,
+    format_options: list[str] | None = None,
 ) -> Mapping[str, Any]:
     if not f:
-        raise ValueError("no input supplied")
+        msg = "no input supplied"
+        raise ValueError(msg)
 
-    context: Dict[str, Any] = {}
+    context: dict[str, Any] = {}
 
     context.update(fmt.parser(f.read(), format_options))
 

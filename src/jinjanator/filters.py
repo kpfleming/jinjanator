@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 import os
-from typing import Optional
 
 from .plugin import Filters, Globals, plugin_filters_hook, plugin_globals_hook
 
 
-def env(varname: str, default: Optional[str] = None) -> str:
+def env(varname: str, default: str | None = None) -> str:
     """Use an environment variable's value inside your template.
 
     This filter is available even when your data source is something other that the environment.

@@ -1,11 +1,15 @@
 from __future__ import annotations
 
-import pathlib
+from typing import TYPE_CHECKING
 
 from . import (
     FilePairFactory,
     render_env,
 )
+
+
+if TYPE_CHECKING:
+    import pathlib
 
 
 def test_short_option(

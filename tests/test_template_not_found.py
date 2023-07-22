@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+
 from jinja2.exceptions import TemplateNotFound
 
 from . import (

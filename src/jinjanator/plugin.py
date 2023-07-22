@@ -1,24 +1,29 @@
+from __future__ import annotations
+
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
-    List,
     Mapping,
-    Optional,
     Protocol,
     Sequence,
     TypeVar,
     cast,
 )
 
-import pluggy  # type: ignore
+import pluggy  # type: ignore[import]
+
 from attrs import define
-from typing_extensions import TypeAlias
+
+
+if TYPE_CHECKING:  # pragma: no cover
+    from typing_extensions import TypeAlias
 
 
 @define(kw_only=True)
 class Format:
-    parser: Callable[[str, Optional[List[str]]], Mapping[str, Any]]
-    suffixes: List[str]
+    parser: Callable[[str, list[str] | None], Mapping[str, Any]]
+    suffixes: list[str]
 
 
 F = TypeVar("F", bound=Callable[..., Any])
