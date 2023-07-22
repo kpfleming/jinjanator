@@ -28,6 +28,16 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [23.3.0](https://github.com/kpfleming/jinjanator/tree/23.3.0) - 2023-07-22
+
+### Fixes
+
+- Disabled Jinja2 'autoescape' feature since it can produce incorrect output.
+  [#8](https://github.com/kpfleming/jinjanator/issues/8)
+- Add missing 'attrs' package to project dependencies.
+  [#9](https://github.com/kpfleming/jinjanator/issues/9)
+
+
 ## [23.2.0](https://github.com/kpfleming/jinjanator/tree/23.2.0) - 2023-07-22
 
 ### Fixes
