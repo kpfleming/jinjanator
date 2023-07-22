@@ -141,7 +141,7 @@ ci = [
     "pip install ./plugin_example",
     "rm -f .coverage",
     # run tests
-    "pytest --verbose --cov-append  --cov-branch --cov-fail-under=96 --cov=jinjanator",
+    "pytest --verbose --cov-append  --cov-branch --cov-fail-under=99 --cov=jinjanator",
     # produce a coverage report with 'missing' lines indicated
     "coverage report -m",
 ]

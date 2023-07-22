@@ -230,7 +230,7 @@ def render_command(
                     break
             if args.format == "?":
                 msg = f"no format which can read '{suffix}' files available"
-                raise ValueError(msg)
+                raise SystemExit(msg)
 
     # We always expect a file;
     # unless the user wants 'env', and there's no input file provided.
@@ -311,16 +311,15 @@ def render_command(
     return result
 
 
-def main() -> int | None:
+def main(args: list[str] | None = None) -> int | None:
     try:
-        output = render_command(
-            Path.cwd(),
-            os.environ,
-            sys.stdin,
-            sys.argv,
-        )
+        if args is None:  # pragma: no cover
+            args = sys.argv
+
+        output = render_command(Path.cwd(), os.environ, sys.stdin, args)
     except SystemExit:
         return 1
-    outstream = getattr(sys.stdout, "buffer", sys.stdout)
-    outstream.write(output)
+
+    sys.stdout.write(output)
+
     return None
