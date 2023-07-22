@@ -70,7 +70,7 @@ class Jinja2TemplateRenderer:
         j2_env_params.setdefault("extensions", self.ENABLED_EXTENSIONS)
         j2_env_params.setdefault("loader", FilePathLoader(cwd))
 
-        self._env = jinja2.Environment(**j2_env_params, autoescape=True)
+        self._env = jinja2.Environment(**j2_env_params, autoescape=False)  # noqa: S701
 
         for plugin_globals in plugin_hook_callers.plugin_globals():
             self._env.globals.update(plugin_globals)
