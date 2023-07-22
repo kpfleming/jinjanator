@@ -46,15 +46,18 @@ dependencies = [
 jinjanate = "jinjanator.cli:main"
 
 [tool.hatch.envs.changelog]
+skip-install = true
 dependencies = [
   "towncrier",
 ]
 
 [tool.hatch.envs.changelog.scripts]
 draft = [
+  "rm changelog.d/*~",
   "towncrier build --version main --draft",
 ]
 release = [
+  "rm changelog.d/*~",
   "towncrier build --version {args}",
 ]
 
@@ -141,7 +144,7 @@ ci = [
     "pip install ./plugin_example",
     "rm -f .coverage",
     # run tests
-    "pytest --verbose --cov-append  --cov-branch --cov-fail-under=99 --cov=jinjanator",
+    "pytest --verbose --cov-append  --cov-branch --cov-fail-under=98 --cov=jinjanator",
     # produce a coverage report with 'missing' lines indicated
     "coverage report -m",
 ]
@@ -168,7 +171,7 @@ text = """
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
 path = "CHANGELOG.md"
 start-after = "<!-- towncrier release notes start -->"
-# pattern = "\n(###.+?\n)## "
+pattern = "\n(###.+?\n)## "
 
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
 text = """

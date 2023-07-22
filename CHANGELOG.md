@@ -28,6 +28,14 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [23.2.0](https://github.com/kpfleming/jinjanator/tree/23.2.0) - 2023-07-22
+
+### Fixes
+
+- Resolved crash when writing final output. Increased test coverage to avoid regressions.
+  [#7](https://github.com/kpfleming/jinjanator/issues/7)
+
+
 ## [23.1.0](https://github.com/kpfleming/jinjanator/tree/23.1.0) - 2023-07-22
 
 ### Added
