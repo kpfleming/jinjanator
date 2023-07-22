@@ -64,10 +64,21 @@ source = "vcs"
 [tool.hatch.build.hooks.vcs]
 version-file = "src/jinjanator/version.py"
 
+[tool.hatch.build]
+artifacts = [
+  "src/jinjanator/version.py",
+]
+exclude = [
+  "*~",
+  ".github",
+]
+
 [tool.hatch.build.targets.sdist]
 include = [
     "src",
     "tests",
+    "plugin_example",
+    "*.md",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -139,7 +150,10 @@ ci = [
 content-type = "text/markdown"
 
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
-text = "# *jinjanator*: CLI tool for rendering Jinja2 templates\n"
+text = """
+# *jinjanator*: CLI tool for rendering Jinja2 templates
+
+"""
 
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
 path = "README.md"
@@ -148,9 +162,7 @@ end-before = "## Credits"
 
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
 text = """
-
 ## Release Information
-
 """
 
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
@@ -161,10 +173,7 @@ start-after = "<!-- towncrier release notes start -->"
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
 text = """
 ---
-
 [→ Full Changelog](https://github.com/kpfleming/jinjanator/blob/main/CHANGELOG.md)
-
-
 """
 
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
