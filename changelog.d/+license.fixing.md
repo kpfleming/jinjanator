@@ -1,1 +1,0 @@
-Corrected content of LICENSE file.

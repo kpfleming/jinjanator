@@ -1,1 +1,0 @@
-Added link to Ansible plugin.

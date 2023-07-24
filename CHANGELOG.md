@@ -28,6 +28,21 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [23.5.0](https://github.com/kpfleming/jinjanator/tree/23.5.0) - 2023-07-24
+
+### Additions
+
+- Added link to Ansible plugin.
+  
+
+
+### Fixes
+
+- Corrected content of LICENSE file.
+  
+- Corrected formatting of README on PyPI.
+
+
 ## [23.4.0](https://github.com/kpfleming/jinjanator/tree/23.4.0) - 2023-07-24
 
 ### Backwards-incompatible Changes

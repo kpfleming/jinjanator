@@ -1,1 +1,0 @@
-Corrected formatting of README on PyPI.
