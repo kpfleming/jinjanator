@@ -28,6 +28,14 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [23.4.0](https://github.com/kpfleming/jinjanator/tree/23.4.0) - 2023-07-24
+
+### Backwards-incompatible Changes
+
+- Moved plugin API to the jinjanator-plugins package.
+  [#12](https://github.com/kpfleming/jinjanator/issues/12)
+
+
 ## [23.3.0](https://github.com/kpfleming/jinjanator/tree/23.3.0) - 2023-07-22
 
 ### Fixes

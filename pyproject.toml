@@ -59,7 +59,7 @@ draft = [
 ]
 release = [
   "rm -f changelog.d/*~",
-  "towncrier build --version {args}",
+  "towncrier build --yes --version {args}",
 ]
 
 [tool.hatch.version]
