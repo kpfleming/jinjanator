@@ -19,11 +19,11 @@ from . import (
 def test_import(make_file_pair: FilePairFactory) -> None:
     # Import environment into a variable
     files = make_file_pair("{{ a }}/{{ env.B }}", '{"a":1}', "json")
-    assert render_file_env(files, ["--import-env=env"], env={"B": "2"}) == "1/2"
+    assert "1/2" == render_file_env(files, ["--import-env=env"], env={"B": "2"})
 
     # Import environment into global scope
     files = make_file_pair("{{ a }}/{{ B }}", '{"a":1, "B": 1}', "json")
-    assert render_file_env(files, ["--import-env="], env={"B": "2"}) == "1/2"
+    assert "1/2" == render_file_env(files, ["--import-env="], env={"B": "2"})
 
 
 def test_equals_sign_in_file_value(make_file_pair: FilePairFactory) -> None:
@@ -32,7 +32,7 @@ def test_equals_sign_in_file_value(make_file_pair: FilePairFactory) -> None:
         "A\nB=1\nC=val=1\n",
         "env",
     )
-    assert render_file(files, []) == "/1/val=1"
+    assert "/1/val=1" == render_file(files, [])
 
 
 def test_filter(make_file_pair: FilePairFactory, monkeypatch: Any) -> None:
@@ -46,12 +46,12 @@ def test_filter(make_file_pair: FilePairFactory, monkeypatch: Any) -> None:
 
     # Value provided by environment
     monkeypatch.setenv("USER_PASS", "qwerty123")
-    assert render_file(files, []) == "kolypto:qwerty123"
+    assert "kolypto:qwerty123" == render_file(files, [])
 
     # Value not provided
     monkeypatch.delenv("USER_PASS")
     with pytest.raises(KeyError):
-        assert render_file(files, []) == "kolypto:qwerty123"
+        assert "kolypto:qwerty123" == render_file(files, [])
 
     # Default value
     files = make_file_pair(
@@ -60,7 +60,7 @@ def test_filter(make_file_pair: FilePairFactory, monkeypatch: Any) -> None:
         "yaml",
     )
 
-    assert render_file(files, []) == "kolypto:-none-"
+    assert "kolypto:-none-" == render_file(files, [])
 
 
 def test_function(make_file_pair: FilePairFactory, monkeypatch: Any) -> None:
@@ -74,12 +74,12 @@ def test_function(make_file_pair: FilePairFactory, monkeypatch: Any) -> None:
 
     # Value provided by environment
     monkeypatch.setenv("USER_PASS", "qwerty123")
-    assert render_file(files, []) == "kolypto:qwerty123"
+    assert "kolypto:qwerty123" == render_file(files, [])
 
     # Value not provided
     monkeypatch.delenv("USER_PASS")
     with pytest.raises(KeyError):
-        assert render_file(files, []) == "kolypto:qwerty123"
+        assert "kolypto:qwerty123" == render_file(files, [])
 
     # Default value
     files = make_file_pair(
@@ -87,7 +87,7 @@ def test_function(make_file_pair: FilePairFactory, monkeypatch: Any) -> None:
         "user_login: kolypto",
         "yaml",
     )
-    assert render_file(files, []) == "kolypto:-none-"
+    assert "kolypto:-none-" == render_file(files, [])
 
 
 def test_env_stream(make_file_pair: FilePairFactory) -> None:

@@ -8,4 +8,4 @@ from . import (
 
 def test_extension(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("{% do [] %}", "", "env")
-    assert render_file(files, []) == ""
+    assert "" == render_file(files, [])

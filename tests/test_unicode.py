@@ -14,10 +14,10 @@ def test_json(make_file_pair: FilePairFactory) -> None:
         '{"a": "широкополосной"}',
         "json",
     )
-    assert render_file(files, []) == "Проверка широкополосной связи!"
+    assert "Проверка широкополосной связи!" == render_file(files, [])
 
 
 def test_env(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("Hello {{name}}!", "", "env")
-    # Test case from issue #17 (in original repo): unicode environment variables
-    assert render_env(files, [], env={"name": "Jürgen"}) == "Hello Jürgen!"
+    # Test case from issue #17 (in j2cli repo): unicode environment variables
+    assert "Hello Jürgen!" == render_env(files, [], env={"name": "Jürgen"})

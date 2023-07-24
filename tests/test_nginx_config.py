@@ -59,22 +59,16 @@ logs=/var/log/nginx
 
     files = make_file_pair(DATA_TEMPLATE, ini_data, "ini")
 
-    assert render_file(files, []) == EXPECTED_OUTPUT
-    assert render_file(files, ["--format=ini"]) == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_file(files, [])
+    assert EXPECTED_OUTPUT == render_file(files, ["--format=ini"])
 
-    assert (
-        render_implicit_stream(
-            files,
-            ["--format=ini"],
-        )
-        == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_implicit_stream(
+        files,
+        ["--format=ini"],
     )
-    assert (
-        render_explicit_stream(
-            files,
-            ["--format=ini"],
-        )
-        == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_explicit_stream(
+        files,
+        ["--format=ini"],
     )
 
 
@@ -91,22 +85,16 @@ def test_json(make_file_pair: FilePairFactory) -> None:
 
     files = make_file_pair(DATA_TEMPLATE, json_data, "json")
 
-    assert render_file(files, []) == EXPECTED_OUTPUT
-    assert render_file(files, ["--format=json"]) == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_file(files, [])
+    assert EXPECTED_OUTPUT == render_file(files, ["--format=json"])
 
-    assert (
-        render_implicit_stream(
-            files,
-            ["--format=json"],
-        )
-        == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_implicit_stream(
+        files,
+        ["--format=json"],
     )
-    assert (
-        render_explicit_stream(
-            files,
-            ["--format=json"],
-        )
-        == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_explicit_stream(
+        files,
+        ["--format=json"],
     )
 
 
@@ -120,27 +108,21 @@ nginx:
 
     files = make_file_pair(DATA_TEMPLATE, yaml_data, "yaml")
 
-    assert render_file(files, []) == EXPECTED_OUTPUT
-    assert render_file(files, ["--format=yaml"]) == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_file(files, [])
+    assert EXPECTED_OUTPUT == render_file(files, ["--format=yaml"])
 
-    assert (
-        render_implicit_stream(
-            files,
-            ["--format=yaml"],
-        )
-        == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_implicit_stream(
+        files,
+        ["--format=yaml"],
     )
-    assert (
-        render_explicit_stream(
-            files,
-            ["--format=yaml"],
-        )
-        == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_explicit_stream(
+        files,
+        ["--format=yaml"],
     )
 
     files = make_file_pair(DATA_TEMPLATE, yaml_data, "yml")
 
-    assert render_file(files, []) == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_file(files, [])
 
 
 def test_env(make_file_pair: FilePairFactory) -> None:
@@ -152,22 +134,16 @@ NGINX_LOGS=/var/log/nginx
 
     files = make_file_pair(ENV_TEMPLATE, env_data, "env")
 
-    assert render_file(files, []) == EXPECTED_OUTPUT
-    assert render_file(files, ["--format=env"]) == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_file(files, [])
+    assert EXPECTED_OUTPUT == render_file(files, ["--format=env"])
 
-    assert (
-        render_explicit_stream(
-            files,
-            [],
-        )
-        == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_explicit_stream(
+        files,
+        [],
     )
-    assert (
-        render_explicit_stream(
-            files,
-            ["--format=env"],
-        )
-        == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_explicit_stream(
+        files,
+        ["--format=env"],
     )
 
     env = {
@@ -176,5 +152,5 @@ NGINX_LOGS=/var/log/nginx
         "NGINX_LOGS": "/var/log/nginx",
     }
 
-    assert render_env(files, [], env) == EXPECTED_OUTPUT
-    assert render_env(files, ["--format=env"], env) == EXPECTED_OUTPUT
+    assert EXPECTED_OUTPUT == render_env(files, [], env)
+    assert EXPECTED_OUTPUT == render_env(files, ["--format=env"], env)

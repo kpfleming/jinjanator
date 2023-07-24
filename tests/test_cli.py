@@ -16,7 +16,7 @@ def test_quiet(make_file_pair: FilePairFactory, capsys: Any) -> None:
     files = make_file_pair("Hello {{name}}!", "name=Blart", "env")
     render_file(files, ["--quiet"])
     captured = capsys.readouterr()
-    assert len(captured.err) == 0
+    assert 0 == len(captured.err)
 
 
 def test_unavailable_suffix(make_file_pair: FilePairFactory) -> None:
@@ -35,12 +35,11 @@ def test_main_normal(make_file_pair: FilePairFactory, capsys: Any) -> None:
         is None
     )
     captured = capsys.readouterr()
-    assert captured.out == "Hello Blart!"
+    assert "Hello Blart!" == captured.out
 
 
 def test_main_failure(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("Hello {{name}}!", "name=Blart", "xyz")
-    assert (
-        jinjanator.cli.main(["--quiet", str(files.template_file), str(files.data_file)])
-        == 1
+    assert 1 == jinjanator.cli.main(
+        ["--quiet", str(files.template_file), str(files.data_file)]
     )

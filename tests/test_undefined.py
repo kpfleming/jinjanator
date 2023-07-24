@@ -18,4 +18,4 @@ def test_normal(make_file_pair: FilePairFactory) -> None:
 
 def test_suppressed(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("{{name}}", "", "env")
-    assert render_file(files, ["--undefined"]) == ""
+    assert "" == render_file(files, ["--undefined"])

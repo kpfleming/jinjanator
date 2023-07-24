@@ -46,7 +46,7 @@ def test_version() -> None:
     """Ensure that '--version' argument is accepted and program exits without an error."""
     with pytest.raises(SystemExit) as excinfo:
         parse_args({}, ["--version"])
-    assert excinfo.value.code == 0
+    assert 0 == excinfo.value.code
 
 
 @pytest.mark.xfail()
