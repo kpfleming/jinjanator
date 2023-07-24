@@ -36,6 +36,12 @@ Features:
 pip install jinjanator
 ```
 
+## Available Plugins
+
+* [jinjanator-plugin-ansible](https://pypi.org/project/jinjanator-plugin-ansible) -
+  makes Ansible's 'core' filters and tests available during template
+  rendering
+
 ## Tutorial
 
 Suppose you have an NGINX configuration file template, `nginx.j2`:
