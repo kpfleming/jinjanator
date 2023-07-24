@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import os
 
-from .plugin import Filters, Globals, plugin_filters_hook, plugin_globals_hook
+from jinjanator_plugins import (
+    Filters,
+    Globals,
+    plugin_filters_hook,
+    plugin_globals_hook,
+)
 
 
 def env(varname: str, default: str | None = None) -> str:

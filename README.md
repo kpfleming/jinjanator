@@ -19,13 +19,16 @@ Open Source software: [Apache License 2.0](https://spdx.org/licenses/Apache-2.0.
 
 ## &nbsp;
 
+<!-- fancy-readme start -->
 Features:
 
 * Jinja2 templating
 * INI, YAML, JSON data sources supported
 * Environment variables can be used with or without data files
 * Plugins can provide additional formats, filters, tests, and global
-  functions (see [Plugins](PLUGINS.md) for details).
+  functions (see
+  [jinjanator-plugins](https://github.com/kpfleming/jinjanator-plugins)
+  for details)
 
 ## Installation
 
@@ -35,7 +38,7 @@ pip install jinjanator
 
 ## Tutorial
 
-Suppose, you have an NGINX configuration file template, `nginx.j2`:
+Suppose you have an NGINX configuration file template, `nginx.j2`:
 
 ```jinja2
 server {
@@ -302,6 +305,12 @@ Pass: {{ env("USER_PASSWORD") }}
 
 Notice that there must be quotes around the environment variable name
 when it is a literal string.
+"<!-- fancy-readme end -->"
+
+## Chat
+
+If you'd like to chat with the Jinjanator community, join us on
+[Matrix](https://matrix.to/#/#jinjanator:km6g.us)!
 
 ## Credits
 

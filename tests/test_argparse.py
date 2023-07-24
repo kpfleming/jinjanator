@@ -4,8 +4,9 @@ from typing import Any, Mapping
 
 import pytest
 
+from jinjanator_plugins import Format
+
 from jinjanator.cli import parse_args
-from jinjanator.plugin import Format
 
 
 def fake_env_parser(

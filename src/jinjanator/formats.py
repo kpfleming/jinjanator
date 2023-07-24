@@ -7,7 +7,7 @@ from typing import Any, Mapping
 
 import yaml
 
-from .plugin import Format, Formats, plugin_formats_hook
+from jinjanator_plugins import Format, Formats, plugin_formats_hook
 
 
 def _parse_ini(

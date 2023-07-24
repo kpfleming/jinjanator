@@ -15,9 +15,10 @@ from typing import (
 )
 
 import jinja2
+import jinjanator_plugins
 import pluggy  # type: ignore[import]
 
-from . import filters, formats, plugin, version
+from . import filters, formats, version
 from .context import read_context_data
 
 
@@ -60,7 +61,7 @@ class Jinja2TemplateRenderer:
         cwd: Path,
         allow_undefined: bool,  # noqa: FBT001
         j2_env_params: dict[str, Any],
-        plugin_hook_callers: plugin.PluginHookCallers,
+        plugin_hook_callers: jinjanator_plugins.PluginHookCallers,
     ):
         j2_env_params.setdefault("keep_trailing_newline", True)
         j2_env_params.setdefault(
@@ -106,7 +107,7 @@ class UniqueStore(argparse.Action):
 
 
 def parse_args(
-    formats: Mapping[str, plugin.Format],
+    formats: Mapping[str, jinjanator_plugins.Format],
     argv: Sequence[str] | None = None,
 ) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -189,13 +190,13 @@ def parse_args(
     return parser.parse_args(argv)
 
 
-def get_hook_callers() -> plugin.PluginHookCallers:
+def get_hook_callers() -> jinjanator_plugins.PluginHookCallers:
     pm = pluggy.PluginManager("jinjanator")
-    pm.add_hookspecs(plugin.PluginHooks)
+    pm.add_hookspecs(jinjanator_plugins.PluginHooks)
     pm.register(filters)
     pm.register(formats)
     pm.load_setuptools_entrypoints("jinjanator")
-    return cast(plugin.PluginHookCallers, pm.hook)
+    return cast(jinjanator_plugins.PluginHookCallers, pm.hook)
 
 
 def render_command(
@@ -206,7 +207,7 @@ def render_command(
 ) -> str:
     plugin_hook_callers = get_hook_callers()
 
-    available_formats: dict[str, plugin.Format] = {}
+    available_formats: dict[str, jinjanator_plugins.Format] = {}
 
     for plugin_formats in plugin_hook_callers.plugin_formats():
         available_formats.update(plugin_formats)

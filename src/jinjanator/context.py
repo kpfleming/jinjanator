@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any, Mapping, TextIO
 
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .plugin import Format
+    from jinjanator_plugins import Format
 
 
 def read_context_data(
