@@ -305,7 +305,7 @@ Pass: {{ env("USER_PASSWORD") }}
 
 Notice that there must be quotes around the environment variable name
 when it is a literal string.
-"<!-- fancy-readme end -->"
+<!-- fancy-readme end -->
 
 ## Chat
 
