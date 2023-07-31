@@ -137,6 +137,7 @@ python = [
 
 [tool.hatch.envs.ci.scripts]
 ci = [
+    "pip install ./tests/test_plugin",
     "rm -f .coverage",
     # run tests
     "pytest --verbose --cov-append  --cov-branch --cov-fail-under=97 --cov=jinjanator",
@@ -212,6 +213,9 @@ unfixable = ["F401"]
   "PT005",   # we use always underscores and explicit names
   "S101",    # assert
   "SIM300",  # Yoda rocks in tests
+]
+"tests/test_plugin/*" = [
+  "INP001",  # we don't care that these are in implicit namespace packages
 ]
 
 [tool.ruff.isort]

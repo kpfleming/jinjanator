@@ -42,3 +42,11 @@ def test_main_normal(make_file_pair: FilePairFactory, capsys: Any) -> None:
 def test_main_failure(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("Hello {{name}}!", "name=Blart", "xyz")
     assert 1 == jinjanator.cli.main(["", str(files.template_file), str(files.data_file)])
+
+
+def test_main_version(capsys: Any) -> None:
+    """Ensure that the 'test' plugin's identity string is included in the '--version' output."""
+    assert 0 == jinjanator.cli.main(["", "--version"])
+    outlines = capsys.readouterr().out.splitlines()
+    assert "Plugins:" == outlines[1]
+    assert "   test" == outlines[2]
