@@ -19,27 +19,26 @@ def test_quiet(make_file_pair: FilePairFactory, capsys: Any) -> None:
     assert 0 == len(captured.err)
 
 
-def test_unavailable_suffix(make_file_pair: FilePairFactory) -> None:
+def test_unavailable_suffix(make_file_pair: FilePairFactory, capsys: Any) -> None:
     files = make_file_pair("Hello {{name}}!", "name=Blart", "xyz")
     with pytest.raises(
         SystemExit,
-        match="no format which can read '.xyz' files available",
     ):
         render_file(files, [])
+    assert (
+        "No format which can read '.xyz' files available"
+        == capsys.readouterr().err.strip()
+    )
 
 
 def test_main_normal(make_file_pair: FilePairFactory, capsys: Any) -> None:
     files = make_file_pair("Hello {{name}}!", "name=Blart", "env")
     assert (
-        jinjanator.cli.main(["--quiet", str(files.template_file), str(files.data_file)])
-        is None
+        jinjanator.cli.main(["", str(files.template_file), str(files.data_file)]) is None
     )
-    captured = capsys.readouterr()
-    assert "Hello Blart!" == captured.out
+    assert "Hello Blart!" == capsys.readouterr().out
 
 
 def test_main_failure(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("Hello {{name}}!", "name=Blart", "xyz")
-    assert 1 == jinjanator.cli.main(
-        ["--quiet", str(files.template_file), str(files.data_file)]
-    )
+    assert 1 == jinjanator.cli.main(["", str(files.template_file), str(files.data_file)])

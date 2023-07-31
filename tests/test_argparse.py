@@ -21,7 +21,7 @@ fake_env_format = Format(parser=fake_env_parser, suffixes=["env"])
 def test_invalid_arg() -> None:
     """Ensure that an invalid argument is not accepted."""
     with pytest.raises(SystemExit):
-        parse_args({}, ["--test-invalid-arg"])
+        parse_args({}, None, ["--test-invalid-arg"])
 
 
 @pytest.mark.parametrize(
@@ -40,13 +40,13 @@ def test_invalid_arg() -> None:
 )
 def test_args(args: list[str]) -> None:
     """Ensure that known arguments are accepted."""
-    parse_args({"env": fake_env_format}, [*args, "template"])
+    parse_args({"env": fake_env_format}, None, [*args, "template"])
 
 
 def test_version() -> None:
     """Ensure that '--version' argument is accepted and program exits without an error."""
     with pytest.raises(SystemExit) as excinfo:
-        parse_args({}, ["--version"])
+        parse_args({}, None, ["--version"])
     assert 0 == excinfo.value.code
 
 
@@ -60,4 +60,4 @@ def test_version() -> None:
 )
 def test_duplicate_args(args: list[str]) -> None:
     """Ensure that duplicate arguments are not accepted."""
-    parse_args({"env": fake_env_format}, [*args, "template"])
+    parse_args({"env": fake_env_format}, None, [*args, "template"])

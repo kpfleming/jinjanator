@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import os
 import sys
 
@@ -106,8 +107,48 @@ class UniqueStore(argparse.Action):
         self.already_seen = True
 
 
+def print_version_info(
+    stream: TextIO = sys.stderr, *, plugin_identities: Sequence[str] | None = None
+) -> None:
+    print(
+        f"{Path(sys.argv[0]).name} {version}, Jinja2"
+        f" {importlib.metadata.version('jinja2')}",
+        file=stream,
+    )
+    if plugin_identities and len(plugin_identities) > 0:
+        print("Plugins:", file=stream)
+        for plugin in plugin_identities:
+            print(f"   {plugin}", file=stream)
+
+
+class VersionAction(argparse.Action):
+    def __init__(  # noqa: PLR0913
+        self,
+        option_strings: list[str],
+        plugin_identities: Sequence[str] | None = None,
+        dest: str = argparse.SUPPRESS,
+        default: str = argparse.SUPPRESS,
+        help: str = "",  # noqa: A002
+    ):
+        super().__init__(
+            option_strings=option_strings, dest=dest, default=default, nargs=0, help=help
+        )
+        self.plugin_identities = plugin_identities
+
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,  # noqa: ARG002
+        values: str | Sequence[Any] | None,  # noqa: ARG002
+        option_string: str | None = None,  # noqa: ARG002
+    ) -> None:
+        print_version_info(sys.stdout, plugin_identities=self.plugin_identities)
+        parser.exit()
+
+
 def parse_args(
     formats: Mapping[str, jinjanator_plugins.Format],
+    plugin_identities: Sequence[str] | None = None,
     argv: Sequence[str] | None = None,
 ) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -119,9 +160,9 @@ def parse_args(
     parser.add_argument(
         "-v",
         "--version",
-        action="version",
-        version=f"jinjanate {version}, Jinja2 {jinja2.__version__}",
-        help="display version of this program",
+        action=VersionAction,
+        help="display version of this program and any installed plugins",
+        plugin_identities=plugin_identities,
     )
 
     parser.add_argument(
@@ -212,13 +253,12 @@ def render_command(
     for plugin_formats in plugin_hook_callers.plugin_formats():
         available_formats.update(plugin_formats)
 
-    args = parse_args(available_formats, argv[1:])
+    plugin_identities = plugin_hook_callers.plugin_identities()
+
+    args = parse_args(available_formats, plugin_identities, argv[1:])
 
     if not args.quiet:
-        print(
-            f"{Path(argv[0]).name} {version}, Jinja2 {jinja2.__version__}",
-            file=sys.stderr,
-        )
+        print_version_info(plugin_identities=plugin_identities)
 
     if args.format == "?":
         if args.data is None or str(args.data) == "-":
@@ -230,8 +270,11 @@ def render_command(
                     args.format = k
                     break
             if args.format == "?":
-                msg = f"no format which can read '{suffix}' files available"
-                raise SystemExit(msg)
+                print(
+                    f"No format which can read '{suffix}' files available",
+                    file=sys.stderr,
+                )
+                raise SystemExit(1)
 
     # We always expect a file;
     # unless the user wants 'env', and there's no input file provided.
@@ -318,7 +361,10 @@ def main(args: list[str] | None = None) -> int | None:
             args = sys.argv
 
         output = render_command(Path.cwd(), os.environ, sys.stdin, args)
-    except SystemExit:
+    except SystemExit as exc:
+        if isinstance(exc.code, int):
+            return exc.code
+
         return 1
 
     sys.stdout.write(output)
