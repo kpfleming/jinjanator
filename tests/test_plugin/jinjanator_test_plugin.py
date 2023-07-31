@@ -5,6 +5,8 @@ from typing import Mapping
 from jinjanator_plugins import (
     Filters,
     Format,
+    FormatOptionUnknownError,
+    FormatOptionValueError,
     Formats,
     Globals,
     Identity,
@@ -31,8 +33,15 @@ def null_test(
 
 def null_format(
     data_string: str,  # noqa: ARG001
-    options: list[str] | None = None,  # noqa: ARG001
+    options: list[str] | None = None,
 ) -> Mapping[str, str]:
+    if options:
+        for option in options:
+            if option == "val":
+                raise FormatOptionValueError(option)
+
+            raise FormatOptionUnknownError(option)
+
     return {}
 
 

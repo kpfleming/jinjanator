@@ -7,12 +7,17 @@ from typing import Any, Mapping
 
 import yaml
 
-from jinjanator_plugins import Format, Formats, plugin_formats_hook
+from jinjanator_plugins import (
+    Format,
+    FormatOptionUnsupportedError,
+    Formats,
+    plugin_formats_hook,
+)
 
 
 def _parse_ini(
     data_string: str,
-    options: list[str] | None = None,  # noqa: ARG001
+    options: list[str] | None = None,
 ) -> Mapping[str, Any]:
     """INI data input format.
 
@@ -30,6 +35,9 @@ def _parse_ini(
         $ j2 config.j2 data.ini
         $ cat data.ini | j2 --format=ini config.j2
     """
+
+    if options:
+        raise FormatOptionUnsupportedError(options[0])
 
     # Override
     class MyConfigParser(configparser.ConfigParser):
@@ -50,7 +58,7 @@ def _parse_ini(
 
 def _parse_json(
     data_string: str,
-    options: list[str] | None = None,  # noqa: ARG001
+    options: list[str] | None = None,
 ) -> Mapping[str, Any]:
     """JSON data input format.
 
@@ -71,6 +79,9 @@ def _parse_json(
         $ j2 config.j2 data.json
         $ cat data.json | j2 --format=ini config.j2
     """
+    if options:
+        raise FormatOptionUnsupportedError(options[0])
+
     context = json.loads(data_string)
 
     if not isinstance(context, dict):
@@ -82,7 +93,7 @@ def _parse_json(
 
 def _parse_yaml(
     data_string: str,
-    options: list[str] | None = None,  # noqa: ARG001
+    options: list[str] | None = None,
 ) -> Mapping[str, Any]:
     """YAML data input format.
 
@@ -100,6 +111,9 @@ def _parse_yaml(
         $ j2 config.j2 data.yml
         $ cat data.yml | j2 --format=yaml config.j2
     """
+    if options:
+        raise FormatOptionUnsupportedError(options[0])
+
     context = yaml.safe_load(data_string)
 
     if not isinstance(context, dict):
@@ -111,7 +125,7 @@ def _parse_yaml(
 
 def _parse_env(
     data_string: str,
-    options: list[str] | None = None,  # noqa: ARG001
+    options: list[str] | None = None,
 ) -> Mapping[str, str]:
     """Data input from environment variables.
 
@@ -138,7 +152,9 @@ def _parse_env(
         $ j2 config.j2 - < data.env
 
     """
-    # Parse
+    if options:
+        raise FormatOptionUnsupportedError(options[0])
+
     return dict(
         filter(
             lambda line: len(line) == 2,  # noqa: PLR2004

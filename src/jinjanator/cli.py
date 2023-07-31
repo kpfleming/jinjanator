@@ -152,7 +152,7 @@ def parse_args(
     argv: Sequence[str] | None = None,
 ) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        prog="j2",
+        prog="jinjanate",
         description="Command-line interface to Jinja2 for templating in shell scripts.",
         epilog="",
     )
@@ -361,6 +361,24 @@ def main(args: list[str] | None = None) -> int | None:
             args = sys.argv
 
         output = render_command(Path.cwd(), os.environ, sys.stdin, args)
+    except jinjanator_plugins.FormatOptionUnknownError as exc:
+        print(
+            f"Format parser does not understand option '{exc}'",
+            file=sys.stderr,
+        )
+        return 2
+    except jinjanator_plugins.FormatOptionUnsupportedError as exc:
+        print(
+            f"Format parser does not support option '{exc}'",
+            file=sys.stderr,
+        )
+        return 3
+    except jinjanator_plugins.FormatOptionValueError as exc:
+        print(
+            f"Format parser does not accept the value provided for option '{exc}'",
+            file=sys.stderr,
+        )
+        return 4
     except SystemExit as exc:
         if isinstance(exc.code, int):
             return exc.code

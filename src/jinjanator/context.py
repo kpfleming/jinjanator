@@ -4,7 +4,9 @@ from typing import TYPE_CHECKING, Any, Mapping, TextIO
 
 
 if TYPE_CHECKING:  # pragma: no cover
-    from jinjanator_plugins import Format
+    from jinjanator_plugins import (
+        Format,
+    )
 
 
 def read_context_data(
@@ -20,7 +22,9 @@ def read_context_data(
 
     context: dict[str, Any] = {}
 
-    context.update(fmt.parser(f.read(), format_options))
+    result = fmt.parser(f.read(), format_options)
+
+    context.update(result)
 
     if import_env is not None:
         if import_env == "":

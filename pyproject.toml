@@ -208,6 +208,7 @@ unfixable = ["F401"]
 
 [tool.ruff.per-file-ignores]
 "src/jinjanator/cli.py" = ["T201"]
+"src/jinjanator/context.py" = ["T201"]
 "tests/*" = [
   "PLC1901", # empty strings are falsey, but are less specific in tests
   "PT005",   # we use always underscores and explicit names
