@@ -28,6 +28,26 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [23.6.0](https://github.com/kpfleming/jinjanator/tree/23.6.0) - 2023-08-01
+
+### Backwards-incompatible Changes
+
+- Upgraded to plugins API 23.4.
+  
+
+
+### Additions
+
+- Added support for 'sequence' data in YAML-format input.
+  [#14](https://github.com/kpfleming/jinjanator/issues/14)
+- Added support for 'array' data in JSON-format input.
+  [#15](https://github.com/kpfleming/jinjanator/issues/15)
+- Added list of discovered plugins to '--version' output.
+  [#16](https://github.com/kpfleming/jinjanator/issues/16)
+- Options-related errors from format parsers are now handled.
+  [#17](https://github.com/kpfleming/jinjanator/issues/17)
+
+
 ## [23.5.0](https://github.com/kpfleming/jinjanator/tree/23.5.0) - 2023-07-24
 
 ### Additions
