@@ -59,10 +59,28 @@ class INIFormat:
 class JSONFormat:
     name = "json"
     suffixes: Iterable[str] | None = (".json",)
-    option_names: Iterable[str] | None = ()
+    option_names: Iterable[str] | None = "array-name"
 
     def __init__(self, options: Iterable[str] | None) -> None:
-        pass
+        self.array_name: str | None = None
+        if options:
+            for option in options:
+                try:
+                    opt, val = option.split("=")
+                except ValueError as exc:
+                    raise FormatOptionValueError(
+                        self, option, "", "contains more than one '='"
+                    ) from exc
+
+                if not val.isidentifier():
+                    raise FormatOptionValueError(
+                        self, opt, val, "is not a valid Python identifier"
+                    )
+
+                if keyword.iskeyword(val):
+                    raise FormatOptionValueError(self, opt, val, "is a Python keyword")
+
+                self.array_name = val
 
     def parse(self, data_string: str) -> Mapping[str, Any]:
         """JSON data input format.
@@ -85,13 +103,28 @@ class JSONFormat:
         $ cat data.json | j2 --format=ini config.j2
         """
 
-        context = json.loads(data_string)
+        try:
+            context = json.loads(data_string)
+        except json.decoder.JSONDecodeError as exc:
+            msg = "JSON input is neither an object nor an array"
+            raise TypeError(msg) from exc
 
-        if not isinstance(context, dict):
-            msg = "JSON input does not contain an object (dictionary)"
-            raise TypeError(msg)
+        if isinstance(context, dict):
+            if self.array_name:
+                raise FormatOptionUnsupportedError(
+                    self,
+                    "array-name",
+                    "cannot be used with object (dictionary) input",
+                )
 
-        return context
+            return context
+
+        if not self.array_name:
+            raise FormatOptionUnsupportedError(
+                self, "array-name", "must be specified for array (list) input"
+            )
+
+        return {self.array_name: context}
 
 
 class YAMLFormat:

@@ -255,7 +255,13 @@ JSON data input format.
 
 #### Options
 
-This format does not support any options.
+* `array-name`: accepts a single string (e.g. `array-name=foo`), which
+  must be a valid Python identifier and not a Python keyword. If this
+  option is specified, and the JSON data provided is an `array`
+  (sequence, list), the specified name will be used to make the data
+  available to the Jinja2 template. Errors will be generated if
+  `array` data is provided and this option is not specified, or if
+  this option is specified and the data provided is an `object`.
 
 #### Usage
 
