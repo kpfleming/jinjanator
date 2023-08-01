@@ -191,7 +191,13 @@ Or pipe it: (note that you'll have to use "-" in this particular case):
 ## Data Formats
 
 ### dotenv
-Data input from environment variables. This format does not support any options.
+Data input from environment variables.
+
+#### Options
+
+This format does not support any options.
+
+#### Usage
 
 Render directly from the current environment variable values:
 
@@ -219,7 +225,13 @@ use "-" as the second argument:
     $ jinjanate config.j2 - < data.env
 
 ### INI
-INI data input format. This format does not support any options.
+INI data input format.
+
+#### Options
+
+This format does not support any options.
+
+#### Usage
 
 data.ini:
 
@@ -239,7 +251,13 @@ Or:
     $ cat data.ini | jinjanate --format=ini config.j2
 
 ### JSON
-JSON data input format. This format does not support any options.
+JSON data input format.
+
+#### Options
+
+This format does not support any options.
+
+#### Usage
 
 data.json:
 
@@ -262,7 +280,19 @@ Or:
     $ cat data.json | jinjanate --format=ini config.j2
 
 ### YAML
-YAML data input format. This format does not support any options.
+YAML data input format.
+
+#### Options
+
+* `sequence-name`: accepts a single string (e.g. `sequence-name=foo`),
+  which must be a valid Python identifier and not a Python keyword. If
+  this option is specified, and the YAML data provided is a `sequence`
+  (array, list), the specified name will be used to make the data
+  available to the Jinja2 template. Errors will be generated if
+  `sequence` data is provided and this option is not specified, or if
+  this option is specified and the data provided is a `mapping`.
+
+#### Usage
 
 data.yaml:
 

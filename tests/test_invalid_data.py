@@ -19,7 +19,7 @@ def test_invalid_json(make_file_pair: FilePairFactory) -> None:
 def test_invalid_yaml(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("", "-one\n-two", "yaml")
 
-    with pytest.raises(TypeError, match="YAML input does not contain a mapping"):
+    with pytest.raises(TypeError, match="YAML input is neither a mapping nor a sequence"):
         assert render_file(files, [])
 
 
