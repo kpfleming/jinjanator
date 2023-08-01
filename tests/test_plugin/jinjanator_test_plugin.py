@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from typing import Mapping
+from typing import Iterable, Mapping
 
 from jinjanator_plugins import (
     Filters,
-    Format,
     FormatOptionUnsupportedError,
     FormatOptionValueError,
     Formats,
@@ -32,21 +31,23 @@ def null_test(
 
 
 class NullFormat:
-    @staticmethod
-    def parser(
-        data_string: str,  # noqa: ARG004
-        options: list[str] | None = None,
-    ) -> Mapping[str, str]:
+    name = "null"
+    suffixes: Iterable[str] | None = (".null",)
+    option_names: Iterable[str] | None = ("val", "uns")
+
+    def __init__(self, options: Iterable[str] | None) -> None:
         if options:
             for option in options:
                 if option == "val":
-                    raise FormatOptionValueError(NullFormat.fmt, option, "", "")
+                    raise FormatOptionValueError(self, option, "", "")
                 if option == "uns":
-                    raise FormatOptionUnsupportedError(NullFormat.fmt, option, "")
+                    raise FormatOptionUnsupportedError(self, option, "")
 
+    def parse(
+        self,
+        data_string: str,  # noqa: ARG002
+    ) -> Mapping[str, str]:
         return {}
-
-    fmt = Format(name="null", parser=parser, suffixes=[".null"], options=["val", "uns"])
 
 
 @plugin_identity_hook
@@ -66,7 +67,7 @@ def plugin_tests() -> Tests:
 
 @plugin_formats_hook
 def plugin_formats() -> Formats:
-    return {NullFormat.fmt.name: NullFormat.fmt}
+    return {NullFormat.name: NullFormat}
 
 
 @plugin_globals_hook

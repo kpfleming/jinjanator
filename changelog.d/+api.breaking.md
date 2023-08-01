@@ -1,1 +1,1 @@
-Upgraded to plugins API 23.2.
+Upgraded to plugins API 23.4.

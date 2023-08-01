@@ -52,6 +52,14 @@ def test_main_version(capsys: Any) -> None:
     assert "   test" == outlines[2]
 
 
+@pytest.mark.noplugin()
+def test_main_version_no_plugins(capsys: Any) -> None:
+    """Ensure that the 'test' plugin's identity string is not included in the '--version' output."""
+    assert 0 == jinjanator.cli.main(["", "--version"])
+    outlines = capsys.readouterr().out.splitlines()
+    assert 1 == len(outlines)
+
+
 def test_main_format_option_unknown(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("Hello {{name}}!", "name=Blart", "null")
     assert 2 == jinjanator.cli.main(  # noqa: PLR2004

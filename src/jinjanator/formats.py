@@ -3,23 +3,25 @@ from __future__ import annotations
 import configparser
 import json
 
-from typing import Any, Mapping
+from typing import Any, Iterable, Mapping
 
 import yaml
 
 from jinjanator_plugins import (
-    Format,
     Formats,
     plugin_formats_hook,
 )
 
 
 class INIFormat:
-    @staticmethod
-    def parser(
-        data_string: str,
-        options: list[str] | None = None,  # noqa: ARG004
-    ) -> Mapping[str, Any]:
+    name = "ini"
+    suffixes: Iterable[str] | None = (".ini",)
+    option_names: Iterable[str] | None = ()
+
+    def __init__(self, options: Iterable[str] | None) -> None:
+        pass
+
+    def parse(self, data_string: str) -> Mapping[str, Any]:
         """INI data input format.
 
         data.ini:
@@ -50,15 +52,16 @@ class INIFormat:
 
         return ini.as_dict()
 
-    fmt = Format(name="ini", parser=parser, suffixes=[".ini"], options=[])
-
 
 class JSONFormat:
-    @staticmethod
-    def parser(
-        data_string: str,
-        options: list[str] | None = None,  # noqa: ARG004
-    ) -> Mapping[str, Any]:
+    name = "json"
+    suffixes: Iterable[str] | None = (".json",)
+    option_names: Iterable[str] | None = ()
+
+    def __init__(self, options: Iterable[str] | None) -> None:
+        pass
+
+    def parse(self, data_string: str) -> Mapping[str, Any]:
         """JSON data input format.
 
         data.json:
@@ -87,14 +90,18 @@ class JSONFormat:
 
         return context
 
-    fmt = Format(name="json", parser=parser, suffixes=[".json"], options=[])
-
 
 class YAMLFormat:
-    @staticmethod
-    def parser(
+    name = "yaml"
+    suffixes: Iterable[str] | None = (".yaml", ".yml")
+    option_names: Iterable[str] | None = ()
+
+    def __init__(self, options: Iterable[str] | None) -> None:
+        pass
+
+    def parse(
+        self,
         data_string: str,
-        options: list[str] | None = None,  # noqa: ARG004
     ) -> Mapping[str, Any]:
         """YAML data input format.
 
@@ -121,15 +128,16 @@ class YAMLFormat:
 
         return context
 
-    fmt = Format(name="yaml", parser=parser, suffixes=[".yaml", ".yml"], options=[])
-
 
 class EnvFormat:
-    @staticmethod
-    def parser(
-        data_string: str,
-        options: list[str] | None = None,  # noqa: ARG004
-    ) -> Mapping[str, str]:
+    name = "env"
+    suffixes: Iterable[str] | None = (".env",)
+    option_names: Iterable[str] | None = ()
+
+    def __init__(self, options: Iterable[str] | None) -> None:
+        pass
+
+    def parse(self, data_string: str) -> Mapping[str, str]:
         """Data input from environment variables.
 
         Render directly from the current environment variable values:
@@ -165,11 +173,12 @@ class EnvFormat:
             ),
         )
 
-    fmt = Format(name="env", parser=parser, suffixes=[".env"], options=[])
-
 
 @plugin_formats_hook
 def plugin_formats() -> Formats:
     return {
-        f.name: f for f in [INIFormat.fmt, JSONFormat.fmt, YAMLFormat.fmt, EnvFormat.fmt]
+        INIFormat.name: INIFormat,
+        JSONFormat.name: JSONFormat,
+        YAMLFormat.name: YAMLFormat,
+        EnvFormat.name: EnvFormat,
     }

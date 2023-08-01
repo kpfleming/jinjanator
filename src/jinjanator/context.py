@@ -14,7 +14,6 @@ def read_context_data(
     f: TextIO | None,
     environ: Mapping[str, str],
     import_env: str | None = None,
-    format_options: list[str] | None = None,
 ) -> Mapping[str, Any]:
     if not f:
         msg = "no input supplied"
@@ -22,7 +21,7 @@ def read_context_data(
 
     context: dict[str, Any] = {}
 
-    result = fmt.parser(f.read(), format_options)
+    result = fmt.parse(f.read())
 
     context.update(result)
 
@@ -32,5 +31,4 @@ def read_context_data(
         else:
             context[import_env] = environ
 
-    # Done
     return context

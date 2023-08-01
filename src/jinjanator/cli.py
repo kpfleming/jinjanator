@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import (
     Any,
     Callable,
+    Iterable,
     Mapping,
     Sequence,
     TextIO,
@@ -108,24 +109,27 @@ class UniqueStore(argparse.Action):
 
 
 def print_version_info(
-    stream: TextIO = sys.stderr, *, plugin_identities: Sequence[str] | None = None
+    stream: TextIO = sys.stderr, *, plugin_identities: Iterable[str]
 ) -> None:
     print(
         f"{Path(sys.argv[0]).name} {version}, Jinja2"
         f" {importlib.metadata.version('jinja2')}",
         file=stream,
     )
-    if plugin_identities and len(plugin_identities) > 0:
-        print("Plugins:", file=stream)
-        for plugin in plugin_identities:
-            print(f"   {plugin}", file=stream)
+    header_printed = False
+    for plugin in plugin_identities:
+        if not header_printed:
+            print("Plugins:", file=stream)
+            header_printed = True
+
+        print(f"   {plugin}", file=stream)
 
 
 class VersionAction(argparse.Action):
     def __init__(  # noqa: PLR0913
         self,
         option_strings: list[str],
-        plugin_identities: Sequence[str] | None = None,
+        plugin_identities: Iterable[str],
         dest: str = argparse.SUPPRESS,
         default: str = argparse.SUPPRESS,
         help: str = "",  # noqa: A002
@@ -147,8 +151,8 @@ class VersionAction(argparse.Action):
 
 
 def parse_args(
-    formats: Mapping[str, jinjanator_plugins.Format],
-    plugin_identities: Sequence[str] | None = None,
+    formats: Mapping[str, type[jinjanator_plugins.Format]],
+    plugin_identities: Iterable[str],
     argv: Sequence[str] | None = None,
 ) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -241,12 +245,17 @@ def get_hook_callers() -> jinjanator_plugins.PluginHookCallers:
 
 
 def validate_format_options(
-    fmt: jinjanator_plugins.Format, options: Sequence[str] | None
-) -> None:
+    fmt: type[jinjanator_plugins.Format], options: Sequence[str] | None
+) -> jinjanator_plugins.Format:
     if options:
+        if not fmt.option_names:
+            raise jinjanator_plugins.FormatOptionUnknownError(fmt, options[0])
+
         for opt in options:
-            if opt.split("=")[0] not in fmt.options:
+            if opt.split("=")[0] not in fmt.option_names:
                 raise jinjanator_plugins.FormatOptionUnknownError(fmt, opt)
+
+    return fmt(options)
 
 
 def render_command(
@@ -257,7 +266,7 @@ def render_command(
 ) -> str:
     plugin_hook_callers = get_hook_callers()
 
-    available_formats: dict[str, jinjanator_plugins.Format] = {}
+    available_formats: dict[str, type[jinjanator_plugins.Format]] = {}
 
     for plugin_formats in plugin_hook_callers.plugin_formats():
         available_formats.update(plugin_formats)
@@ -275,7 +284,7 @@ def render_command(
         else:
             suffix = args.data.suffix
             for k, v in available_formats.items():
-                if suffix in v.suffixes:
+                if v.suffixes and suffix in v.suffixes:
                     args.format = k
                     break
             if args.format == "?":
@@ -315,9 +324,7 @@ def render_command(
             stdin if args.data is None or str(args.data) == "-" else args.data.open()
         )
 
-    fmt = available_formats[args.format]
-
-    validate_format_options(fmt, args.format_options)
+    fmt = validate_format_options(available_formats[args.format], args.format_options)
 
     if args.format == "env" and input_data_f is None:
         context = environ
@@ -327,7 +334,6 @@ def render_command(
             input_data_f,
             environ,
             args.import_env,
-            args.format_options,
         )
 
     renderer = Jinja2TemplateRenderer(

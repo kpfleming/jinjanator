@@ -1,29 +1,31 @@
 from __future__ import annotations
 
-from typing import Any, Mapping
+from typing import Iterable, Mapping
 
 import pytest
-
-from jinjanator_plugins import Format
 
 from jinjanator.cli import parse_args
 
 
-def fake_env_parser(
-    data_string: str, options: list[str] | None  # noqa: ARG001
-) -> Mapping[str, Any]:
-    return {"foo": "bar"}
+class FakeFormat:
+    name = "env"
+    suffixes: Iterable[str] | None = (".env",)
+    option_names: Iterable[str] | None = ()
 
+    def __init__(self, options: Iterable[str] | None) -> None:
+        pass
 
-fake_env_format = Format(
-    name="env", parser=fake_env_parser, suffixes=[".env"], options=[]
-)
+    def parse(
+        self,
+        data_string: str,  # noqa: ARG002
+    ) -> Mapping[str, str]:
+        return {"foo": "bar"}
 
 
 def test_invalid_arg() -> None:
     """Ensure that an invalid argument is not accepted."""
     with pytest.raises(SystemExit):
-        parse_args({}, None, ["--test-invalid-arg"])
+        parse_args({}, [], ["--test-invalid-arg"])
 
 
 @pytest.mark.parametrize(
@@ -42,13 +44,13 @@ def test_invalid_arg() -> None:
 )
 def test_args(args: list[str]) -> None:
     """Ensure that known arguments are accepted."""
-    parse_args({"env": fake_env_format}, None, [*args, "template"])
+    parse_args({"env": FakeFormat}, [], [*args, "template"])
 
 
 def test_version() -> None:
     """Ensure that '--version' argument is accepted and program exits without an error."""
     with pytest.raises(SystemExit) as excinfo:
-        parse_args({}, None, ["--version"])
+        parse_args({}, [], ["--version"])
     assert 0 == excinfo.value.code
 
 
@@ -62,4 +64,4 @@ def test_version() -> None:
 )
 def test_duplicate_args(args: list[str]) -> None:
     """Ensure that duplicate arguments are not accepted."""
-    parse_args({"env": fake_env_format}, None, [*args, "template"])
+    parse_args({"env": FakeFormat}, [], [*args, "template"])

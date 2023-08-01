@@ -36,7 +36,7 @@ dynamic = [
 dependencies = [
   "attrs",
   "jinja2>=2.7.2",
-  "jinjanator-plugins==23.3.*",
+  "jinjanator-plugins==23.4.*",
   "PyYAML",
   "typing-extensions",
 ]
@@ -137,12 +137,14 @@ python = [
 
 [tool.hatch.envs.ci.scripts]
 ci = [
-    "pip install ./tests/test_plugin",
     "rm -f .coverage",
-    # run tests
-    "pytest --verbose --cov-append  --cov-branch --cov-fail-under=97 --cov=jinjanator",
-    # produce a coverage report with 'missing' lines indicated
-    "coverage report -m",
+    # run tests for 'no plugin' mode
+    "pip uninstall --yes jinjanator-test-plugin",
+    "pytest -m 'noplugin' --verbose  --cov-branch --cov=jinjanator",
+    # run tests for 'plugin' mode
+    "pip install ./tests/test_plugin",
+    "pytest -m 'not noplugin' --verbose --cov-append  --cov-branch --cov=jinjanator",
+    "coverage report --show-missing --fail-under=98",
 ]
 
 [tool.hatch.metadata]
@@ -231,6 +233,9 @@ testpaths = [
 addopts = [
     "-ra",
     "--strict-markers",
+]
+markers = [
+    "noplugin: tests which must run without plugins installed",
 ]
 
 [tool.mypy]
