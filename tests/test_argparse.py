@@ -10,12 +10,14 @@ from jinjanator.cli import parse_args
 
 
 def fake_env_parser(
-    data: str, options: list[str] | None = None  # noqa: ARG001
+    data_string: str, options: list[str] | None  # noqa: ARG001
 ) -> Mapping[str, Any]:
     return {"foo": "bar"}
 
 
-fake_env_format = Format(parser=fake_env_parser, suffixes=["env"])
+fake_env_format = Format(
+    name="env", parser=fake_env_parser, suffixes=[".env"], options=[]
+)
 
 
 def test_invalid_arg() -> None:

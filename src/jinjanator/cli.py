@@ -240,6 +240,15 @@ def get_hook_callers() -> jinjanator_plugins.PluginHookCallers:
     return cast(jinjanator_plugins.PluginHookCallers, pm.hook)
 
 
+def validate_format_options(
+    fmt: jinjanator_plugins.Format, options: Sequence[str] | None
+) -> None:
+    if options:
+        for opt in options:
+            if opt.split("=")[0] not in fmt.options:
+                raise jinjanator_plugins.FormatOptionUnknownError(fmt, opt)
+
+
 def render_command(
     cwd: Path,
     environ: Mapping[str, str],
@@ -306,11 +315,15 @@ def render_command(
             stdin if args.data is None or str(args.data) == "-" else args.data.open()
         )
 
+    fmt = available_formats[args.format]
+
+    validate_format_options(fmt, args.format_options)
+
     if args.format == "env" and input_data_f is None:
         context = environ
     else:
         context = read_context_data(
-            available_formats[args.format],
+            fmt,
             input_data_f,
             environ,
             args.import_env,
@@ -362,22 +375,13 @@ def main(args: list[str] | None = None) -> int | None:
 
         output = render_command(Path.cwd(), os.environ, sys.stdin, args)
     except jinjanator_plugins.FormatOptionUnknownError as exc:
-        print(
-            f"Format parser does not understand option '{exc}'",
-            file=sys.stderr,
-        )
+        print(str(exc), file=sys.stderr)
         return 2
     except jinjanator_plugins.FormatOptionUnsupportedError as exc:
-        print(
-            f"Format parser does not support option '{exc}'",
-            file=sys.stderr,
-        )
+        print(str(exc), file=sys.stderr)
         return 3
     except jinjanator_plugins.FormatOptionValueError as exc:
-        print(
-            f"Format parser does not accept the value provided for option '{exc}'",
-            file=sys.stderr,
-        )
+        print(str(exc), file=sys.stderr)
         return 4
     except SystemExit as exc:
         if isinstance(exc.code, int):

@@ -59,15 +59,15 @@ def test_main_format_option_unknown(make_file_pair: FilePairFactory) -> None:
     )
 
 
+def test_main_format_option_unsupported(make_file_pair: FilePairFactory) -> None:
+    files = make_file_pair("Hello {{name}}!", "name=Blart", "null")
+    assert 3 == jinjanator.cli.main(  # noqa: PLR2004
+        ["", "--format-option", "uns", str(files.template_file), str(files.data_file)]
+    )
+
+
 def test_main_format_option_value_error(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("Hello {{name}}!", "name=Blart", "null")
     assert 4 == jinjanator.cli.main(  # noqa: PLR2004
         ["", "--format-option", "val", str(files.template_file), str(files.data_file)]
-    )
-
-
-def test_main_format_option_unsupported(make_file_pair: FilePairFactory) -> None:
-    files = make_file_pair("Hello {{name}}!", "name=Blart", "ini")
-    assert 3 == jinjanator.cli.main(  # noqa: PLR2004
-        ["", "--format-option", "midge", str(files.template_file), str(files.data_file)]
     )

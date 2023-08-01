@@ -9,29 +9,29 @@ from . import (
 )
 
 
-def test_ini_unsupported(make_file_pair: FilePairFactory) -> None:
+def test_ini_unknown(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("", "", "ini")
 
-    with pytest.raises(jinjanator_plugins.FormatOptionUnsupportedError):
+    with pytest.raises(jinjanator_plugins.FormatOptionUnknownError):
         assert render_file(files, ["--format-option", "midge"])
 
 
-def test_json_unsupported(make_file_pair: FilePairFactory) -> None:
+def test_json_unknown(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("", "", "json")
 
-    with pytest.raises(jinjanator_plugins.FormatOptionUnsupportedError):
+    with pytest.raises(jinjanator_plugins.FormatOptionUnknownError):
         assert render_file(files, ["--format-option", "midge"])
 
 
-def test_yaml_unsupported(make_file_pair: FilePairFactory) -> None:
+def test_yaml_unknown(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("", "", "yaml")
 
-    with pytest.raises(jinjanator_plugins.FormatOptionUnsupportedError):
+    with pytest.raises(jinjanator_plugins.FormatOptionUnknownError):
         assert render_file(files, ["--format-option", "midge"])
 
 
-def test_env_unsupported(make_file_pair: FilePairFactory) -> None:
+def test_env_unknown(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("", "", "env")
 
-    with pytest.raises(jinjanator_plugins.FormatOptionUnsupportedError):
+    with pytest.raises(jinjanator_plugins.FormatOptionUnknownError):
         assert render_file(files, ["--format-option", "midge"])

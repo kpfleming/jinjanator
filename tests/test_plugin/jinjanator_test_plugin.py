@@ -5,7 +5,7 @@ from typing import Mapping
 from jinjanator_plugins import (
     Filters,
     Format,
-    FormatOptionUnknownError,
+    FormatOptionUnsupportedError,
     FormatOptionValueError,
     Formats,
     Globals,
@@ -31,18 +31,22 @@ def null_test(
     return False
 
 
-def null_format(
-    data_string: str,  # noqa: ARG001
-    options: list[str] | None = None,
-) -> Mapping[str, str]:
-    if options:
-        for option in options:
-            if option == "val":
-                raise FormatOptionValueError(option)
+class NullFormat:
+    @staticmethod
+    def parser(
+        data_string: str,  # noqa: ARG004
+        options: list[str] | None = None,
+    ) -> Mapping[str, str]:
+        if options:
+            for option in options:
+                if option == "val":
+                    raise FormatOptionValueError(NullFormat.fmt, option, "", "")
+                if option == "uns":
+                    raise FormatOptionUnsupportedError(NullFormat.fmt, option, "")
 
-            raise FormatOptionUnknownError(option)
+        return {}
 
-    return {}
+    fmt = Format(name="null", parser=parser, suffixes=[".null"], options=["val", "uns"])
 
 
 @plugin_identity_hook
@@ -62,7 +66,7 @@ def plugin_tests() -> Tests:
 
 @plugin_formats_hook
 def plugin_formats() -> Formats:
-    return {"null": Format(parser=null_format, suffixes=[".null"])}
+    return {NullFormat.fmt.name: NullFormat.fmt}
 
 
 @plugin_globals_hook
