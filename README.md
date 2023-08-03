@@ -41,6 +41,10 @@ pip install jinjanator
 * [jinjanator-plugin-ansible](https://pypi.org/project/jinjanator-plugin-ansible) -
   makes Ansible's 'core' filters and tests available during template
   rendering
+* [jinjanator-plugin-format-toml](https://pypi.org/project/jinjanator-plugin-format-toml) -
+  provides a TOML parser for input data files
+* [jinjanator-plugin-format-xml](https://pypi.org/project/jinjanator-plugin-format-xml) -
+  provides an XML parser for input data files
 
 ## Tutorial
 
