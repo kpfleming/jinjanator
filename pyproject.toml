@@ -97,24 +97,27 @@ dependencies = [
     "black",
     "ruff",
     "mypy",
+    "pyproject-fmt",
     "pytest", # needed for type-checking tests
     "types-PyYAML",
 ]
 
 [tool.hatch.envs.lint.scripts]
 lint = [
-     "black --preview src tests",
-     "ruff check --fix -- src tests",
+     "ruff check --fix --show-fixes .",
+     "black --preview .",
      "mypy --package jinjanator",
      "mypy tests",
      "shellcheck workflow-support/*.sh",
+     "pyproject-fmt pyproject.toml tests/test_plugin/pyproject.toml",
 ]
 lint-action = [
-     "black --check --diff --preview src tests",
-     "ruff check --format=github -- src tests",
+     "ruff check --format=github .",
+     "black --check --diff --preview .",
      "mypy --package jinjanator",
      "mypy tests",
      "shellcheck workflow-support/*.sh",
+     "pyproject-fmt --check pyproject.toml tests/test_plugin/pyproject.toml",
 ]
 
 [tool.hatch.envs.ci]
@@ -190,6 +193,7 @@ replacement = "[#\\1](https://github.com/kpfleming/jinjanator/issues/\\1)"
 
 [tool.black]
 line-length = 90
+target-version = ["py38"]
 
 [tool.ruff]
 src = ["src", "tests"]
