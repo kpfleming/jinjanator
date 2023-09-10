@@ -18,7 +18,7 @@ from typing import (
 
 import jinja2
 import jinjanator_plugins
-import pluggy  # type: ignore[import]
+import pluggy
 
 from . import filters, formats, version
 from .context import read_context_data
