@@ -112,7 +112,7 @@ lint = [
      "pyproject-fmt pyproject.toml tests/test_plugin/pyproject.toml",
 ]
 lint-action = [
-     "ruff check --format=github .",
+     "ruff check --output-format=github .",
      "black --check --diff --preview .",
      "mypy --package jinjanator",
      "mypy tests",
