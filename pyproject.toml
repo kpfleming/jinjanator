@@ -198,7 +198,7 @@ target-version = ["py38"]
 
 [tool.ruff]
 src = ["src", "tests"]
-format = "grouped"
+output-format = "grouped"
 target-version = "py38"
 select = ["ALL"]
 
