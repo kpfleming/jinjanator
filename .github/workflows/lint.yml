@@ -14,7 +14,9 @@ jobs:
       image_base: ${{ steps.details.outputs.image_base }}
       need_lint: ${{ steps.preflight.outputs.need_lint == 'true' }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        show-progress: false
     - id: details
       uses: kpfleming/composite-actions/image-details@v2
       with:
@@ -31,5 +33,7 @@ jobs:
     container:
       image: ${{ needs.preflight.outputs.image_base }}:main
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        show-progress: false
     - uses: kpfleming/composite-actions/lint-hatch@v2

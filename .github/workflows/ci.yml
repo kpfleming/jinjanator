@@ -23,7 +23,9 @@ jobs:
       versions: ${{ steps.get_versions.outputs.versions }}
       need_ci: ${{ (steps.preflight.outputs.need_ci == 'true') || (steps.preflight.outputs.need_image == 'true') }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        show-progress: false
     - id: get_versions
       run: cat workflow-support/versions.json >> $GITHUB_OUTPUT
     - id: details
