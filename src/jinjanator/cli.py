@@ -109,11 +109,12 @@ class UniqueStore(argparse.Action):
 
 
 def print_version_info(
-    stream: TextIO = sys.stderr, *, plugin_identities: Iterable[str]
+    stream: TextIO = sys.stderr,
+    *,
+    plugin_identities: Iterable[str],
 ) -> None:
     print(
-        f"{Path(sys.argv[0]).name} {version}, Jinja2"
-        f" {importlib.metadata.version('jinja2')}",
+        f"{Path(sys.argv[0]).name} {version}, Jinja2" f" {importlib.metadata.version('jinja2')}",
         file=stream,
     )
     header_printed = False
@@ -135,7 +136,11 @@ class VersionAction(argparse.Action):
         help: str = "",  # noqa: A002
     ):
         super().__init__(
-            option_strings=option_strings, dest=dest, default=default, nargs=0, help=help
+            option_strings=option_strings,
+            dest=dest,
+            default=default,
+            nargs=0,
+            help=help,
         )
         self.plugin_identities = plugin_identities
 
@@ -245,7 +250,8 @@ def get_hook_callers() -> jinjanator_plugins.PluginHookCallers:
 
 
 def validate_format_options(
-    fmt: type[jinjanator_plugins.Format], options: Sequence[str] | None
+    fmt: type[jinjanator_plugins.Format],
+    options: Sequence[str] | None,
 ) -> jinjanator_plugins.Format:
     if options:
         if not fmt.option_names:
@@ -320,9 +326,7 @@ def render_command(
         else:
             input_data_f = args.data.open()
     else:
-        input_data_f = (
-            stdin if args.data is None or str(args.data) == "-" else args.data.open()
-        )
+        input_data_f = stdin if args.data is None or str(args.data) == "-" else args.data.open()
 
     fmt = validate_format_options(available_formats[args.format], args.format_options)
 

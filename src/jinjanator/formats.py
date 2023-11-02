@@ -69,12 +69,18 @@ class JSONFormat:
                     opt, val = option.split("=")
                 except ValueError as exc:
                     raise FormatOptionValueError(
-                        self, option, "", "contains more than one '='"
+                        self,
+                        option,
+                        "",
+                        "contains more than one '='",
                     ) from exc
 
                 if not val.isidentifier():
                     raise FormatOptionValueError(
-                        self, opt, val, "is not a valid Python identifier"
+                        self,
+                        opt,
+                        val,
+                        "is not a valid Python identifier",
                     )
 
                 if keyword.iskeyword(val):
@@ -121,7 +127,9 @@ class JSONFormat:
 
         if not self.array_name:
             raise FormatOptionUnsupportedError(
-                self, "array-name", "must be specified for array (list) input"
+                self,
+                "array-name",
+                "must be specified for array (list) input",
             )
 
         return {self.array_name: context}
@@ -140,12 +148,18 @@ class YAMLFormat:
                     opt, val = option.split("=")
                 except ValueError as exc:
                     raise FormatOptionValueError(
-                        self, option, "", "contains more than one '='"
+                        self,
+                        option,
+                        "",
+                        "contains more than one '='",
                     ) from exc
 
                 if not val.isidentifier():
                     raise FormatOptionValueError(
-                        self, opt, val, "is not a valid Python identifier"
+                        self,
+                        opt,
+                        val,
+                        "is not a valid Python identifier",
                     )
 
                 if keyword.iskeyword(val):
@@ -189,7 +203,9 @@ class YAMLFormat:
         if isinstance(context, list):
             if not self.sequence_name:
                 raise FormatOptionUnsupportedError(
-                    self, "sequence-name", "must be specified for sequence (array) input"
+                    self,
+                    "sequence-name",
+                    "must be specified for sequence (array) input",
                 )
 
             return {self.sequence_name: context}
@@ -235,10 +251,7 @@ class EnvFormat:
         return dict(
             filter(
                 lambda line: len(line) == 2,  # noqa: PLR2004
-                (
-                    list(map(str.strip, line.split("=", 1)))
-                    for line in data_string.split("\n")
-                ),
+                (list(map(str.strip, line.split("=", 1))) for line in data_string.split("\n")),
             ),
         )
 
