@@ -4,9 +4,8 @@
 [![CI](https://github.com/kpfleming/jinjanator/workflows/CI%20checks/badge.svg)](https://github.com/kpfleming/jinjanator/actions?query=workflow%3ACI%20checks)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/release/python-3812/)
 [![License - Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-9400d3.svg)](https://spdx.org/licenses/Apache-2.0.html)
-[![Code Style - Black](https://img.shields.io/badge/Code%20Style-Black-000000.svg)](https://github.com/psf/black)
 [![Types - Mypy](https://img.shields.io/badge/Types-Mypy-blue.svg)](https://github.com/python/mypy)
-[![Code Quality - Ruff](https://img.shields.io/badge/Code%20Quality-Ruff-red.svg)](https://github.com/astral-sh/ruff)
+[![Code Style and Quality - Ruff](https://img.shields.io/badge/Code%20Quality-Ruff-red.svg)](https://github.com/astral-sh/ruff)
 [![Project Management - Hatch](https://img.shields.io/badge/Project%20Management-Hatch-purple.svg)](https://github.com/pypa/hatch)
 [![Testing - Pytest](https://img.shields.io/badge/Testing-Pytest-orange.svg)](https://github.com/pytest-dev/pytest)
 
@@ -376,7 +375,6 @@ itself. I've listed many of them below, but if I've overlooked any
 please do not be offended :-)
 
 * [Attrs](https://pypi.org/project/attrs)
-* [Black](https://pypi.org/project/black)
 * [Hatch-Fancy-PyPI-Readme](https://pypi.org/project/hatch-fancy-pypi-readme)
 * [Hatch](https://pypi.org/project/hatch)
 * [Jinja2](https://pypi.org/project/jinja2/)
