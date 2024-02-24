@@ -38,8 +38,6 @@ build_cmd_with_source() {
 build_cmd apt update --quiet=2
 build_cmd apt install --yes --quiet=2 "${lint_deps[@]}" "${proj_deps[@]}" "${proj_build_deps[@]}"
 
-build_cmd pip3.12 install git+https://github.com/pypa/hatch
-
 for env in "${hatchenvs[@]}"; do
     # this looks weird... but it causes Hatch to create the env,
     # install all of the project's dependencies and the project,
