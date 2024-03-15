@@ -84,6 +84,10 @@ class Jinja2TemplateRenderer:
         for plugin_tests in plugin_hook_callers.plugin_tests():
             self._env.tests.update(plugin_tests)
 
+        for plugin_extensions in plugin_hook_callers.plugin_extensions():
+            for extension in plugin_extensions:
+                self._env.add_extension(extension)
+
     def render(self, template_name: str, context: Mapping[str, str]) -> str:
         return self._env.get_template(template_name).render(context)
 
