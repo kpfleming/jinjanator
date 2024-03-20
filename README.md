@@ -24,7 +24,7 @@ Features:
 * Jinja2 templating
 * INI, YAML, JSON data sources supported
 * Environment variables can be used with or without data files
-* Plugins can provide additional formats, filters, tests, and global
+* Plugins can provide additional formats, filters, tests, extensions and global
   functions (see
   [jinjanator-plugins](https://github.com/kpfleming/jinjanator-plugins)
   for details)

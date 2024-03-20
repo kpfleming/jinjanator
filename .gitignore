@@ -3,3 +3,4 @@
 dist
 build
 src/jinjanator/version.py
+__pycache__
