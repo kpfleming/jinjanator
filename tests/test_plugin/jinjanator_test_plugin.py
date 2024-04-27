@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Iterable, Mapping
 
 from jinjanator_plugins import (
+    Extensions,
     Filters,
     FormatOptionUnsupportedError,
     FormatOptionValueError,
@@ -10,6 +11,7 @@ from jinjanator_plugins import (
     Globals,
     Identity,
     Tests,
+    plugin_extensions_hook,
     plugin_filters_hook,
     plugin_formats_hook,
     plugin_globals_hook,
@@ -73,3 +75,8 @@ def plugin_formats() -> Formats:
 @plugin_globals_hook
 def plugin_globals() -> Globals:
     return {"null": null_filter}
+
+
+@plugin_extensions_hook
+def plugin_extensions() -> Extensions:
+    return ["jinja2.ext.do"]
