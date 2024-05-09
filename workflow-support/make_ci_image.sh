@@ -23,7 +23,7 @@ proj_deps=(libsqlite3-0)
 proj_build_deps=(build-essential libc6-dev pkg-config)
 
 hatchenvs=(lint ci)
-cimatrix=(3.8 3.9 3.10 3.11 3.12)
+cimatrix=(3.8 3.9 3.10 3.11 3.12 3.13)
 
 c=$(buildah from "${base_image}")
 
