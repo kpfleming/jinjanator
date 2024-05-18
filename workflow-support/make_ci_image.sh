@@ -19,11 +19,10 @@ image_name=${1}; shift
 dist_name=${1}; shift
 
 lint_deps=(shellcheck)
-proj_deps=(libsqlite3-0)
-proj_build_deps=(build-essential libc6-dev pkg-config)
+proj_deps=()
+proj_build_deps=()
 
 hatchenvs=(lint ci)
-cimatrix=(3.8 3.9 3.10 3.11 3.12 3.13)
 
 c=$(buildah from "${base_image}")
 
@@ -41,27 +40,20 @@ build_cmd apt install --yes --quiet=2 "${lint_deps[@]}" "${proj_deps[@]}" "${pro
 for env in "${hatchenvs[@]}"; do
     # this looks weird... but it causes Hatch to create the env,
     # install all of the project's dependencies and the project,
-    # then runs pip to uninstall the project, leaving the env
+    # then runs 'uv pip' to uninstall the project, leaving the env
     # in place with the dependencies
-    case "${env}" in
-	ci*)
-	    for py in "${cimatrix[@]}"; do
-		build_cmd_with_source hatch env create "${env}.py${py}"
-		build_cmd_with_source hatch -e "${env}.py${py}" run pip uninstall --yes "${dist_name}"
-	    done
-	;;
-	*)
-	    build_cmd_with_source hatch env create "${env}"
-	    build_cmd_with_source hatch -e "${env}" run pip uninstall --yes "${dist_name}"
-	;;
-    esac
+    build_cmd_with_source hatch env create "${env}"
+    build_cmd_with_source hatch -e "${env}" run uv pip uninstall "${dist_name}"
 done
 
-build_cmd apt remove --yes --purge "${proj_build_deps[@]}"
+if [ -n "${proj_build_deps[*]}" ]
+then
+    build_cmd apt remove --yes --purge "${proj_build_deps[@]}"
+fi
 build_cmd apt autoremove --yes --purge
 build_cmd apt clean autoclean
 build_cmd sh -c "rm -rf /var/lib/apt/lists/*"
-build_cmd rm -rf /root/.cache
+build_cmd uv cache clean
 
 if buildah images --quiet "${image_name}"; then
     buildah rmi "${image_name}"

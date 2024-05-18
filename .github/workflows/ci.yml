@@ -31,7 +31,7 @@ jobs:
     - id: details
       uses: kpfleming/composite-actions/image-details@v2
       with:
-        base_image: python:bookworm-main
+        base_image: python:v3-bookworm-main
     - id: preflight
       uses: kpfleming/composite-actions/ci-preflight@v2
       with:

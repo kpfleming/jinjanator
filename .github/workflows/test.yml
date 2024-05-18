@@ -28,7 +28,7 @@ jobs:
       run: hatch build -t wheel
       shell: bash
     - name: install project
-      run: hatch run ci.py${{ inputs.python }}:pip install dist/*.whl
+      run: hatch run ci.py${{ inputs.python }}:uv pip install dist/*.whl
       shell: bash
     - name: run tests
       run: hatch run ci.py${{ inputs.python }}:ci

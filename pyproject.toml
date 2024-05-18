@@ -45,22 +45,6 @@ urls."Bug Tracker" = "https://github.com/kpfleming/jinjanator/issues"
 urls."Homepage" = "https://github.com/kpfleming/jinjanator"
 scripts.jinjanate = "jinjanator.cli:main"
 
-[tool.hatch.envs.changelog]
-skip-install = true
-dependencies = [
-  "towncrier",
-]
-
-[tool.hatch.envs.changelog.scripts]
-draft = [
-  "rm -f changelog.d/*~",
-  "towncrier build --version main --draft",
-]
-release = [
-  "rm -f changelog.d/*~",
-  "towncrier build --yes --version {args}",
-]
-
 [tool.hatch.version]
 source = "vcs"
 
@@ -90,6 +74,26 @@ packages = [
 
 [tool.hatch.envs.default]
 python = "3.12"
+installer = "uv"
+python-sources = [
+  "external",
+]
+
+[tool.hatch.envs.changelog]
+detached = true
+dependencies = [
+  "towncrier",
+]
+
+[tool.hatch.envs.changelog.scripts]
+draft = [
+  "rm -f changelog.d/*~",
+  "towncrier build --version main --draft",
+]
+release = [
+  "rm -f changelog.d/*~",
+  "towncrier build --yes --version {args}",
+]
 
 [tool.hatch.envs.lint]
 dependencies = [
@@ -134,17 +138,16 @@ python = [
   "3.10",
   "3.11",
   "3.12",
-  "3.13",
 ]
 
 [tool.hatch.envs.ci.scripts]
 ci = [
   "rm -f .coverage",
   # run tests for 'no plugin' mode
-  "pip uninstall --yes jinjanator-test-plugin",
+  "uv pip uninstall jinjanator-test-plugin",
   "pytest -m 'noplugin' --verbose  --cov-branch --cov=jinjanator",
   # run tests for 'plugin' mode
-  "pip install ./tests/test_plugin",
+  "uv pip install ./tests/test_plugin",
   "pytest -m 'not noplugin' --verbose --cov-append  --cov-branch --cov=jinjanator",
   "coverage report --show-missing --fail-under=98",
 ]
