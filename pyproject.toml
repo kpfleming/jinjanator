@@ -9,10 +9,10 @@ requires = [
 [project]
 name = "jinjanator"
 description = "Command-line interface to Jinja2 for templating in shell scripts."
-license = { text="Apache-2.0" }
+license = { text = "Apache-2.0" }
 authors = [
-  { name="Kevin P. Fleming", email="jinjanator@kevin.km6g.us" },
-  { name="Mark Vartanyan", email="kolypto@gmail.com" },
+  { name = "Kevin P. Fleming", email = "jinjanator@kevin.km6g.us" },
+  { name = "Mark Vartanyan", email = "kolypto@gmail.com" },
 ]
 requires-python = ">=3.8"
 classifiers = [
@@ -38,14 +38,12 @@ dependencies = [
   "attrs",
   "jinja2>=2.7.2",
   "jinjanator-plugins==24.1.*",
-  "PyYAML",
+  "pyyaml",
   "typing-extensions",
 ]
-[project.urls]
-"Bug Tracker" = "https://github.com/kpfleming/jinjanator/issues"
-"Homepage" = "https://github.com/kpfleming/jinjanator"
-[project.scripts]
-jinjanate = "jinjanator.cli:main"
+urls."Bug Tracker" = "https://github.com/kpfleming/jinjanator/issues"
+urls."Homepage" = "https://github.com/kpfleming/jinjanator"
+scripts.jinjanate = "jinjanator.cli:main"
 
 [tool.hatch.envs.changelog]
 skip-install = true
@@ -80,14 +78,14 @@ exclude = [
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "src",
-    "tests",
-    "*.md",
+  "src",
+  "tests",
+  "*.md",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = [
-    "src/jinjanator",
+  "src/jinjanator",
 ]
 
 [tool.hatch.envs.default]
@@ -95,60 +93,60 @@ python = "3.12"
 
 [tool.hatch.envs.lint]
 dependencies = [
-    "ruff>=0.2.0",
-    "mypy",
-    "pyproject-fmt",
-    "pytest", # needed for type-checking tests
-    "types-PyYAML",
+  "ruff>=0.2.0",
+  "mypy",
+  "pyproject-fmt",
+  "pytest",        # needed for type-checking tests
+  "types-PyYAML",
 ]
 
 [tool.hatch.envs.lint.scripts]
 lint = [
-     "ruff format",
-     "ruff check --output-format=full --fix --show-fixes",
-     "mypy --package jinjanator",
-     "mypy tests",
-     "shellcheck workflow-support/*.sh",
-     "pyproject-fmt pyproject.toml tests/test_plugin/pyproject.toml",
+  "ruff format",
+  "ruff check --output-format=full --fix --show-fixes",
+  "mypy --package jinjanator",
+  "mypy tests",
+  "shellcheck workflow-support/*.sh",
+  "pyproject-fmt pyproject.toml tests/test_plugin/pyproject.toml",
 ]
 lint-action = [
-     "ruff format --check --diff",
-     "ruff check --output-format=github",
-     "mypy --package jinjanator",
-     "mypy tests",
-     "shellcheck workflow-support/*.sh",
-     "pyproject-fmt --check pyproject.toml tests/test_plugin/pyproject.toml",
+  "ruff format --check --diff",
+  "ruff check --output-format=github",
+  "mypy --package jinjanator",
+  "mypy tests",
+  "shellcheck workflow-support/*.sh",
+  "pyproject-fmt --check pyproject.toml tests/test_plugin/pyproject.toml",
 ]
 
 [tool.hatch.envs.ci]
 dependencies = [
-    "coverage[toml]",
-    "pytest",
-    "pytest-cov",
-    "pytest-icdiff",
-    "PyYAML",
+  "coverage[toml]",
+  "pytest",
+  "pytest-cov",
+  "pytest-icdiff",
+  "PyYAML",
 ]
 
 [[tool.hatch.envs.ci.matrix]]
 python = [
-"3.8",
-"3.9",
-"3.10",
-"3.11",
-"3.12",
-"3.13",
+  "3.8",
+  "3.9",
+  "3.10",
+  "3.11",
+  "3.12",
+  "3.13",
 ]
 
 [tool.hatch.envs.ci.scripts]
 ci = [
-    "rm -f .coverage",
-    # run tests for 'no plugin' mode
-    "pip uninstall --yes jinjanator-test-plugin",
-    "pytest -m 'noplugin' --verbose  --cov-branch --cov=jinjanator",
-    # run tests for 'plugin' mode
-    "pip install ./tests/test_plugin",
-    "pytest -m 'not noplugin' --verbose --cov-append  --cov-branch --cov=jinjanator",
-    "coverage report --show-missing --fail-under=98",
+  "rm -f .coverage",
+  # run tests for 'no plugin' mode
+  "pip uninstall --yes jinjanator-test-plugin",
+  "pytest -m 'noplugin' --verbose  --cov-branch --cov=jinjanator",
+  # run tests for 'plugin' mode
+  "pip install ./tests/test_plugin",
+  "pytest -m 'not noplugin' --verbose --cov-append  --cov-branch --cov=jinjanator",
+  "coverage report --show-missing --fail-under=98",
 ]
 
 [tool.hatch.metadata]
@@ -193,51 +191,55 @@ pattern = "#(\\d+)"
 replacement = "[#\\1](https://github.com/kpfleming/jinjanator/issues/\\1)"
 
 [tool.ruff]
-src = ["src", "tests"]
 line-length = 100
 
-[tool.ruff.lint]
-ignore-init-module-imports = true
-select = ["ALL"]
-ignore = [
-  "ANN",      # Mypy is better at this.
-  "COM812",   # conflicts with formatter
-  "C901",     # Leave complexity to me.
-  "D",        # We have different ideas about docstrings.
-  "ISC001",   # conflicts with formatter
-  "PLR0912",  # Leave complexity to me.
-  "TRY301",   # Raise in try blocks can totally make sense.
+src = [
+  "src",
+  "tests",
 ]
-unfixable = ["F401"]
-
-[tool.ruff.lint.per-file-ignores]
-"src/jinjanator/cli.py" = ["T201"]
-"tests/*" = [
+lint.select = [
+  "ALL",
+]
+lint.per-file-ignores."src/jinjanator/cli.py" = [
+  "T201",
+]
+lint.per-file-ignores."tests/*" = [
   "PLC1901", # empty strings are falsey, but are less specific in tests
   "PT005",   # we use always underscores and explicit names
   "S101",    # assert
   "SIM300",  # Yoda rocks in tests
 ]
-"tests/test_plugin/*" = [
-  "INP001",  # we don't care that these are in implicit namespace packages
+lint.per-file-ignores."tests/test_plugin/*" = [
+  "INP001", # we don't care that these are in implicit namespace packages
 ]
-
-[tool.ruff.lint.isort]
-lines-between-types = 1
-lines-after-imports = 2
+lint.unfixable = [
+  "F401",
+]
+lint.isort.lines-after-imports = 2
+lint.isort.lines-between-types = 1
+lint.ignore = [
+  "ANN",     # Mypy is better at this.
+  "C901",    # Leave complexity to me.
+  "COM812",  # conflicts with formatter
+  "D",       # We have different ideas about docstrings.
+  "ISC001",  # conflicts with formatter
+  "PLR0912", # Leave complexity to me.
+  "TRY301",  # Raise in try blocks can totally make sense.
+]
+lint.ignore-init-module-imports = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
 xfail_strict = true
 testpaths = [
-    "tests",
+  "tests",
 ]
 addopts = [
-    "-ra",
-    "--strict-markers",
+  "-ra",
+  "--strict-markers",
 ]
 markers = [
-    "noplugin: tests which must run without plugins installed",
+  "noplugin: tests which must run without plugins installed",
 ]
 
 [tool.towncrier]
@@ -249,7 +251,11 @@ start_string = "<!-- towncrier release notes start -->\n"
 template = "changelog.d/towncrier_template.md.jinja"
 title_format = ""
 issue_format = "[#{issue}](https://github.com/kpfleming/jinjanator/issues/{issue})"
-underlines = ["", "", ""]
+underlines = [
+  "",
+  "",
+  "",
+]
 
 [[tool.towncrier.section]]
 path = ""
@@ -297,4 +303,6 @@ warn_no_return = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unused_ignores = true
-exclude = ['tests/test_plugin/build']
+exclude = [
+  'tests/test_plugin/build',
+]

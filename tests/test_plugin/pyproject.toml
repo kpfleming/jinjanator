@@ -17,8 +17,9 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 
-[tool.setuptools]
-py-modules = ["jinjanator_test_plugin"]
+entry-points.jinjanator.test = "jinjanator_test_plugin"
 
-[project.entry-points.jinjanator]
-test = "jinjanator_test_plugin"
+[tool.setuptools]
+py-modules = [
+  "jinjanator_test_plugin",
+]
