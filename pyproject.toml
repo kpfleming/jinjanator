@@ -43,6 +43,8 @@ dependencies = [
 ]
 urls."Bug Tracker" = "https://github.com/kpfleming/jinjanator/issues"
 urls."Homepage" = "https://github.com/kpfleming/jinjanator"
+scripts.j2 = "jinjanator.cli:main"
+
 scripts.jinjanate = "jinjanator.cli:main"
 
 [tool.hatch.version]
