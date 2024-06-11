@@ -28,6 +28,15 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [24.2.0](https://github.com/kpfleming/jinjanator/tree/24.2.0) - 2024-06-11
+
+### Additions
+
+- Added 'j2' CLI entrypoint, for users converting from 'j2cli'.
+  [#25](https://github.com/kpfleming/jinjanator/issues/25)
+- Added support for Python 3.13.
+  [#31](https://github.com/kpfleming/jinjanator/issues/31)
+
 ## [24.1.0](https://github.com/kpfleming/jinjanator/tree/24.1.0) - 2024-04-27
 
 ### Additions
