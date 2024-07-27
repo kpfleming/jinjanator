@@ -131,7 +131,7 @@ def print_version_info(
 
 
 class VersionAction(argparse.Action):
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         option_strings: list[str],
         plugin_identities: Iterable[str],
