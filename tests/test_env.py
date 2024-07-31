@@ -27,12 +27,20 @@ def test_import(make_file_pair: FilePairFactory) -> None:
 
 
 def test_equals_sign_in_file_value(make_file_pair: FilePairFactory) -> None:
+    # A: key with out an equals sign should return an empty string.
+    #  Slight drift from python-dotenv to maintain current plugin definition
+    # B: C should return their assigned values
+    # D: key with an equals sign and no value should return empty string
+    # E: should interpolate the value of C
+    # F: should fail to interpolate the value of G due to order
+    # G: should be assigned value
+    # Ref: https://pypi.org/project/python-dotenv/
     files = make_file_pair(
-        "{{ A|default() }}/{{ B }}/{{ C }}",
-        "A\nB=1\nC=val=1\n",
+        "{{ A|default() }}/{{ B }}/{{ C }}/{{ D }}/{{ E }}/{{ F }}/{{ G }}",
+        "A\nB=1\nC=val=1\nD=\nE=${C}\nF=${G}\nG=1",
         "env",
     )
-    assert "/1/val=1" == render_file(files, [])
+    assert "/1/val=1//val=1//1" == render_file(files, [])
 
 
 def test_filter(make_file_pair: FilePairFactory, monkeypatch: Any) -> None:

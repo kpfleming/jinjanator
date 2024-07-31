@@ -4,10 +4,12 @@ import configparser
 import json
 import keyword
 
+from io import StringIO
 from typing import Any, Iterable, Mapping
 
 import yaml
 
+from dotenv import dotenv_values
 from jinjanator_plugins import (
     FormatOptionUnsupportedError,
     FormatOptionValueError,
@@ -248,12 +250,10 @@ class EnvFormat:
         $ j2 config.j2 - < data.env
         """
 
-        return dict(
-            filter(
-                lambda line: len(line) == 2,  # noqa: PLR2004
-                (list(map(str.strip, line.split("=", 1))) for line in data_string.split("\n")),
-            ),
-        )
+        data = StringIO(data_string)
+        results_dict = dotenv_values(stream=data)
+
+        return {k: v if v is not None else "" for (k, v) in results_dict.items()}
 
 
 @plugin_formats_hook
