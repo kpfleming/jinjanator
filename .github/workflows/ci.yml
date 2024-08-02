@@ -42,7 +42,7 @@ jobs:
       uses: kpfleming/composite-actions/make-ci-image@v2
       if: steps.preflight.outputs.need_image == 'true'
       with:
-        build_args: ${{ vars.PYTHON_DISTRIBUTION_NAME }}
+        build_args: jinjanator
         base_image: ${{ steps.details.outputs.base_image }}
         image_name: ${{ steps.details.outputs.image_base }}:${{ steps.preflight.outputs.image_tag }}
         image_cache_key: ${{ steps.preflight.outputs.image_cache_key }}
