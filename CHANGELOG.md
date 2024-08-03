@@ -28,6 +28,13 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [24.3.0](https://github.com/kpfleming/jinjanator/tree/24.3.0) - 2024-08-03
+
+### Additions
+
+- Support for full 'interpolation' in env-format input files (contributed by @lgtml)
+  [#36](https://github.com/kpfleming/jinjanator/issues/36)
+
 ## [24.2.0](https://github.com/kpfleming/jinjanator/tree/24.2.0) - 2024-06-11
 
 ### Additions
