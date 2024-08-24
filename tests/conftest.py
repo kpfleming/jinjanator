@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-@pytest.fixture()
+@pytest.fixture
 def make_file_pair(tmp_path: Path) -> FilePairFactory:
     def _make_file_pair(
         template_content: str,

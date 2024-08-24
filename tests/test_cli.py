@@ -51,7 +51,7 @@ def test_main_version(capsys: Any) -> None:
     assert "   test" == outlines[2]
 
 
-@pytest.mark.noplugin()
+@pytest.mark.noplugin
 def test_main_version_no_plugins(capsys: Any) -> None:
     """
     Ensure that the 'test' plugin's identity string is not included in the '--version' output.

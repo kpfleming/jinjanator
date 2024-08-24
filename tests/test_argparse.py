@@ -60,7 +60,7 @@ def test_version() -> None:
     assert 0 == excinfo.value.code
 
 
-@pytest.mark.xfail()
+@pytest.mark.xfail
 @pytest.mark.parametrize(
     "args",
     [
