@@ -8,7 +8,7 @@ from . import (
 )
 
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     import pathlib
 
 

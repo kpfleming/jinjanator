@@ -7,7 +7,7 @@ import pytest
 from . import FilePair, FilePairFactory
 
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from pathlib import Path
 
 

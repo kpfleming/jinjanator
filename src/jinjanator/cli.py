@@ -5,13 +5,15 @@ import importlib
 import os
 import sys
 
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import (
     Any,
     Callable,
-    Iterable,
-    Mapping,
-    Sequence,
     TextIO,
     cast,
 )

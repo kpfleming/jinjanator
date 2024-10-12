@@ -4,8 +4,13 @@ import configparser
 import json
 import keyword
 
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Iterable, Mapping
 from io import StringIO
-from typing import Any, Iterable, Mapping
+from typing import Any
 
 import yaml
 

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Mapping, TextIO
+from typing import TYPE_CHECKING, Any, TextIO
 
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Mapping
+
     from jinjanator_plugins import (
         Format,
     )
