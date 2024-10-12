@@ -210,6 +210,7 @@ lint.ignore = [
   "C901",    # Leave complexity to me.
   "COM812",  # conflicts with formatter
   "D",       # We have different ideas about docstrings.
+  "FA100",   # Intentionally not using '__future__' for annotations
   "ISC001",  # conflicts with formatter
   "PLR0912", # Leave complexity to me.
   "TRY301",  # Raise in try blocks can totally make sense.

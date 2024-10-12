@@ -1,14 +1,8 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 
 from . import FilePair, FilePairFactory
-
-
-if TYPE_CHECKING:  # pragma: no cover
-    from pathlib import Path
 
 
 @pytest.fixture

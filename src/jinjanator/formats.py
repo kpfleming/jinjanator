@@ -1,16 +1,10 @@
-from __future__ import annotations
-
 import configparser
 import json
 import keyword
 
-from typing import TYPE_CHECKING
-
-
-if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping
 from io import StringIO
-from typing import Any
+from typing import Any, Optional
 
 import yaml
 
@@ -25,10 +19,10 @@ from jinjanator_plugins import (
 
 class INIFormat:
     name = "ini"
-    suffixes: Iterable[str] | None = (".ini",)
-    option_names: Iterable[str] | None = ()
+    suffixes: Optional[Iterable[str]] = (".ini",)
+    option_names: Optional[Iterable[str]] = ()
 
-    def __init__(self, options: Iterable[str] | None) -> None:
+    def __init__(self, options: Optional[Iterable[str]]) -> None:
         pass
 
     def parse(self, data_string: str) -> Mapping[str, Any]:
@@ -65,11 +59,11 @@ class INIFormat:
 
 class JSONFormat:
     name = "json"
-    suffixes: Iterable[str] | None = (".json",)
-    option_names: Iterable[str] | None = "array-name"
+    suffixes: Optional[Iterable[str]] = (".json",)
+    option_names: Optional[Iterable[str]] = "array-name"
 
-    def __init__(self, options: Iterable[str] | None) -> None:
-        self.array_name: str | None = None
+    def __init__(self, options: Optional[Iterable[str]]) -> None:
+        self.array_name: Optional[str] = None
         if options:
             for option in options:
                 try:
@@ -144,11 +138,11 @@ class JSONFormat:
 
 class YAMLFormat:
     name = "yaml"
-    suffixes: Iterable[str] | None = (".yaml", ".yml")
-    option_names: Iterable[str] | None = "sequence-name"
+    suffixes: Optional[Iterable[str]] = (".yaml", ".yml")
+    option_names: Optional[Iterable[str]] = "sequence-name"
 
-    def __init__(self, options: Iterable[str] | None) -> None:
-        self.sequence_name: str | None = None
+    def __init__(self, options: Optional[Iterable[str]]) -> None:
+        self.sequence_name: Optional[str] = None
         if options:
             for option in options:
                 try:
@@ -223,10 +217,10 @@ class YAMLFormat:
 
 class EnvFormat:
     name = "env"
-    suffixes: Iterable[str] | None = (".env",)
-    option_names: Iterable[str] | None = ()
+    suffixes: Optional[Iterable[str]] = (".env",)
+    option_names: Optional[Iterable[str]] = ()
 
-    def __init__(self, options: Iterable[str] | None) -> None:
+    def __init__(self, options: Optional[Iterable[str]]) -> None:
         pass
 
     def parse(self, data_string: str) -> Mapping[str, str]:

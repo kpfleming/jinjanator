@@ -1,15 +1,9 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+import pathlib
 
 from . import (
     FilePairFactory,
     render_env,
 )
-
-
-if TYPE_CHECKING:  # pragma: no cover
-    import pathlib
 
 
 def test_short_option(

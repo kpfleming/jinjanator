@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import jinjanator_plugins
 import pytest
 

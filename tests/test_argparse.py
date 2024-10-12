@@ -1,10 +1,5 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-
-if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping
+from typing import Optional
 
 import pytest
 
@@ -13,10 +8,10 @@ from jinjanator.cli import parse_args
 
 class FakeFormat:
     name = "env"
-    suffixes: Iterable[str] | None = (".env",)
-    option_names: Iterable[str] | None = ()
+    suffixes: Optional[Iterable[str]] = (".env",)
+    option_names: Optional[Iterable[str]] = ()
 
-    def __init__(self, options: Iterable[str] | None) -> None:
+    def __init__(self, options: Optional[Iterable[str]]) -> None:
         pass
 
     def parse(

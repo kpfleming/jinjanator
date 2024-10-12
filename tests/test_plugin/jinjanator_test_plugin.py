@@ -1,11 +1,5 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-
-if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import Iterable, Mapping
-
+from collections.abc import Iterable, Mapping
+from typing import Optional
 
 from jinjanator_plugins import (
     Extensions,
@@ -39,10 +33,10 @@ def null_test(
 
 class NullFormat:
     name = "null"
-    suffixes: Iterable[str] | None = (".null",)
-    option_names: Iterable[str] | None = ("val", "uns")
+    suffixes: Optional[Iterable[str]] = (".null",)
+    option_names: Optional[Iterable[str]] = ("val", "uns")
 
-    def __init__(self, options: Iterable[str] | None) -> None:
+    def __init__(self, options: Optional[Iterable[str]]) -> None:
         if options:
             for option in options:
                 if option == "val":
