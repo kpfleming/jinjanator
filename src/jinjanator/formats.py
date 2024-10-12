@@ -47,7 +47,7 @@ class INIFormat:
             def as_dict(self) -> Mapping[str, Any]:
                 d = dict(self._sections)  # type: ignore[attr-defined]
                 for k in d:
-                    d[k] = dict(self._defaults, **d[k])  # type: ignore[attr-defined]
+                    d[k] = self._defaults | d[k]  # type: ignore[attr-defined]
                     d[k].pop("__name__", None)
                 return d
 

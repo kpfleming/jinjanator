@@ -20,11 +20,11 @@ def read_context_data(
 
     result = fmt.parse(f.read())
 
-    context.update(result)
+    context |= result
 
     if import_env is not None:
         if import_env == "":
-            context.update(environ)
+            context |= environ
         else:
             context[import_env] = environ
 

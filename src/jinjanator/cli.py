@@ -74,13 +74,13 @@ class Jinja2TemplateRenderer:
         self._env = jinja2.Environment(**j2_env_params, autoescape=False)  # noqa: S701
 
         for plugin_globals in plugin_hook_callers.plugin_globals():
-            self._env.globals.update(plugin_globals)
+            self._env.globals |= plugin_globals
 
         for plugin_filters in plugin_hook_callers.plugin_filters():
-            self._env.filters.update(plugin_filters)
+            self._env.filters |= plugin_filters
 
         for plugin_tests in plugin_hook_callers.plugin_tests():
-            self._env.tests.update(plugin_tests)
+            self._env.tests |= plugin_tests
 
         for plugin_extensions in plugin_hook_callers.plugin_extensions():
             for extension in plugin_extensions:
@@ -277,7 +277,7 @@ def render_command(
     available_formats: dict[str, type[jinjanator_plugins.Format]] = {}
 
     for plugin_formats in plugin_hook_callers.plugin_formats():
-        available_formats.update(plugin_formats)
+        available_formats |= plugin_formats
 
     plugin_identities = plugin_hook_callers.plugin_identities()
 
