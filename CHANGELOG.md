@@ -28,6 +28,15 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [24.4.0](https://github.com/kpfleming/jinjanator/tree/24.4.0) - 2024-10-13
+
+### Backwards-incompatible Changes
+
+- Added support for Python 3.13, and removed support for Python 3.8.
+  
+- Upgraded to version 24.2.0 of jinjanator-plugins.
+  
+
 ## [24.3.0](https://github.com/kpfleming/jinjanator/tree/24.3.0) - 2024-08-03
 
 ### Additions
