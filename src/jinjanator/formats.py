@@ -46,8 +46,8 @@ class INIFormat:
         class MyConfigParser(configparser.ConfigParser):
             def as_dict(self) -> Mapping[str, Any]:
                 d = dict(self._sections)  # type: ignore[attr-defined]
-                for k in d:
-                    d[k] = self._defaults | d[k]  # type: ignore[attr-defined]
+                for k, v in d.items():
+                    d[k] = self._defaults | v  # type: ignore[attr-defined]
                     d[k].pop("__name__", None)
                 return d
 
