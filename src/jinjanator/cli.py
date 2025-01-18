@@ -116,7 +116,7 @@ def print_version_info(
     plugin_identities: Iterable[str],
 ) -> None:
     print(
-        f"{Path(sys.argv[0]).name} {version}, Jinja2" f" {importlib.metadata.version('jinja2')}",
+        f"{Path(sys.argv[0]).name} {version}, Jinja2 {importlib.metadata.version('jinja2')}",
         file=stream,
     )
     header_printed = False
