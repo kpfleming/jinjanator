@@ -20,6 +20,7 @@ import pluggy
 
 from . import filters, formats, version
 from .context import read_context_data
+from . import customize
 
 
 class FilePathLoader(jinja2.BaseLoader):
@@ -220,6 +221,9 @@ def parse_args(
         help="Suppress informational messages",
     )
 
+    # add args for customize support
+    customize.add_args(parser)
+
     parser.add_argument(
         "-o",
         "--output-file",
@@ -342,12 +346,20 @@ def render_command(
             args.import_env,
         )
 
+    customizations = customize.from_file(args.customize)
+
+    context = customizations.alter_context(context)
+
     renderer = Jinja2TemplateRenderer(
         cwd,
         args.undefined,
-        j2_env_params={},
+        j2_env_params=customizations.j2_environment_params(),
         plugin_hook_callers=plugin_hook_callers,
     )
+
+    customize.apply(customizations, renderer._env,
+                    filters=args.filters,
+                    tests=args.tests)
 
     try:
         result = renderer.render(args.template, context)
