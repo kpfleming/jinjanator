@@ -308,7 +308,7 @@ def render_command(
 
     # We always expect a file;
     # unless the user wants 'env', and there's no input file provided.
-    if args.format == "env":
+    if args.format == "env" and args.data is None:
         """
         With the "env" format, if no dotenv filename is provided,
         we have two options: 1. The user wants to use the current
@@ -325,12 +325,7 @@ def render_command(
         And this is what we're going to do here as well. The script,
         however, would give the user a hint that they should use '-'.
         """
-        if str(args.data) == "-":
-            input_data_f = stdin
-        elif args.data is None:
-            input_data_f = None
-        else:
-            input_data_f = args.data.open()
+        input_data_f = None
     else:
         input_data_f = stdin if args.data is None or str(args.data) == "-" else args.data.open()
 
