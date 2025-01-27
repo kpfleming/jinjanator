@@ -18,9 +18,9 @@ import jinja2
 import jinjanator_plugins
 import pluggy
 
-from . import filters, formats, version
+from . import customize, filters, formats, version
 from .context import read_context_data
-from . import customize
+from .customize import CustomizationModule
 
 
 class FilePathLoader(jinja2.BaseLoader):
@@ -72,23 +72,23 @@ class Jinja2TemplateRenderer:
         j2_env_params.setdefault("extensions", self.ENABLED_EXTENSIONS)
         j2_env_params.setdefault("loader", FilePathLoader(cwd))
 
-        self._env = jinja2.Environment(**j2_env_params, autoescape=False)  # noqa: S701
+        self.env = jinja2.Environment(**j2_env_params, autoescape=False)  # noqa: S701
 
         for plugin_globals in plugin_hook_callers.plugin_globals():
-            self._env.globals |= plugin_globals
+            self.env.globals |= plugin_globals
 
         for plugin_filters in plugin_hook_callers.plugin_filters():
-            self._env.filters |= plugin_filters
+            self.env.filters |= plugin_filters
 
         for plugin_tests in plugin_hook_callers.plugin_tests():
-            self._env.tests |= plugin_tests
+            self.env.tests |= plugin_tests
 
         for plugin_extensions in plugin_hook_callers.plugin_extensions():
             for extension in plugin_extensions:
-                self._env.add_extension(extension)
+                self.env.add_extension(extension)
 
     def render(self, template_name: str, context: Mapping[str, str]) -> str:
-        return self._env.get_template(template_name).render(context)
+        return self.env.get_template(template_name).render(context)
 
 
 class UniqueStore(argparse.Action):
@@ -346,7 +346,7 @@ def render_command(
             args.import_env,
         )
 
-    customizations = customize.from_file(args.customize)
+    customizations = CustomizationModule.from_file(args.customize)
 
     context = customizations.alter_context(context)
 
@@ -357,9 +357,7 @@ def render_command(
         plugin_hook_callers=plugin_hook_callers,
     )
 
-    customize.apply(customizations, renderer._env,
-                    filters=args.filters,
-                    tests=args.tests)
+    customize.apply(customizations, renderer.env, filters=args.filters, tests=args.tests)
 
     try:
         result = renderer.render(args.template, context)
