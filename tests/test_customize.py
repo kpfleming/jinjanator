@@ -46,27 +46,27 @@ def test_two_custom_filters(dir_maker: DirMakerTool) -> None:
         template=FileContent(
             "template.j2",
             """
-            {{- "Hello, World!" | with_parens  | reverse -}}
+            {{- key | with_parens  | my_reverse -}}
             """,
         ),
-        data=FileContent("data.env", "key=value"),
+        data=FileContent("data.env", "key=Hello, World!"),
         filter=FileContent(
             "filter.py",
             """
 
-        def with_parens(message):
-            return f"({message})"
+            def with_parens(message):
+                return f"({message})"
 
-        """,
+            """,
         ),
         filter2=FileContent(
             "filter2.py",
             """
 
-        def reverse(message):
-            return message[::=1]
+            def my_reverse(message):
+                return message[::-1]
 
-        """,
+            """,
         ),
     )
 
@@ -74,7 +74,7 @@ def test_two_custom_filters(dir_maker: DirMakerTool) -> None:
         Path.cwd(),
         {},
         None,
-        ["", "--filters", files.filter, "--", files.template, files.data],
+        ["", "--filters", files.filter, "--filters", files.filter2, files.template, files.data],
     )
 
 
@@ -108,7 +108,7 @@ def test_custom_filter(dir_maker: DirMakerTool, key: str, expected: str) -> None
         Path.cwd(),
         {},
         None,
-        ["", "--filter", files.filter, "--", files.template, files.data],
+        ["", "--filter", files.filter, files.template, files.data],
     )
 
 
@@ -152,7 +152,7 @@ def test_custom_test(dir_maker: DirMakerTool, key: str, expected: str) -> None:
         Path.cwd(),
         {},
         None,
-        ["", "--tests", files.test, "--", files.template, files.data],
+        ["", "--tests", files.test, files.template, files.data],
     )
 
 
@@ -194,7 +194,7 @@ def test_custom_filter_and_test(dir_maker: DirMakerTool, key: str, expected: str
         Path.cwd(),
         {},
         None,
-        ["", "--filters", files.filter, "--tests", files.test, "--", files.template, files.data],
+        ["", "--filters", files.filter, "--tests", files.test, files.template, files.data],
     )
 
 

@@ -159,12 +159,13 @@ Customization Options:
 
 These options were ported from the j2cli tool for backwards compatibility (See customization section below)
 
-* `--filters PYTHON_FILE [FILE2] ...` - specify a python file containing additional filters as simple functions. You can specify more than one file at a time. NOTE: if this is the last argument before specifying the template filename, you will need to add a `--` separator before the template filename.
+* `--filters PYTHON_FILE` - specify a python file containing additional j2 filters as simple functions. You can use this option more than once to include multiple files.
+  * NOTE: while this option's behavior matches j2cli documentation, but does not match j2cli implementation. If you are migrating from j2cli and use more than one file, you will need to adjust your cli args from `... --filters file1.py file2.py ...` to `... --filters file1.py --filters file2.py ...``.
 
-* `--tests PYTHON_FILE [FILE2] ...`  - specify a python file containing additional tests as simple functions. You can specify more than one file at a time. NOTE: if this is the last argument before specifying the template filename, you will need to add a `--` separator before the template filename.
+* `--tests PYTHON_FILE [FILE2] ...`  - specify a python file containing additional j2 tests as simple functions. You can use this option more than once to include multiple files.
+  * NOTE: while this option's behavior matches j2cli documentation, but does not match j2cli implementation. If you are migrating from j2cli and use more than one file, you will need to adjust your cli args from `... --tests file1.py file2.py ...` to `... --tests file1.py --tests file2.py ...``.
 
-* `--customize PYTHON_FILE` - specify a customization python file. This file can modify context, add filters/tests or change J2 configuration.
-
+* `--customize PYTHON_FILE` - specify a customization python file. This file can modify context, add filters/tests or change J2 configuration. Unlike `--filters` or `--tests` - this option can only be used once per run.
 
 There is some special behavior with environment variables:
 
