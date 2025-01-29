@@ -117,11 +117,6 @@ def apply(
 
 def add_args(parser: ArgumentParser) -> ArgumentParser:
     """Add args to the parser"""
-    vargs_warning = (
-        "NOTE: Due to the way python implements options, if this is"
-        " the last option before the template filename, you need"
-        " to add a -- separator before the template filename"
-    )
 
     parser.add_argument(
         "--customize",
@@ -133,20 +128,23 @@ def add_args(parser: ArgumentParser) -> ArgumentParser:
 
     parser.add_argument(
         "--filters",
-        nargs="+",
+        action="append",
         default=[],
-        metavar="python-file",
+        metavar="filters-file.py",
         dest="filters",
-        help="Load custom Jinja2 filters from a Python file(s). "
-        f"All top-level functions are imported as filters. {vargs_warning}",
+        help="Load custom Jinja2 filters from a Python file. "
+        "All top-level functions in provided file are imported as j2 filters. "
+        "(Can be used multiple times)",
     )
 
     parser.add_argument(
         "--tests",
-        nargs="+",
+        action="append",
         default=[],
-        metavar="python-file",
+        metavar="tests-file.py",
         dest="tests",
-        help=f"Load custom Jinja2 tests from a Python file(s). {vargs_warning}",
+        help="Load custom Jinja2 tests from a Python file. "
+        "All top-level functions in provided file are imported as j2 tests. "
+        "(Can be used multiple times)",
     )
     return parser
