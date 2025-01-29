@@ -41,6 +41,11 @@ def test_invalid_arg() -> None:
         ["-e", "env"],
         ["-f", "env"],
         ["-o", "output"],
+        ["--customize", "customize.py"],
+        ["--filters", "filename.py", "--"],
+        ["--filters", "filename.py", "filename2.py", "--"],
+        ["--tests", "filename.py", "--"],
+        ["--tests", "filename.py", "filename2.py", "--"],
     ],
 )
 def test_args(args: list[str]) -> None:

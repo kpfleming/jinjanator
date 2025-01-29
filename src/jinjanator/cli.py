@@ -18,8 +18,9 @@ import jinja2
 import jinjanator_plugins
 import pluggy
 
-from . import filters, formats, version
+from . import customize, filters, formats, version
 from .context import read_context_data
+from .customize import CustomizationModule
 
 
 class FilePathLoader(jinja2.BaseLoader):
@@ -71,23 +72,23 @@ class Jinja2TemplateRenderer:
         j2_env_params.setdefault("extensions", self.ENABLED_EXTENSIONS)
         j2_env_params.setdefault("loader", FilePathLoader(cwd))
 
-        self._env = jinja2.Environment(**j2_env_params, autoescape=False)  # noqa: S701
+        self.env = jinja2.Environment(**j2_env_params, autoescape=False)  # noqa: S701
 
         for plugin_globals in plugin_hook_callers.plugin_globals():
-            self._env.globals |= plugin_globals
+            self.env.globals |= plugin_globals
 
         for plugin_filters in plugin_hook_callers.plugin_filters():
-            self._env.filters |= plugin_filters
+            self.env.filters |= plugin_filters
 
         for plugin_tests in plugin_hook_callers.plugin_tests():
-            self._env.tests |= plugin_tests
+            self.env.tests |= plugin_tests
 
         for plugin_extensions in plugin_hook_callers.plugin_extensions():
             for extension in plugin_extensions:
-                self._env.add_extension(extension)
+                self.env.add_extension(extension)
 
     def render(self, template_name: str, context: Mapping[str, str]) -> str:
-        return self._env.get_template(template_name).render(context)
+        return self.env.get_template(template_name).render(context)
 
 
 class UniqueStore(argparse.Action):
@@ -220,6 +221,9 @@ def parse_args(
         help="Suppress informational messages",
     )
 
+    # add args for customize support
+    customize.add_args(parser)
+
     parser.add_argument(
         "-o",
         "--output-file",
@@ -304,7 +308,7 @@ def render_command(
 
     # We always expect a file;
     # unless the user wants 'env', and there's no input file provided.
-    if args.format == "env":
+    if args.format == "env" and args.data is None:
         """
         With the "env" format, if no dotenv filename is provided,
         we have two options: 1. The user wants to use the current
@@ -321,12 +325,7 @@ def render_command(
         And this is what we're going to do here as well. The script,
         however, would give the user a hint that they should use '-'.
         """
-        if str(args.data) == "-":
-            input_data_f = stdin
-        elif args.data is None:
-            input_data_f = None
-        else:
-            input_data_f = args.data.open()
+        input_data_f = None
     else:
         input_data_f = stdin if args.data is None or str(args.data) == "-" else args.data.open()
 
@@ -342,12 +341,18 @@ def render_command(
             args.import_env,
         )
 
+    customizations = CustomizationModule.from_file(args.customize)
+
+    context = customizations.alter_context(context)
+
     renderer = Jinja2TemplateRenderer(
         cwd,
         args.undefined,
-        j2_env_params={},
+        j2_env_params=customizations.j2_environment_params(),
         plugin_hook_callers=plugin_hook_callers,
     )
+
+    customize.apply(customizations, renderer.env, filters=args.filters, tests=args.tests)
 
     try:
         result = renderer.render(args.template, context)
