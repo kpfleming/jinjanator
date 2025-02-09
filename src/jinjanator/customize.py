@@ -123,7 +123,7 @@ def add_args(parser: ArgumentParser) -> ArgumentParser:
         default=None,
         metavar="python-file.py",
         dest="customize",
-        help="A Python file that implements hooks to fine-tune the jinjanator behavior",
+        help="A file of Python source code that implements hooks to fine-tune Jinja2 behavior",
     )
 
     parser.add_argument(
@@ -132,9 +132,8 @@ def add_args(parser: ArgumentParser) -> ArgumentParser:
         default=[],
         metavar="filters-file.py",
         dest="filters",
-        help="Load custom Jinja2 filters from a Python file. "
-        "All top-level functions in provided file are imported as j2 filters. "
-        "(Can be used multiple times)",
+        help="Load custom Jinja2 filters from a file of Python source code."
+        " All top-level functions in the file are imported as Jinja2 filters.",
     )
 
     parser.add_argument(
@@ -143,8 +142,7 @@ def add_args(parser: ArgumentParser) -> ArgumentParser:
         default=[],
         metavar="tests-file.py",
         dest="tests",
-        help="Load custom Jinja2 tests from a Python file. "
-        "All top-level functions in provided file are imported as j2 tests. "
-        "(Can be used multiple times)",
+        help="Load custom Jinja2 tests from file of Python source code."
+        " All top-level functions in the file are imported as Jinja2 tests.",
     )
     return parser
