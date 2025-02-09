@@ -133,7 +133,12 @@ Password: {{ "APP_PASSWORD" | env }}
 * `data`: (optional) path to the data used for rendering.
     The default is `-`: use stdin.
 
-Options:
+There is some special behavior with environment variables:
+
+* When `data` is not provided (data is `-`), `--format` defaults to
+  `env` and thus reads environment variables.
+
+### Options:
 
 * `--format FMT, -f FMT`: format for the data file. The default is
   `?`: guess from file extension. Supported formats are YAML (.yaml or
@@ -155,22 +160,33 @@ Options:
   error will be raised).
 * `--version`: prints the version of the tool and the Jinja2 package installed.
 
-Customization Options:
+### Customization Options:
 
-These options were ported from the j2cli tool for backwards compatibility (See customization section below)
+For details on the behavior of these options, see the
+[Customization](#customization) section.
 
-* `--filters PYTHON_FILE` - specify a python file containing additional j2 filters as simple functions. You can use this option more than once to include multiple files.
-  * NOTE: while this option's behavior matches j2cli documentation, but does not match j2cli implementation. If you are migrating from j2cli and use more than one file, you will need to adjust your cli args from `... --filters file1.py file2.py ...` to `... --filters file1.py --filters file2.py ...``.
+* `--filters PYTHON_FILE` - specify a file of Python source code,
+  containing additional Jinja2 filters as simple functions. You can
+  use this option more than once to include multiple files.
 
-* `--tests PYTHON_FILE [FILE2] ...`  - specify a python file containing additional j2 tests as simple functions. You can use this option more than once to include multiple files.
-  * NOTE: while this option's behavior matches j2cli documentation, but does not match j2cli implementation. If you are migrating from j2cli and use more than one file, you will need to adjust your cli args from `... --tests file1.py file2.py ...` to `... --tests file1.py --tests file2.py ...``.
+  * NOTE: While this option's behavior matches the `j2cli`
+    documentation, it does not match the `j2cli` implementation. If
+    you are migrating from `j2cli` and use more than one filters file,
+    you will need to specify this option once for each file.
 
-* `--customize PYTHON_FILE` - specify a customization python file. This file can modify context, add filters/tests or change J2 configuration. Unlike `--filters` or `--tests` - this option can only be used once per run.
+* `--tests PYTHON_FILE` - specify a file of Python source code,
+  containing additional Jinja2 tests as simple functions. You can use
+  this option more than once to include multiple files.
 
-There is some special behavior with environment variables:
+  * NOTE: While this option's behavior matches the `j2cli`
+    documentation, it does not match the `j2cli` implementation. If
+    you are migrating from `j2cli` and use more than one tests file,
+    you will need to specify this option once for each file.
 
-* When `data` is not provided (data is `-`), `--format` defaults to
-  `env` and thus reads environment variables.
+* `--customize PYTHON_FILE` - specify a file of Python source code
+  containing customization functions. This file can modify the Jinja2
+  context, add filters/tests, or change Jinja2's configuration. Unlike
+  `--filters` and `--tests`, this option can only be specified once.
 
 ## Usage Examples
 
@@ -362,17 +378,21 @@ Pass: {{ env("USER_PASSWORD") }}
 
 Notice that there must be quotes around the environment variable name
 when it is a literal string.
-<!-- fancy-readme end -->
 
 ## Customization
 
-(this functionality was ported from j2cli)
+Jinjanator supports customizing Jinja2 template processing using two
+methods - via simple files containing custom filters or tests, or via
+a more advanced "customizations" file that allows you to do all of the
+above as well as modify core configuration of the Jinja2 engine.
 
-Jinjanator now supports customizing your Jinja2 template processing via two methods - via simple files containing custom filters or tests, or via a more advanced "customize" file that allows you to do all of the above as well as modify core configuration of the Jinja2 engine
+### Using filters and tests files
 
-### Via filters/tests files
+The simplest way to add additional filters or tests is via "filters"
+and "tests" files. These files contain Python source code consisting
+of simple functions. Each function becomes a filter or test.
 
-The simplest way to add additional filters or tests is via a "filters" or "tests" files. These files are simple python files with function. Each function becomes a filter or test. Examples:
+Examples:
 
 `filters.py`
 
@@ -409,7 +429,7 @@ And a template that uses them:
 The output is:
 
 ```
-$ jinjanate --filter ./filters.py --test ./tests.py -- simple.j2 
+$ jinjanate --filter ./filters.py --test ./tests.py simple.j2
 
 0 is: (even)
 1 is: (odd)
@@ -418,44 +438,56 @@ $ jinjanate --filter ./filters.py --test ./tests.py -- simple.j2
 
 ```
 
-You can include multiple functions in each file and/or use multiple files as needed.
+You can include multiple functions in each file and/or use multiple
+files as needed.
 
-### Using via a Customize File
+### Using a customizations file
 
-A more advanced way to customize your template processing is via a "customize" file.
+A more advanced way to customize your template processing is by using
+a "customizations" file.
 
-Customize file allows you to:
+Customizations files allow you to:
 
-* Pass additional keywords to Jinja2 environment
-* Modify the context before it's used for rendering
+* Pass additional keywords to the Jinja2 environment
+* Modify the context before it is used for rendering
 * Register custom filters and tests
 
-This is done through *hooks* that you implement in a customization file in Python language. Each hook is a plain functions at the module level with the exact name as shown below.
+This is done through *hooks* that you implement in a customization
+file in Python code. Each hook is a plain function at the module
+level with the exact name as shown below.
 
 The following hooks are available:
 
 * `j2_environment_params() -> dict`: returns a `dict` of additional parameters for
-  [Jinja2 Environment](http://jinja.pocoo.org/docs/2.10/api/#jinja2.Environment).
-* `j2_environment(env: Environment) -> Environment`: lets you customize the `Environment` object.
-* `alter_context(context: dict) -> dict`: lets you modify the context variables that are going to be
-  used for template rendering. You can do all sorts of pre-processing here.
-* `extra_filters() -> dict`: returns a `dict` with extra filters for Jinja2
-* `extra_tests() -> dict`: returns a `dict` with extra tests for Jinja2
+  [Jinja2 Environment](https://jinja.pocoo.org/docs/2.10/api/#jinja2.Environment).
+
+* `j2_environment(env: Environment) -> Environment`: lets you
+  customize the `Environment` object.
+
+* `alter_context(context: dict) -> dict`: lets you modify the context
+  variables that are going to be used for template rendering. You can
+  do all sorts of pre-processing here.
+
+* `extra_filters() -> dict`: returns a `dict` with extra filters for
+  Jinja2
+
+* `extra_tests() -> dict`: returns a `dict` with extra tests for
+  Jinja2
 
 All of them are optional.
 
-The example customization.py file for your reference:
+The example `customization.py file` for your reference:
 
 ```python
 #
 # Example customization.py file for jinjanator
-# Contains hooks that modify the way jinjanator is initialized and used
+# Contains hooks that modify the way Jinja2 is initialized and used
 
 
 def j2_environment_params():
     """ Extra parameters for the Jinja2 Environment """
     # Jinja2 Environment configuration
-    # http://jinja.pocoo.org/docs/2.10/api/#jinja2.Environment
+    # https://jinja.pocoo.org/docs/2.10/api/#jinja2.Environment
     return dict(
         # Just some examples
 
@@ -522,8 +554,8 @@ def extra_tests():
 #
 
 ```
-You can only have one customize file per run.
 
+<!-- fancy-readme end -->
 ## Chat
 
 If you'd like to chat with the jinjanator community, join us on
