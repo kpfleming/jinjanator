@@ -402,7 +402,6 @@ Examples:
 def parentheses(message):
     """ Put message in parenthesis """
     return f"({message})"
-
 ```
 
 `tests.py`
@@ -416,6 +415,7 @@ def an_odd_number(number):
 ```
 
 And a template that uses them:
+
 ```
 {% for x in range(4) %}
 {{x}} is: {% if x is an_odd_number %}
@@ -435,7 +435,6 @@ $ jinjanate --filter ./filters.py --test ./tests.py simple.j2
 1 is: (odd)
 2 is: (even)
 3 is: (odd)
-
 ```
 
 You can include multiple functions in each file and/or use multiple
@@ -483,7 +482,6 @@ The example `customization.py file` for your reference:
 # Example customization.py file for jinjanator
 # Contains hooks that modify the way Jinja2 is initialized and used
 
-
 def j2_environment_params():
     """ Extra parameters for the Jinja2 Environment """
     # Jinja2 Environment configuration
@@ -510,7 +508,6 @@ def j2_environment_params():
         extensions=('jinja2.ext.i18n',),
     )
 
-
 def j2_environment(env):
     """ Modify Jinja2 environment
 
@@ -522,13 +519,11 @@ def j2_environment(env):
     )
     return env
 
-
 def alter_context(context):
     """ Modify the context and return it """
     # An extra variable
     context['ADD'] = '127'
     return context
-
 
 def extra_filters():
     """ Declare some custom filters.
@@ -540,7 +535,6 @@ def extra_filters():
         parentheses=lambda t: '(' + t + ')',
     )
 
-
 def extra_tests():
     """ Declare some custom tests
 
@@ -550,9 +544,6 @@ def extra_tests():
         # Example: {% if a|int is custom_odd %}odd{% endif %}
         custom_odd=lambda n: True if (n % 2) else False
     )
-
-#
-
 ```
 
 <!-- fancy-readme end -->
