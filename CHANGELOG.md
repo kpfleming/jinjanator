@@ -28,6 +28,16 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [25.1.0](https://github.com/kpfleming/jinjanator/tree/25.1.0) - 2025-02-09
+
+### Additions
+
+- Added support for '--filters', '--tests' and '--customize' from j2cli
+  (contributed by @mlasevich).
+  [#46](https://github.com/kpfleming/jinjanator/issues/46)
+- Added testing against Python 3.13 (again).
+  
+
 ## [24.4.0](https://github.com/kpfleming/jinjanator/tree/24.4.0) - 2024-10-13
 
 ### Backwards-incompatible Changes
