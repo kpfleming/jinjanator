@@ -252,7 +252,7 @@ def get_hook_callers() -> jinjanator_plugins.PluginHookCallers:
     pm.register(filters)
     pm.register(formats)
     pm.load_setuptools_entrypoints("jinjanator")
-    return cast(jinjanator_plugins.PluginHookCallers, pm.hook)
+    return cast("jinjanator_plugins.PluginHookCallers", pm.hook)
 
 
 def validate_format_options(
