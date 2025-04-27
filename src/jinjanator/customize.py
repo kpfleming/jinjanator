@@ -35,8 +35,8 @@ class CustomizationModule:
     def __init__(self, module: Optional[ModuleType] = None):
         if module is not None:
             # Import every module function as a method on ourselves
-            with contextlib.suppress(AttributeError):
-                for name in self._IMPORTED_METHOD_NAMES:
+            for name in self._IMPORTED_METHOD_NAMES:
+                with contextlib.suppress(AttributeError):
                     setattr(self, name, getattr(module, name))
 
     # stubs
