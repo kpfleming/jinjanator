@@ -225,3 +225,37 @@ def test_customize_file(dir_maker: DirMakerTool) -> None:
         None,
         ["", "--customize", files.customize, files.template, files.data],
     )
+
+
+def test_customize_file_no_discarded_functions(dir_maker: DirMakerTool) -> None:
+    # This is a regression test for https://github.com/kpfleming/jinjanator/issues/48
+    files = dir_maker(
+        template=FileContent(
+            "template.j2",
+            """
+            {{- key | my_reverse -}}
+            """,
+        ),
+        data=FileContent("data.env", "key=Hello, World!"),
+        customize=FileContent(
+            "customize.py",
+            """
+            def my_reverse(message):
+                return message[::-1]
+
+            def extra_filters():
+                return dict(
+                    # Change block start/end strings
+                    my_reverse=my_reverse,
+                )
+            """,
+        ),
+    )
+
+
+    assert "!dlroW ,olleH" == render_command(
+        Path.cwd(),
+        {},
+        None,
+        ["", "--customize", files.customize, files.template, files.data],
+    )
