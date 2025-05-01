@@ -28,6 +28,15 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [25.2.0](https://github.com/kpfleming/jinjanator/tree/25.2.0) - 2025-05-01
+
+### Fixes
+
+- Corrected behavior of '--customize' argument when the customization file
+  doesn't contain every possible type of customization function
+  (contributed by @itamaro).
+  [#48](https://github.com/kpfleming/jinjanator/issues/48)
+
 ## [25.1.0](https://github.com/kpfleming/jinjanator/tree/25.1.0) - 2025-02-09
 
 ### Additions
