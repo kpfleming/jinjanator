@@ -252,7 +252,6 @@ def test_customize_file_no_discarded_functions(dir_maker: DirMakerTool) -> None:
         ),
     )
 
-
     assert "!dlroW ,olleH" == render_command(
         Path.cwd(),
         {},
