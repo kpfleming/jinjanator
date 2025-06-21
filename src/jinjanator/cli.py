@@ -368,7 +368,7 @@ def render_command(
                         argv=" ".join(sys.argv[1:]),
                     )
                 )
-                e.args = (e.args[0] + extra_info,) + e.args[1:]
+                e.args = (e.args[0] + extra_info, *e.args[1:])
         except:  # noqa: E722, S110
             # The above code is so optional that any, ANY, error, is ignored
             pass
