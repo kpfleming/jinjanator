@@ -17,7 +17,7 @@ on:
 jobs:
   test:
     if: inputs.if
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04-arm
     container:
       image: ${{ inputs.image }}
     steps:

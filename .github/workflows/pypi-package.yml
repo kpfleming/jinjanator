@@ -18,7 +18,7 @@ permissions:
 jobs:
   build-package:
     name: Build and verify package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
 
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
     name: Publish released package to PyPI
     environment: release-pypi
     if: github.event.action == 'published'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     needs: build-package
 
     steps:
