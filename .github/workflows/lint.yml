@@ -18,11 +18,11 @@ jobs:
       with:
         show-progress: false
     - id: details
-      uses: kpfleming/composite-actions/image-details@v2
+      uses: kpfleming/composite-actions/image-details@v3
       with:
         base_image: python:bookworm-main
     - id: preflight
-      uses: kpfleming/composite-actions/lint-preflight@v2
+      uses: kpfleming/composite-actions/lint-preflight@v3
       with:
         lint_paths: workflow-support/lint_paths.yml
   lint:
@@ -36,4 +36,4 @@ jobs:
     - uses: actions/checkout@v4
       with:
         show-progress: false
-    - uses: kpfleming/composite-actions/lint-hatch@v2
+    - uses: kpfleming/composite-actions/lint-hatch@v3

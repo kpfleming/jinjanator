@@ -12,12 +12,12 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - id: details
-      uses: kpfleming/composite-actions/image-details@v2
+      uses: kpfleming/composite-actions/image-details@v3
       with:
         base_image: python:bookworm-main
-    - uses: kpfleming/composite-actions/delete-pr-image@v2
+    - uses: kpfleming/composite-actions/delete-pr-image@v3
       with:
         image_registry: ${{ steps.details.outputs.image_registry }}
         registry_account: ${{ steps.details.outputs.registry_account }}
-        registry_token: ${{ secrets.QUAY_API_TOKEN }}
+        registry_token: ${{ secrets.FORGE_API_TOKEN }}
         repo_name: ${{ steps.details.outputs.repo_name }}
