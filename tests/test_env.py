@@ -98,5 +98,5 @@ def test_function(make_file_pair: FilePairFactory, monkeypatch: Any) -> None:
 
 def test_env_stream(make_file_pair: FilePairFactory) -> None:
     files = make_file_pair("{{ a }}", "foo=bar", "env")
-    with pytest.raises(UndefinedError, match="If you're trying to pipe a .env file"):
+    with pytest.raises(UndefinedError, match=r"If you're trying to pipe a .env file"):
         render_implicit_stream(files, ["--format=env"])
