@@ -1,5 +1,4 @@
 from collections.abc import Iterable, Mapping
-from typing import Optional
 
 import pytest
 
@@ -8,10 +7,10 @@ from jinjanator.cli import parse_args
 
 class FakeFormat:
     name = "env"
-    suffixes: Optional[Iterable[str]] = (".env",)
-    option_names: Optional[Iterable[str]] = ()
+    suffixes: Iterable[str] | None = (".env",)
+    option_names: Iterable[str] | None = ()
 
-    def __init__(self, options: Optional[Iterable[str]]) -> None:
+    def __init__(self, options: Iterable[str] | None) -> None:
         pass
 
     def parse(

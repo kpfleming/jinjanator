@@ -14,7 +14,7 @@ authors = [
   { name = "Kevin P. Fleming", email = "jinjanator@kevin.km6g.us" },
   { name = "Mark Vartanyan", email = "kolypto@gmail.com" },
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Environment :: Console",
@@ -23,11 +23,11 @@ classifiers = [
   "Natural Language :: English",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Typing :: Typed",
 ]
 dynamic = [
@@ -136,7 +136,6 @@ dependencies = [
 
 [[tool.hatch.envs.ci.matrix]]
 python = [
-  "3.9",
   "3.10",
   "3.11",
   "3.12",
@@ -236,6 +235,9 @@ lint.unfixable = [
 lint.isort.lines-after-imports = 2
 lint.isort.lines-between-types = 1
 
+[tool.pyproject-fmt]
+max_supported_python = "3.14"
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 xfail_strict = true
@@ -294,7 +296,7 @@ name = "Fixes"
 showcontent = true
 
 [tool.mypy]
-python_version = 3.9
+python_version = "3.10"
 namespace_packages = true
 explicit_package_bases = true
 check_untyped_defs = true

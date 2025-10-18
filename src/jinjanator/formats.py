@@ -4,7 +4,7 @@ import keyword
 
 from collections.abc import Iterable, Mapping
 from io import StringIO
-from typing import Any, Optional
+from typing import Any
 
 import yaml
 
@@ -19,10 +19,10 @@ from jinjanator_plugins import (
 
 class INIFormat:
     name = "ini"
-    suffixes: Optional[Iterable[str]] = (".ini",)
-    option_names: Optional[Iterable[str]] = ()
+    suffixes: Iterable[str] | None = (".ini",)
+    option_names: Iterable[str] | None = ()
 
-    def __init__(self, options: Optional[Iterable[str]]) -> None:
+    def __init__(self, options: Iterable[str] | None) -> None:
         pass
 
     def parse(self, data_string: str) -> Mapping[str, Any]:
@@ -59,11 +59,11 @@ class INIFormat:
 
 class JSONFormat:
     name = "json"
-    suffixes: Optional[Iterable[str]] = (".json",)
-    option_names: Optional[Iterable[str]] = "array-name"
+    suffixes: Iterable[str] | None = (".json",)
+    option_names: Iterable[str] | None = "array-name"
 
-    def __init__(self, options: Optional[Iterable[str]]) -> None:
-        self.array_name: Optional[str] = None
+    def __init__(self, options: Iterable[str] | None) -> None:
+        self.array_name: str | None = None
         if options:
             for option in options:
                 try:
@@ -138,11 +138,11 @@ class JSONFormat:
 
 class YAMLFormat:
     name = "yaml"
-    suffixes: Optional[Iterable[str]] = (".yaml", ".yml")
-    option_names: Optional[Iterable[str]] = "sequence-name"
+    suffixes: Iterable[str] | None = (".yaml", ".yml")
+    option_names: Iterable[str] | None = "sequence-name"
 
-    def __init__(self, options: Optional[Iterable[str]]) -> None:
-        self.sequence_name: Optional[str] = None
+    def __init__(self, options: Iterable[str] | None) -> None:
+        self.sequence_name: str | None = None
         if options:
             for option in options:
                 try:
@@ -217,10 +217,10 @@ class YAMLFormat:
 
 class EnvFormat:
     name = "env"
-    suffixes: Optional[Iterable[str]] = (".env",)
-    option_names: Optional[Iterable[str]] = ()
+    suffixes: Iterable[str] | None = (".env",)
+    option_names: Iterable[str] | None = ()
 
-    def __init__(self, options: Optional[Iterable[str]]) -> None:
+    def __init__(self, options: Iterable[str] | None) -> None:
         pass
 
     def parse(self, data_string: str) -> Mapping[str, str]:

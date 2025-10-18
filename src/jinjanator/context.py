@@ -1,5 +1,5 @@
 from collections.abc import Mapping
-from typing import Any, Optional, TextIO
+from typing import Any, TextIO
 
 from jinjanator_plugins import (
     Format,
@@ -8,9 +8,9 @@ from jinjanator_plugins import (
 
 def read_context_data(
     fmt: Format,
-    f: Optional[TextIO],
+    f: TextIO | None,
     environ: Mapping[str, str],
-    import_env: Optional[str] = None,
+    import_env: str | None = None,
 ) -> Mapping[str, Any]:
     if not f:
         msg = "no input supplied"

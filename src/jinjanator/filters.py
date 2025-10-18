@@ -1,7 +1,5 @@
 import os
 
-from typing import Optional
-
 from jinjanator_plugins import (
     Filters,
     Globals,
@@ -10,7 +8,7 @@ from jinjanator_plugins import (
 )
 
 
-def env(varname: str, default: Optional[str] = None) -> str:
+def env(varname: str, default: str | None = None) -> str:
     """Use an environment variable's value inside your template.
 
     This filter is available even when your data source is something other that the environment.

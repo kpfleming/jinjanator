@@ -7,14 +7,14 @@ requires = [
 [project]
 name = "jinjanator-test-plugin"
 version = "0.0.0"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 
 entry-points.jinjanator.test = "jinjanator_test_plugin"
@@ -23,3 +23,6 @@ entry-points.jinjanator.test = "jinjanator_test_plugin"
 py-modules = [
   "jinjanator_test_plugin",
 ]
+
+[tool.pyproject-fmt]
+max_supported_python = "3.14"

@@ -1,8 +1,8 @@
 from argparse import Namespace
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from textwrap import dedent
-from typing import Callable
 
 import pytest
 

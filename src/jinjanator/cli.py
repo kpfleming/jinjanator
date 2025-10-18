@@ -3,14 +3,11 @@ import importlib
 import os
 import sys
 
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import (
     Any,
-    Callable,
-    Optional,
     TextIO,
-    Union,
     cast,
 )
 
@@ -102,8 +99,8 @@ class UniqueStore(argparse.Action):
         self,
         parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,
-        values: Union[str, Sequence[Any], None],
-        option_string: Optional[str] = None,
+        values: str | Sequence[Any] | None,
+        option_string: str | None = None,
     ) -> None:
         if self.already_seen and option_string:
             parser.error(option_string + " cannot be specified more than once.")
@@ -151,8 +148,8 @@ class VersionAction(argparse.Action):
         self,
         parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,  # noqa: ARG002
-        values: Union[str, Sequence[Any], None],  # noqa: ARG002
-        option_string: Optional[str] = None,  # noqa: ARG002
+        values: str | Sequence[Any] | None,  # noqa: ARG002
+        option_string: str | None = None,  # noqa: ARG002
     ) -> None:
         print_version_info(sys.stdout, plugin_identities=self.plugin_identities)
         parser.exit()
@@ -161,7 +158,7 @@ class VersionAction(argparse.Action):
 def parse_args(
     formats: Mapping[str, type[jinjanator_plugins.Format]],
     plugin_identities: Iterable[str],
-    argv: Optional[Sequence[str]] = None,
+    argv: Sequence[str] | None = None,
 ) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="jinjanate",
@@ -257,7 +254,7 @@ def get_hook_callers() -> jinjanator_plugins.PluginHookCallers:
 
 def validate_format_options(
     fmt: type[jinjanator_plugins.Format],
-    options: Optional[Sequence[str]],
+    options: Sequence[str] | None,
 ) -> jinjanator_plugins.Format:
     if options:
         if not fmt.option_names:
@@ -273,7 +270,7 @@ def validate_format_options(
 def render_command(
     cwd: Path,
     environ: Mapping[str, str],
-    stdin: Optional[TextIO],
+    stdin: TextIO | None,
     argv: Sequence[str],
 ) -> str:
     plugin_hook_callers = get_hook_callers()
@@ -385,7 +382,7 @@ def render_command(
     return result
 
 
-def main(args: Optional[list[str]] = None) -> Optional[int]:
+def main(args: list[str] | None = None) -> int | None:
     try:
         if args is None:  # pragma: no cover
             args = sys.argv

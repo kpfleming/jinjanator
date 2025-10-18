@@ -11,7 +11,7 @@ from argparse import ArgumentParser
 from collections.abc import Mapping
 from importlib.machinery import SourceFileLoader
 from types import FunctionType, ModuleType
-from typing import Any, ClassVar, Optional
+from typing import Any, ClassVar
 
 import jinja2
 
@@ -32,7 +32,7 @@ class CustomizationModule:
     """The interface for customization functions, defined as module-level
     functions"""
 
-    def __init__(self, module: Optional[ModuleType] = None):
+    def __init__(self, module: ModuleType | None = None):
         if module is not None:
             # Import every module function as a method on ourselves
             for name in self._IMPORTED_METHOD_NAMES:
