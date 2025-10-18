@@ -37,7 +37,7 @@ dynamic = [
 dependencies = [
   "attrs",
   "jinja2>=2.7.2",
-  "jinjanator-plugins==24.2.*",
+  "jinjanator-plugins==25.1.*",
   "python-dotenv>=1",
   "pyyaml",
   "typing-extensions",
