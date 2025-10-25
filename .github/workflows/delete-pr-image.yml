@@ -14,7 +14,7 @@ jobs:
     - id: details
       uses: kpfleming/composite-actions/image-details@v3
       with:
-        base_image: python:bookworm-main
+        base_image: python:trixie-main
     - uses: kpfleming/composite-actions/delete-pr-image@v3
       with:
         image_registry: ${{ steps.details.outputs.image_registry }}
