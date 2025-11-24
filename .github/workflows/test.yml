@@ -21,7 +21,7 @@ jobs:
     container:
       image: ${{ inputs.image }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         show-progress: false
     - name: build wheel
