@@ -286,7 +286,7 @@ JSON data input format.
 
 #### Options
 
-* `array-name`: accepts a single string (e.g. `array-name=foo`), which
+* `array-name`: accepts a single string (e.g. `--format-option array-name=foo`), which
   must be a valid Python identifier and not a Python keyword. If this
   option is specified, and the JSON data provided is an `array`
   (sequence, list), the specified name will be used to make the data
@@ -321,7 +321,7 @@ YAML data input format.
 
 #### Options
 
-* `sequence-name`: accepts a single string (e.g. `sequence-name=foo`),
+* `sequence-name`: accepts a single string (e.g. `--format-option sequence-name=foo`),
   which must be a valid Python identifier and not a Python keyword. If
   this option is specified, and the YAML data provided is a `sequence`
   (array, list), the specified name will be used to make the data
