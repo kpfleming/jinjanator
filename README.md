@@ -314,7 +314,7 @@ Usage:
 
 Or:
 
-    $ cat data.json | jinjanate --format=ini config.j2
+    $ cat data.json | jinjanate --format=json config.j2
 
 ### YAML
 YAML data input format.
