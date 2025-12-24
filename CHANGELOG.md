@@ -28,6 +28,13 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [25.3.1](https://github.com/kpfleming/jinjanator/tree/25.3.1) - 2025-12-24
+
+### Fixes
+
+- Improved documentation of format options, and corrected an error in example for JSON data format.
+  [#61](https://github.com/kpfleming/jinjanator/issues/61)
+
 ## [25.3.0](https://github.com/kpfleming/jinjanator/tree/25.3.0) - 2025-10-18
 
 ### Backwards-incompatible Changes
