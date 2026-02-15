@@ -48,12 +48,6 @@ scripts.j2 = "jinjanator.cli:main"
 
 scripts.jinjanate = "jinjanator.cli:main"
 
-[tool.hatch.version]
-source = "vcs"
-
-[tool.hatch.build.hooks.vcs]
-version-file = "src/jinjanator/version.py"
-
 [tool.hatch.build]
 artifacts = [
   "src/jinjanator/version.py",
@@ -62,6 +56,9 @@ exclude = [
   "*~",
   ".github",
 ]
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/jinjanator/version.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
@@ -73,13 +70,6 @@ include = [
 [tool.hatch.build.targets.wheel]
 packages = [
   "src/jinjanator",
-]
-
-[tool.hatch.envs.default]
-python = "3.13"
-installer = "uv"
-python-sources = [
-  "external",
 ]
 
 [tool.hatch.envs.changelog]
@@ -96,33 +86,6 @@ draft = [
 release = [
   "rm -f changelog.d/*~",
   "towncrier build --yes --version {args}",
-]
-
-[tool.hatch.envs.lint]
-dependencies = [
-  "ruff>=0.2.0",
-  "mypy",
-  "pyproject-fmt",
-  "pytest",        # needed for type-checking tests
-  "types-PyYAML",
-]
-
-[tool.hatch.envs.lint.scripts]
-lint = [
-  "ruff format",
-  "ruff check --output-format=full --fix --show-fixes",
-  "mypy --package jinjanator",
-  "mypy tests",
-  "shellcheck workflow-support/*.sh",
-  "pyproject-fmt pyproject.toml tests/test_plugin/pyproject.toml",
-]
-lint-action = [
-  "ruff format --check --diff",
-  "ruff check --output-format=github",
-  "mypy --package jinjanator",
-  "mypy tests",
-  "shellcheck workflow-support/*.sh",
-  "pyproject-fmt --check pyproject.toml tests/test_plugin/pyproject.toml",
 ]
 
 [tool.hatch.envs.ci]
@@ -153,6 +116,40 @@ ci = [
   "uv pip install ./tests/test_plugin",
   "pytest -m 'not noplugin' --verbose --cov-append  --cov-branch --cov=jinjanator",
   "coverage report --show-missing --fail-under=98",
+]
+
+[tool.hatch.envs.default]
+python = "3.13"
+installer = "uv"
+python-sources = [
+  "external",
+]
+
+[tool.hatch.envs.lint]
+dependencies = [
+  "ruff>=0.2.0",
+  "mypy",
+  "pyproject-fmt",
+  "pytest",        # needed for type-checking tests
+  "types-PyYAML",
+]
+
+[tool.hatch.envs.lint.scripts]
+lint = [
+  "ruff format",
+  "ruff check --output-format=full --fix --show-fixes",
+  "mypy --package jinjanator",
+  "mypy tests",
+  "shellcheck workflow-support/*.sh",
+  "pyproject-fmt pyproject.toml tests/test_plugin/pyproject.toml",
+]
+lint-action = [
+  "ruff format --check --diff",
+  "ruff check --output-format=github",
+  "mypy --package jinjanator",
+  "mypy tests",
+  "shellcheck workflow-support/*.sh",
+  "pyproject-fmt --check pyproject.toml tests/test_plugin/pyproject.toml",
 ]
 
 [tool.hatch.metadata]
@@ -195,6 +192,9 @@ replacement = '[\1](https://github.com/kpfleming/jinjanator/tree/main/\g<2>)'
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
 pattern = "#(\\d+)"
 replacement = "[#\\1](https://github.com/kpfleming/jinjanator/issues/\\1)"
+
+[tool.hatch.version]
+source = "vcs"
 
 [tool.ruff]
 line-length = 100
