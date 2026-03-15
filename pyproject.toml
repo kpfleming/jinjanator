@@ -49,7 +49,7 @@ j2 = "jinjanator.cli:main"
 jinjanate = "jinjanator.cli:main"
 [project.urls]
 "Bug Tracker" = "https://github.com/kpfleming/jinjanator/issues"
-"Homepage" = "https://github.com/kpfleming/jinjanator"
+Homepage = "https://github.com/kpfleming/jinjanator"
 
 [tool.hatch.build]
 artifacts = [
