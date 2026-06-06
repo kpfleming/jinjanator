@@ -120,10 +120,10 @@ python-sources = [
 ]
 [tool.hatch.envs.lint]
 dependencies = [
-  "ruff>=0.2.0",
   "mypy",
   "pyproject-fmt",
   "pytest",        # needed for type-checking tests
+  "ruff>=0.2.0",
   "types-PyYAML",
 ]
 [tool.hatch.envs.lint.scripts]
@@ -222,26 +222,26 @@ max_supported_python = "3.14"
 table_format = "long"
 
 [tool.mypy]
-python_version = "3.10"
-namespace_packages = true
-explicit_package_bases = true
-check_untyped_defs = true
-disallow_any_generics = true
-disallow_incomplete_defs = true
-disallow_subclassing_any = true
-disallow_untyped_calls = true
-disallow_untyped_decorators = true
-disallow_untyped_defs = true
-follow_imports = "normal"
-no_implicit_optional = true
-strict_equality = true
-warn_no_return = true
-warn_redundant_casts = true
-warn_return_any = true
-warn_unused_ignores = true
 exclude = [
   "tests/test_plugin/build",
 ]
+namespace_packages = true
+explicit_package_bases = true
+follow_imports = "normal"
+python_version = "3.10"
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_return_any = true
+strict_equality = true
+no_implicit_optional = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
