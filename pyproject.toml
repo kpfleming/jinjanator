@@ -41,6 +41,7 @@ dependencies = [
 [[project.authors]]
 name = "Kevin P. Fleming"
 email = "jinjanator@kevin.km6g.us"
+
 [[project.authors]]
 name = "Mark Vartanyan"
 email = "kolypto@gmail.com"
@@ -152,27 +153,33 @@ text = """
 # *jinjanator*: CLI tool for rendering Jinja2 templates
 
 """
+
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
 path = "README.md"
 start-after = "<!-- fancy-readme start -->"
 end-before = "<!-- fancy-readme end -->"
+
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
 text = """
 ## Release Information
 """
+
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
 path = "CHANGELOG.md"
 start-after = "<!-- towncrier release notes start -->"
 pattern = "\n(###.+?\n)## "
+
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
 text = """
 ---
+
 [→ Full Changelog](https://github.com/kpfleming/jinjanator/blob/main/CHANGELOG.md)
 """
 
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
 pattern = "\\[(.+?)\\]\\(((?!https?://)\\S+?)\\)"
 replacement = "[\\1](https://github.com/kpfleming/jinjanator/tree/main/\\g<2>)"
+
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
 pattern = "#(\\d+)"
 replacement = "[#\\1](https://github.com/kpfleming/jinjanator/issues/\\1)"
@@ -277,18 +284,22 @@ path = ""
 directory = "breaking"
 name = "Backwards-incompatible Changes"
 showcontent = true
+
 [[tool.towncrier.type]]
 directory = "deprecating"
 name = "Deprecations"
 showcontent = true
+
 [[tool.towncrier.type]]
 directory = "adding"
 name = "Additions"
 showcontent = true
+
 [[tool.towncrier.type]]
 directory = "changing"
 name = "Changes"
 showcontent = true
+
 [[tool.towncrier.type]]
 directory = "fixing"
 name = "Fixes"
