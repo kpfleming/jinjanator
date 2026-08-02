@@ -200,6 +200,7 @@ ignore = [
   "ANN",     # Mypy is better at this.
   "C901",    # Leave complexity to me.
   "COM812",  # conflicts with formatter
+  "CPY001",  # i don't want copyright notices in every file
   "D",       # We have different ideas about docstrings.
   "FA100",   # Intentionally not using '__future__' for annotations
   "ISC001",  # conflicts with formatter
