@@ -15,6 +15,13 @@ on:
     - cron: "35 4 * * 6"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   preflight:
     runs-on: ubuntu-24.04-arm
@@ -24,40 +31,46 @@ jobs:
       versions: ${{ steps.get_versions.outputs.versions }}
       need_ci: ${{ (steps.preflight.outputs.need_ci == 'true') || (steps.preflight.outputs.need_image == 'true') }}
     steps:
-    - uses: actions/checkout@v7
-      with:
-        show-progress: false
-    - id: get_versions
-      run: cat workflow-support/versions.json >> $GITHUB_OUTPUT
-    - id: details
-      uses: kpfleming/composite-actions/image-details@v3
-      with:
-        base_image: python:v4-trixie-main
-    - id: preflight
-      uses: kpfleming/composite-actions/ci-preflight@v3
-      with:
-        ci_paths: workflow-support/ci_paths.yml
-        files_hash: ${{ hashfiles('pyproject.toml', 'workflow-support/make_ci_image.sh', '.github/workflows/ci.yml') }}
-        base_image_hash: ${{ steps.details.outputs.base_image_hash }}
-    - id: make-ci-image
-      uses: kpfleming/composite-actions/make-ci-image@v3
-      if: steps.preflight.outputs.need_image == 'true'
-      with:
-        build_args: jinjanator
-        base_image: ${{ steps.details.outputs.base_image }}
-        image_name: ${{ steps.details.outputs.image_base }}:${{ steps.preflight.outputs.image_tag }}
-        image_cache_key: ${{ steps.preflight.outputs.image_cache_key }}
-        image_registry: ${{ steps.details.outputs.image_registry }}
-        registry_username: ${{ vars.FORGE_BOT_NAME }}
-        registry_password: ${{ secrets.FORGE_API_TOKEN }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          show-progress: false
+          persist-credentials: false
+
+      - id: get_versions
+        run: cat workflow-support/versions.json >> $GITHUB_OUTPUT
+
+      - id: details
+        uses: kpfleming/composite-actions/image-details@74c01bb4d399a98545e8cdc5826d832b7917ac6b # v3.1.0
+        with:
+          base_image: python:v4-trixie-main
+
+      - id: preflight
+        uses: kpfleming/composite-actions/ci-preflight@74c01bb4d399a98545e8cdc5826d832b7917ac6b # v3.1.0
+        with:
+          ci_paths: workflow-support/ci_paths.yml
+          files_hash: ${{ hashfiles('pyproject.toml', 'workflow-support/make_ci_image.sh', '.github/workflows/ci.yml') }}
+          base_image_hash: ${{ steps.details.outputs.base_image_hash }}
+
+      - id: make-ci-image
+        uses: kpfleming/composite-actions/make-ci-image@74c01bb4d399a98545e8cdc5826d832b7917ac6b # v3.1.0
+        if: steps.preflight.outputs.need_image == 'true'
+        with:
+          build_args: jinjanator
+          base_image: ${{ steps.details.outputs.base_image }}
+          image_name: ${{ steps.details.outputs.image_base }}:${{ steps.preflight.outputs.image_tag }}
+          image_cache_key: ${{ steps.preflight.outputs.image_cache_key }}
+          image_registry: ${{ steps.details.outputs.image_registry }}
+          registry_username: ${{ vars.FORGE_BOT_NAME }}
+          registry_password: ${{ secrets.FORGE_API_TOKEN }}
+
   ci:
     needs:
-    - preflight
+      - preflight
     strategy:
       matrix:
         python: ${{ fromJSON(needs.preflight.outputs.versions).python }}
       fail-fast: false
-    uses: ./.github/workflows/test.yml
+    uses: $/.github/workflows/test.yml
     with:
       if: ${{ needs.preflight.outputs.need_ci == 'true' }}
       image: ${{ needs.preflight.outputs.image_base }}:${{ needs.preflight.outputs.image_tag }}

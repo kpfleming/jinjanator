@@ -21,14 +21,19 @@ jobs:
     container:
       image: ${{ inputs.image }}
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         show-progress: false
+        persist-credentials: false
     - name: build wheel
       run: hatch build -t wheel
       shell: bash
     - name: install project
-      run: hatch run ci.py${{ inputs.python }}:uv pip install dist/*.whl
+      run: hatch run ci.py${INPUTS_PYTHON}:uv pip install dist/*.whl
       shell: bash
+      env:
+        INPUTS_PYTHON: ${{ inputs.python }}
     - name: run tests
-      run: hatch run ci.py${{ inputs.python }}:ci
+      run: hatch run ci.py${INPUTS_PYTHON}:ci
+      env:
+        INPUTS_PYTHON: ${{ inputs.python }}
