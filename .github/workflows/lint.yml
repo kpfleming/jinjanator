@@ -7,6 +7,13 @@ on:
   schedule:
     - cron: "35 4 * * 6"
 
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   preflight:
     runs-on: ubuntu-24.04-arm
@@ -14,26 +21,32 @@ jobs:
       image_base: ${{ steps.details.outputs.image_base }}
       need_lint: ${{ steps.preflight.outputs.need_lint == 'true' }}
     steps:
-    - uses: actions/checkout@v7
-      with:
-        show-progress: false
-    - id: details
-      uses: kpfleming/composite-actions/image-details@v3
-      with:
-        base_image: python:trixie-main
-    - id: preflight
-      uses: kpfleming/composite-actions/lint-preflight@v3
-      with:
-        lint_paths: workflow-support/lint_paths.yml
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          show-progress: false
+          persist-credentials: false
+
+      - id: details
+        uses: kpfleming/composite-actions/image-details@74c01bb4d399a98545e8cdc5826d832b7917ac6b # v3.1.0
+        with:
+          base_image: python:trixie-main
+
+      - id: preflight
+        uses: kpfleming/composite-actions/lint-preflight@74c01bb4d399a98545e8cdc5826d832b7917ac6b # v3.1.0
+        with:
+          lint_paths: workflow-support/lint_paths.yml
+
   lint:
     if: needs.preflight.outputs.need_lint == 'true'
     runs-on: ubuntu-24.04-arm
     needs:
-    - preflight
+      - preflight
     container:
       image: ${{ needs.preflight.outputs.image_base }}:main
     steps:
-    - uses: actions/checkout@v7
-      with:
-        show-progress: false
-    - uses: kpfleming/composite-actions/lint-hatch@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          show-progress: false
+          persist-credentials: false
+
+      - uses: kpfleming/composite-actions/lint-hatch@74c01bb4d399a98545e8cdc5826d832b7917ac6b # v3.1.0
