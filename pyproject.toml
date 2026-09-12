@@ -45,21 +45,53 @@ email = "jinjanator@kevin.km6g.us"
 [[project.authors]]
 name = "Mark Vartanyan"
 email = "kolypto@gmail.com"
-[project.scripts]
-j2 = "jinjanator.cli:main"
-jinjanate = "jinjanator.cli:main"
 [project.urls]
 "Bug Tracker" = "https://github.com/kpfleming/jinjanator/issues"
 Homepage = "https://github.com/kpfleming/jinjanator"
+[project.scripts]
+j2 = "jinjanator.cli:main"
+jinjanate = "jinjanator.cli:main"
 
-[tool.hatch.build]
-artifacts = [
-  "src/jinjanator/version.py",
-]
-exclude = [
-  "*~",
-  ".github",
-]
+[tool.hatch.version]
+source = "vcs"
+[tool.hatch.metadata.hooks.fancy-pypi-readme]
+content-type = "text/markdown"
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+text = """
+# *jinjanator*: CLI tool for rendering Jinja2 templates
+
+"""
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+path = "README.md"
+start-after = "<!-- fancy-readme start -->"
+end-before = "<!-- fancy-readme end -->"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+text = """
+## Release Information
+"""
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+path = "CHANGELOG.md"
+start-after = "<!-- towncrier release notes start -->"
+pattern = "\n(###.+?\n)## "
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+text = """
+---
+
+[→ Full Changelog](https://github.com/kpfleming/jinjanator/blob/main/CHANGELOG.md)
+"""
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
+pattern = "\\[(.+?)\\]\\(((?!https?://)\\S+?)\\)"
+replacement = "[\\1](https://github.com/kpfleming/jinjanator/tree/main/\\g<2>)"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
+pattern = "#(\\d+)"
+replacement = "[#\\1](https://github.com/kpfleming/jinjanator/issues/\\1)"
+[tool.hatch.metadata]
+allow-direct-references = true
 [tool.hatch.build.hooks.vcs]
 version-file = "src/jinjanator/version.py"
 [tool.hatch.build.targets.sdist]
@@ -71,6 +103,14 @@ include = [
 [tool.hatch.build.targets.wheel]
 packages = [
   "src/jinjanator",
+]
+[tool.hatch.build]
+exclude = [
+  "*~",
+  ".github",
+]
+artifacts = [
+  "src/jinjanator/version.py",
 ]
 [tool.hatch.envs.changelog]
 detached = true
@@ -144,47 +184,6 @@ lint-action = [
   "shellcheck workflow-support/*.sh",
   "pyproject-fmt --check pyproject.toml tests/test_plugin/pyproject.toml",
 ]
-[tool.hatch.metadata]
-allow-direct-references = true
-[tool.hatch.metadata.hooks.fancy-pypi-readme]
-content-type = "text/markdown"
-[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
-text = """
-# *jinjanator*: CLI tool for rendering Jinja2 templates
-
-"""
-
-[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
-path = "README.md"
-start-after = "<!-- fancy-readme start -->"
-end-before = "<!-- fancy-readme end -->"
-
-[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
-text = """
-## Release Information
-"""
-
-[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
-path = "CHANGELOG.md"
-start-after = "<!-- towncrier release notes start -->"
-pattern = "\n(###.+?\n)## "
-
-[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
-text = """
----
-
-[→ Full Changelog](https://github.com/kpfleming/jinjanator/blob/main/CHANGELOG.md)
-"""
-
-[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
-pattern = "\\[(.+?)\\]\\(((?!https?://)\\S+?)\\)"
-replacement = "[\\1](https://github.com/kpfleming/jinjanator/tree/main/\\g<2>)"
-
-[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
-pattern = "#(\\d+)"
-replacement = "[#\\1](https://github.com/kpfleming/jinjanator/issues/\\1)"
-[tool.hatch.version]
-source = "vcs"
 
 [tool.ruff]
 line-length = 100
@@ -253,7 +252,6 @@ no_implicit_optional = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-xfail_strict = true
 testpaths = [
   "tests",
 ]
@@ -264,6 +262,7 @@ addopts = [
 markers = [
   "noplugin: tests which must run without plugins installed",
 ]
+xfail_strict = true
 
 [tool.towncrier]
 name = "jinjanator"
@@ -279,8 +278,6 @@ underlines = [
   "",
   "",
 ]
-[[tool.towncrier.section]]
-path = ""
 [[tool.towncrier.type]]
 directory = "breaking"
 name = "Backwards-incompatible Changes"
@@ -305,3 +302,5 @@ showcontent = true
 directory = "fixing"
 name = "Fixes"
 showcontent = true
+[[tool.towncrier.section]]
+path = ""
