@@ -169,6 +169,10 @@ dependencies = [
 ]
 [tool.hatch.envs.lint.scripts]
 lint = [
+  "ruff --version",
+  "mypy --version",
+  "shellcheck --version",
+  "pyproject-fmt --version",
   "ruff format",
   "ruff check --output-format=full --fix --show-fixes",
   "mypy --package jinjanator",
@@ -177,6 +181,10 @@ lint = [
   "pyproject-fmt pyproject.toml tests/test_plugin/pyproject.toml",
 ]
 lint-action = [
+  "ruff --version",
+  "mypy --version",
+  "shellcheck --version",
+  "pyproject-fmt --version",
   "ruff format --check --diff",
   "ruff check --output-format=github",
   "mypy --package jinjanator",
