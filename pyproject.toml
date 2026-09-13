@@ -3,7 +3,7 @@ build-backend = "hatchling.build"
 requires = [
   "hatch-fancy-pypi-readme",
   "hatch-vcs",
-  "hatchling<1.27",
+  "hatchling",
 ]
 
 [project]
