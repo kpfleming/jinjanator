@@ -11,7 +11,7 @@ from argparse import ArgumentParser
 from collections.abc import Mapping
 from importlib.machinery import SourceFileLoader
 from types import FunctionType, ModuleType
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Self
 
 import jinja2
 
@@ -62,7 +62,7 @@ class CustomizationModule:
     ]
 
     @classmethod
-    def from_file(cls, filename: str) -> "CustomizationModule":
+    def from_file(cls, filename: str) -> Self:
         """Create Customize object"""
         if filename is not None:
             return cls(imp_load_source("customize-module", filename))
