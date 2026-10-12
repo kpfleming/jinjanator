@@ -42,7 +42,7 @@ jobs:
       - id: details
         uses: kpfleming/composite-actions/image-details@74c01bb4d399a98545e8cdc5826d832b7917ac6b # v3.1.0
         with:
-          base_image: python:v4-trixie-main
+          base_image: python:v5-trixie-main
 
       - id: preflight
         uses: kpfleming/composite-actions/ci-preflight@74c01bb4d399a98545e8cdc5826d832b7917ac6b # v3.1.0
