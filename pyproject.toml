@@ -23,6 +23,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
   "Typing :: Typed",
 ]
 dynamic = [
@@ -32,7 +33,7 @@ dynamic = [
 dependencies = [
   "attrs",
   "jinja2>=2.7.2",
-  "jinjanator-plugins==26.1.*",
+  "jinjanator-plugins==26.2.*",
   "python-dotenv>=1",
   "pyyaml",
   "typing-extensions",
@@ -139,6 +140,7 @@ python = [
   "3.12",
   "3.13",
   "3.14",
+  "3.15",
 ]
 [tool.hatch.envs.ci.scripts]
 ci = [
@@ -231,7 +233,7 @@ isort.lines-after-imports = 2
 isort.lines-between-types = 1
 
 [tool.pyproject-fmt]
-max_supported_python = "3.14"
+max_supported_python = "3.15"
 table_format = "long"
 
 [tool.mypy]
