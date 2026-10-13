@@ -28,6 +28,19 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [26.2.0](https://github.com/kpfleming/jinjanator/tree/26.2.0) - 2026-10-13
+
+### Additions
+
+- Added support for Python 3.15.
+  
+
+
+### Changes
+
+- Update to version 26.2.0 of jinjanator-plugins.
+  
+
 ## [26.1.0](https://github.com/kpfleming/jinjanator/tree/26.1.0) - 2026-10-11
 
 ### Backwards-incompatible Changes
