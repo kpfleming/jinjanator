@@ -284,9 +284,6 @@ def render_command(
 
     args = parse_args(available_formats, plugin_identities, argv[1:])
 
-    if not args.quiet:
-        print_version_info(plugin_identities=plugin_identities)
-
     if args.format == "?":
         if args.data is None or str(args.data) == "-":
             args.format = "env"
