@@ -1,3 +1,6 @@
+import subprocess
+import sys
+
 from typing import Any
 
 import pytest
@@ -15,6 +18,29 @@ def test_quiet(make_file_pair: FilePairFactory, capsys: Any) -> None:
     render_file(files, ["--quiet"])
     captured = capsys.readouterr()
     assert 0 == len(captured.err)
+
+
+@pytest.mark.parametrize("options", [[], ["--quiet"]])
+def test_render_does_not_print_version(
+    make_file_pair: FilePairFactory,
+    options: list[str],
+) -> None:
+    files = make_file_pair("Hello {{name}}!", "name=Blart", "env")
+    result = subprocess.run(  # noqa: S603
+        [
+            sys.executable,
+            "-c",
+            "from jinjanator.cli import main; raise SystemExit(main())",
+            *options,
+            str(files.template_file),
+            str(files.data_file),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert "Hello Blart!" == result.stdout
+    assert "" == result.stderr
 
 
 def test_unavailable_suffix(make_file_pair: FilePairFactory, capsys: Any) -> None:
