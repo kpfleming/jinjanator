@@ -28,6 +28,14 @@ See https://github.com/kpfleming/jinjanator/blob/main/.github/CONTRIBUTING.md#ch
 
 <!-- towncrier release notes start -->
 
+## [26.3.0](https://github.com/kpfleming/jinjanator/tree/26.3.0) - 2026-10-27
+
+### Changes
+
+- Version and plugin information is now printed only when `--version` is requested,
+  instead of before each template render. The `--quiet` flag remains accepted.
+  [#64](https://github.com/kpfleming/jinjanator/issues/64)
+
 ## [26.2.0](https://github.com/kpfleming/jinjanator/tree/26.2.0) - 2026-10-13
 
 ### Additions
