@@ -60,7 +60,7 @@ class INIFormat:
 class JSONFormat:
     name = "json"
     suffixes: Iterable[str] | None = (".json",)
-    option_names: Iterable[str] | None = "array-name"
+    option_names: Iterable[str] | None = ("array-name",)
 
     def __init__(self, options: Iterable[str] | None) -> None:
         self.array_name: str | None = None
@@ -139,7 +139,7 @@ class JSONFormat:
 class YAMLFormat:
     name = "yaml"
     suffixes: Iterable[str] | None = (".yaml", ".yml")
-    option_names: Iterable[str] | None = "sequence-name"
+    option_names: Iterable[str] | None = ("sequence-name",)
 
     def __init__(self, options: Iterable[str] | None) -> None:
         self.sequence_name: str | None = None

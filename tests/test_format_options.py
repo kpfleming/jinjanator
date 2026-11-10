@@ -33,3 +33,17 @@ def test_env_unknown(make_file_pair: FilePairFactory) -> None:
 
     with pytest.raises(jinjanator_plugins.FormatOptionUnknownError):
         assert render_file(files, ["--format-option", "midge"])
+
+
+def test_json_substring_option_rejected(make_file_pair: FilePairFactory) -> None:
+    files = make_file_pair("", "", "json")
+
+    with pytest.raises(jinjanator_plugins.FormatOptionUnknownError):
+        assert render_file(files, ["--format-option", "ray-name=items"])
+
+
+def test_yaml_substring_option_rejected(make_file_pair: FilePairFactory) -> None:
+    files = make_file_pair("", "", "yaml")
+
+    with pytest.raises(jinjanator_plugins.FormatOptionUnknownError):
+        assert render_file(files, ["--format-option", "equence-name=items"])
